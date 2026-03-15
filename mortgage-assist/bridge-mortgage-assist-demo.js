@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/15/2026, 1:12:04 PM
+// Generated: 3/15/2026, 1:28:37 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.0 - FULL SMART SCREEN WITH BACKDROP
 
@@ -87,6 +87,20 @@
                     "backdropOpacity": 0.5,
                     "showTitle": true,
                     "borderColor": "#f8c400"
+                },
+                {
+                    "name": "Tess intro screen",
+                    "url": "blob:https://mobilewise.netlify.app/a6aa03d6-7d3d-489b-a343-5ce6bddab744",
+                    "caption": "",
+                    "link": "",
+                    "triggerMatch": [
+                        "Hi my name is Tess how may I help you?"
+                    ],
+                    "imageSize": "400px",
+                    "bgColor": "white",
+                    "backdropOpacity": 0.5,
+                    "showTitle": true,
+                    "borderColor": "#f8c400"
                 }
             ]
         },
@@ -96,7 +110,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-15T20:12:04.940Z"
+    "updatedAt": "2026-03-15T20:28:37.222Z"
 };
     
     // ===== ADD SPLASH SCREEN CSS =====
