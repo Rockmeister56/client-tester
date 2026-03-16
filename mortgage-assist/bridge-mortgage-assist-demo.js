@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 1:26:02 AM
+// Generated: 3/16/2026, 1:42:00 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T08:26:02.834Z"
+    "updatedAt": "2026-03-16T08:42:00.188Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -196,6 +196,69 @@
         const secondaryBtn = document.getElementById('justBrowsingBtn');
         secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
+    }
+
+    function activateTess() {
+        console.log("🖱️ Click detected: Capturing user gesture for audio...");
+        
+        // 1. NUKE THE SPLASH WIDGET
+        const splashWidget = document.getElementById('splash-widget');
+        if (splashWidget) {
+            splashWidget.innerHTML = ''; 
+            if (splashWidget.parentNode) {
+                splashWidget.parentNode.removeChild(splashWidget); 
+            }
+        }
+
+        // 2. Remove the overlay
+        const overlay = document.getElementById('splashOverlay');
+        if (overlay) overlay.remove();
+
+        // 3. CREATE MAIN WIDGET (Fast Transition)
+        setTimeout(() => {
+            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
+                window.mainWidget = createMainWidget();
+                document.body.appendChild(window.mainWidget);
+            }
+            
+            // First set widget to active state
+            window.mainWidget.style.display = 'block';
+            window.mainWidget.setAttribute('controlled-widget-state', 'active');
+            
+            // Wait for widget to be fully ready before turning on mic
+            setTimeout(async () => {
+                console.log("🎤 Attempting to turn on microphone...");
+                try {
+                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                        // micOn returns a promise, so await it
+                        await window.mainWidget.micOn();
+                        console.log("✅ Microphone activated successfully");
+                        
+                        // Send welcome message after mic is on
+                        setTimeout(() => {
+                            if (window.mainWidget && typeof window.mainWidget.sendMessage === 'function') {
+                                window.mainWidget.sendMessage("Hi! I'm Tess. How can I help you today?");
+                            }
+                        }, 1000);
+                    }
+                } catch (e) {
+                    console.error("❌ Failed to activate microphone:", e);
+                    
+                    // Fallback: Try one more time after a delay
+                    setTimeout(async () => {
+                        try {
+                            if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                                await window.mainWidget.micOn();
+                                console.log("✅ Microphone activated on retry");
+                            }
+                        } catch (retryError) {
+                            console.warn("⚠️ Could not activate microphone automatically");
+                            // Show mic button so user can manually enable
+                        }
+                    }, 1000);
+                }
+            }, 800); // Increased delay to ensure widget is ready
+        }, 100);
     }
 
     function justBrowsing() {
