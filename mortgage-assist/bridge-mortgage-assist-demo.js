@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 2:18:50 AM
+// Generated: 3/16/2026, 2:34:56 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T09:18:50.213Z"
+    "updatedAt": "2026-03-16T09:34:56.400Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -198,6 +198,28 @@
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
     }
 
+    async function forceUnmute() {
+        if (window.mainWidget) {
+            // 1. API Calls
+            try {
+                await window.mainWidget.micOn?.();
+                await window.mainWidget.unmute?.();
+            } catch(e) {
+                console.warn("Force unmute API error", e);
+            }
+            // 2. Nuclear Shadow DOM Unmute
+            try {
+                const shadow = window.mainWidget.shadowRoot;
+                if (shadow) {
+                    const v = shadow.querySelector('video');
+                    const a = shadow.querySelector('audio');
+                    if (v) { v.muted = false; v.volume = 1.0; v.play(); }
+                    if (a) { a.muted = false; a.volume = 1.0; a.play(); }
+                }
+            } catch(e) {}
+        }
+    }
+
     function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
@@ -225,8 +247,8 @@
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
-                // CRITICAL: Set ui="false" to prevent text messages
-                window.mainWidget.setAttribute('ui', 'false');
+                // CRITICAL: Set hide-ui to prevent text messages
+                window.mainWidget.setAttribute('hide-ui', 'true');
                 document.body.appendChild(window.mainWidget);
             }
             
@@ -239,9 +261,13 @@
                 try {
                     if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
                         await window.mainWidget.micOn();
+                        await window.mainWidget.unmute?.();
                         console.log("✅ Microphone activated");
                         
-                        // Send welcome message (audio only due to ui:false)
+                        // Force unmute shadow DOM as backup
+                        await forceUnmute();
+                        
+                        // Send welcome message (audio only due to hide-ui)
                         setTimeout(() => {
                             if (window.mainWidget && typeof window.mainWidget.sendMessage === 'function') {
                                 window.mainWidget.sendMessage("Hi! I'm Tess. How can I help you today?");
@@ -250,6 +276,8 @@
                     }
                 } catch (e) {
                     console.error("❌ Mic activation failed:", e);
+                    // Fallback to forceUnmute
+                    forceUnmute();
                 }
             }, 800);
         }, 100);
