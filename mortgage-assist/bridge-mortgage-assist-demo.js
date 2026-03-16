@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 1:09:36 AM
+// Generated: 3/16/2026, 1:26:02 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T08:09:36.906Z"
+    "updatedAt": "2026-03-16T08:26:02.834Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -196,37 +196,6 @@
         const secondaryBtn = document.getElementById('justBrowsingBtn');
         secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
-    }
-
-    async function activateTess() {
-        const splashWidget = document.getElementById('splash-widget');
-        if (splashWidget) {
-            splashWidget.innerHTML = ''; 
-            if (splashWidget.parentNode) {
-                splashWidget.parentNode.removeChild(splashWidget); 
-            }
-        }
-
-        const overlay = document.getElementById('splashOverlay');
-        if (overlay) {
-            overlay.innerHTML = '';
-            if (overlay.parentNode) {
-                overlay.parentNode.removeChild(overlay);
-            }
-        }
-
-        if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
-            window.mainWidget = createMainWidget();
-            document.body.appendChild(window.mainWidget);
-        }
-        window.mainWidget.style.display = 'block';
-        try {
-            console.log("🎤 Activating Tess via API...");
-            await window.mainWidget.micOn();
-            console.log("✅ Tess Activated and Unmuted.");
-        } catch (e) {
-            console.error("❌ Activation failed:", e);
-        }
     }
 
     function justBrowsing() {
