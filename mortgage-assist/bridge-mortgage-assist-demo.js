@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 1:59:02 AM
+// Generated: 3/16/2026, 2:18:50 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T08:59:02.212Z"
+    "updatedAt": "2026-03-16T09:18:50.213Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -201,57 +201,47 @@
     function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
-        // Generate userId for this session
-        const userId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-        
-        // 1. NUKE THE SPLASH WIDGET
+        // 1. Try to pre-warm audio
+        try {
+            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
+                window.mainWidget.micOn();
+            }
+        } catch(e) { console.warn("Audio pre-check:", e); }
+
+        // 2. NUKE THE SPLASH WIDGET
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
-            splashWidget.innerHTML = ''; 
+            splashWidget.innerHTML = '';
             if (splashWidget.parentNode) {
-                splashWidget.parentNode.removeChild(splashWidget); 
+                splashWidget.parentNode.removeChild(splashWidget);
             }
         }
 
-        // 2. Remove the overlay
+        // 3. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
-        // 3. CREATE MAIN WIDGET WITH UI: FALSE (to prevent text)
+        // 4. CREATE MAIN WIDGET (Fast Transition)
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
-                // CRITICAL: Create widget with ui: false to prevent text messages
-                window.mainWidget = document.createElement('lemon-slice-widget');
-                window.mainWidget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
-                window.mainWidget.setAttribute('user-id', userId);
-                window.mainWidget.setAttribute('user-name', 'Mortgage Assist Demo');
-                window.mainWidget.setAttribute('ui', 'false'); // THIS PREVENTS TEXT!
-                window.mainWidget.style.position = 'fixed';
-                window.mainWidget.style.bottom = '80px';
-                window.mainWidget.style.right = '20px';
-                window.mainWidget.style.zIndex = '999999';
-                window.mainWidget.style.width = '400px';
-                window.mainWidget.style.height = '600px';
-                window.mainWidget.style.border = 'none';
-                window.mainWidget.style.borderRadius = '10px';
-                window.mainWidget.style.boxShadow = '0 5px 25px rgba(0,0,0,0.2)';
+                window.mainWidget = createMainWidget();
+                // CRITICAL: Set ui="false" to prevent text messages
+                window.mainWidget.setAttribute('ui', 'false');
                 document.body.appendChild(window.mainWidget);
             }
             
-            // Set to active state first
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // Small delay then trigger mic (preserves user gesture)
+            // 5. Turn on mic with proper async handling
             setTimeout(async () => {
-                console.log("🎤 Attempting to turn on microphone...");
+                console.log("🎤 Finalizing audio state...");
                 try {
                     if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                        // This preserves the user gesture from the button click
                         await window.mainWidget.micOn();
-                        console.log("✅ Microphone activated successfully");
+                        console.log("✅ Microphone activated");
                         
-                        // Send welcome message (audio only, no text due to ui:false)
+                        // Send welcome message (audio only due to ui:false)
                         setTimeout(() => {
                             if (window.mainWidget && typeof window.mainWidget.sendMessage === 'function') {
                                 window.mainWidget.sendMessage("Hi! I'm Tess. How can I help you today?");
@@ -259,24 +249,12 @@
                         }, 1000);
                     }
                 } catch (e) {
-                    console.error("❌ Failed to activate microphone:", e);
-                    
-                    // Retry once
-                    setTimeout(async () => {
-                        try {
-                            if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                                await window.mainWidget.micOn();
-                                console.log("✅ Microphone activated on retry");
-                            }
-                        } catch (retryError) {
-                            console.warn("⚠️ Could not activate microphone automatically");
-                            // Show mic button as fallback
-                        }
-                    }, 1000);
+                    console.error("❌ Mic activation failed:", e);
                 }
             }, 800);
         }, 100);
     }
+
     function justBrowsing() {
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
