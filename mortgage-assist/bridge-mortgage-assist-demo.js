@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/15/2026, 9:20:48 PM
+// Generated: 3/15/2026, 11:00:38 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.3 - SINGLE WIDGET FIX (COMPLETE)
 
@@ -10,7 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
-    "agentId": "",
+    "agentId": "agent_7b0776ef6b855de5",
     "widgetId": "",
     "apiKey": "",
     "environment": "production",
@@ -62,53 +62,12 @@
             "action": "showBestMatch",
             "images": [
                 {
-                    "name": "Botemia Intro",
-                    "url": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Smart%20Screens%20Demo/botemia-intro.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTbWFydCBTY3JlZW5zIERlbW8vYm90ZW1pYS1pbnRyby5qcGciLCJpYXQiOjE3NzEyNTk2NjgsImV4cCI6MTgwMjc5NTY2OH0.KSQa5TdyL0ZV1sfTEFFzlhom-8WSFlieQtp5crmo6UM",
-                    "caption": "",
-                    "link": "",
-                    "triggerMatch": [],
-                    "imageSize": "400px",
-                    "bgColor": "white",
-                    "backdropOpacity": 0.5,
-                    "showTitle": true,
-                    "borderColor": "#f8c400"
-                },
-                {
                     "name": "Tess Intro",
-                    "url": "blob:https://mobilewise.netlify.app/908a1ab8-60ef-4134-a6ff-10c1346ad376",
+                    "url": "blob:https://mobilewise.netlify.app/22400717-b033-4eaf-80ab-4b35fe5e503a",
                     "caption": "",
                     "link": "",
                     "triggerMatch": [
-                        "Hi I'm Tess",
-                        "how can I help you today?"
-                    ],
-                    "imageSize": "400px",
-                    "bgColor": "white",
-                    "backdropOpacity": 0.5,
-                    "showTitle": true,
-                    "borderColor": "#f8c400"
-                },
-                {
-                    "name": "Tess intro screen",
-                    "url": "blob:https://mobilewise.netlify.app/a6aa03d6-7d3d-489b-a343-5ce6bddab744",
-                    "caption": "",
-                    "link": "",
-                    "triggerMatch": [
-                        "Hi my name is Tess how may I help you?"
-                    ],
-                    "imageSize": "400px",
-                    "bgColor": "white",
-                    "backdropOpacity": 0.5,
-                    "showTitle": true,
-                    "borderColor": "#f8c400"
-                },
-                {
-                    "name": "Test introduction",
-                    "url": "blob:https://mobilewise.netlify.app/24b64215-dca8-4179-baa0-7aa45e6345a0",
-                    "caption": "",
-                    "link": "",
-                    "triggerMatch": [
-                        "Hi I'm Tess how can I help you"
+                        "Hi my name is Tess how can I help you today?"
                     ],
                     "imageSize": "400px",
                     "bgColor": "white",
@@ -124,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T04:20:48.806Z"
+    "updatedAt": "2026-03-16T06:00:38.884Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
