@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 1:07:14 AM
+// Generated: 3/16/2026, 1:09:36 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T08:07:14.832Z"
+    "updatedAt": "2026-03-16T08:09:36.906Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -198,14 +198,7 @@
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
     }
 
-    function activateTess() {
-        console.log("🖱️ Click detected: Capturing user gesture for audio...");
-        try {
-            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
-                window.mainWidget.micOn(); 
-            }
-        } catch(e) { console.warn("Audio pre-check:", e); }
-
+    async function activateTess() {
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = ''; 
@@ -215,24 +208,25 @@
         }
 
         const overlay = document.getElementById('splashOverlay');
-        if (overlay) overlay.remove();
-
-        setTimeout(() => {
-            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
-                window.mainWidget = createMainWidget();
-                document.body.appendChild(window.mainWidget);
+        if (overlay) {
+            overlay.innerHTML = '';
+            if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
             }
-            window.mainWidget.style.display = 'block';
-            window.mainWidget.setAttribute('controlled-widget-state', 'active');
-            setTimeout(() => {
-                console.log("🎤 Finalizing audio state...");
-                try {
-                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                        window.mainWidget.micOn();
-                    }
-                } catch (e) {}
-            }, 500); 
-        }, 100); 
+        }
+
+        if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
+            window.mainWidget = createMainWidget();
+            document.body.appendChild(window.mainWidget);
+        }
+        window.mainWidget.style.display = 'block';
+        try {
+            console.log("🎤 Activating Tess via API...");
+            await window.mainWidget.micOn();
+            console.log("✅ Tess Activated and Unmuted.");
+        } catch (e) {
+            console.error("❌ Activation failed:", e);
+        }
     }
 
     function justBrowsing() {
