@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 9:48:38 AM
+// Generated: 3/16/2026, 1:35:09 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T16:48:38.091Z"
+    "updatedAt": "2026-03-16T20:35:09.275Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -284,6 +284,13 @@
     }
 
     function showPersistentAvatar() {
+        const config = window.BotemiaConfig.modules?.splashScreen;
+        const persistentConfig = config?.persistentButton || {};
+        
+        // Get position from config (NOT localStorage)
+        const position = persistentConfig.position || 'bottom-left';
+        console.log("📌 Avatar position from config:", position);
+        
         // Remove existing avatar button if any
         const existingBtn = document.getElementById('persistent-avatar-btn');
         if (existingBtn) existingBtn.remove();
@@ -292,20 +299,34 @@
         const avatarBtn = document.createElement('div');
         avatarBtn.id = 'persistent-avatar-btn';
         
-        // Get position from splash module settings
-        const avatarPosition = localStorage.getItem('avatarPosition') || 'right';
-        const avatarBottom = localStorage.getItem('avatarBottom') || '20px';
-        const avatarSide = localStorage.getItem('avatarSide') || '20px';
+        // Apply position based on dropdown selection
+        let positionStyles = '';
+        
+        switch(position) {
+            case 'bottom-left':
+                positionStyles = 'bottom: 20px; left: 20px;';
+                break;
+            case 'bottom-right':
+                positionStyles = 'bottom: 20px; right: 20px;';
+                break;
+            case 'middle-left':
+                positionStyles = 'top: 50%; left: 20px; transform: translateY(-50%);';
+                break;
+            case 'middle-right':
+                positionStyles = 'top: 50%; right: 20px; transform: translateY(-50%);';
+                break;
+            default:
+                positionStyles = 'bottom: 20px; left: 20px;';
+        }
         
         // Style the avatar button
         avatarBtn.style.cssText = `
             position: fixed;
-            ${avatarPosition === 'right' ? 'right' : 'left'}: ${avatarSide};
-            bottom: ${avatarBottom};
+            ${positionStyles}
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, ${persistentConfig.gradientTop || '#f8c400'} 0%, ${persistentConfig.gradientBottom || '#d4a000'} 100%);
             cursor: pointer;
             z-index: 999999;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -313,14 +334,16 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.3s ease;
-            animation: slideIn 0.5s ease;
         `;
         
-        // Add avatar image or icon
-        avatarBtn.innerHTML = `
-            <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7--v1.png" 
-                 style="width: 50px; height: 50px; border-radius: 50%;">
-        `;
+        // Add avatar image (use uploaded Tess image if available)
+        const tessImage = config?.tessImage;
+        if (tessImage) {
+            avatarBtn.innerHTML = `<img src="${tessImage}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">`;
+        } else {
+            // Fallback icon
+            avatarBtn.innerHTML = `<i class="fas fa-user-circle" style="font-size: 40px; color: white;"></i>`;
+        }
         
         // Add hover effect
         avatarBtn.addEventListener('mouseenter', () => {
@@ -330,27 +353,15 @@
             avatarBtn.style.transform = 'scale(1)';
         });
         
-        // Click handler - activates Tess the same as "Get AI Help" button
+        // Click handler
         avatarBtn.addEventListener('click', () => {
             console.log("🖱️ Avatar button clicked - activating Tess");
-            avatarBtn.remove(); // Remove avatar button
-            activateTess(); // Same function that Get AI Help uses
+            avatarBtn.remove();
+            activateTess();
         });
         
         document.body.appendChild(avatarBtn);
-        
-        // Add animation keyframes if not exists
-        if (!document.getElementById('avatar-animations')) {
-            const style = document.createElement('style');
-            style.id = 'avatar-animations';
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100px); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
+        console.log(`✅ Avatar button created at ${position}`);
     }
 
     function justBrowsing() {
