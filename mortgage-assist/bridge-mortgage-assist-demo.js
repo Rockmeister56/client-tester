@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 12:17:41 AM
+// Generated: 3/16/2026, 12:30:17 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T07:17:41.677Z"
+    "updatedAt": "2026-03-16T07:30:17.121Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -215,25 +215,25 @@
             }
         }
 
-        if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
-            window.mainWidget = createMainWidget();
-            document.body.appendChild(window.mainWidget);
-        }
-        window.mainWidget.style.display = 'block';
-        window.mainWidget.setAttribute('controlled-widget-state', 'active');
         setTimeout(() => {
-            console.log("🎤 Attempting to turn on microphone...");
-            try {
-                if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                    window.mainWidget.micOn();
-                    console.log("✅ Microphone turned on.");
-                } else {
-                    console.warn("⚠️ Widget ready, but micOn not available yet. Widget is active.");
-                }
-            } catch (e) {
-                console.error("❌ Mic error:", e);
+            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
+                window.mainWidget = createMainWidget();
+                document.body.appendChild(window.mainWidget);
             }
-        }, 1000);
+            window.mainWidget.style.display = 'block';
+            window.mainWidget.setAttribute('controlled-widget-state', 'active');
+            setTimeout(() => {
+                console.log("🎤 Attempting to turn on microphone...");
+                try {
+                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                        window.mainWidget.micOn();
+                        console.log("✅ Microphone turned on.");
+                    } else {
+                        console.warn("⚠️ Widget ready, but micOn not available yet.");
+                    }
+                } catch (e) { console.error("❌ Mic error:", e); }
+            }, 500);
+        }, 500);
     }
 
     function justBrowsing() {
