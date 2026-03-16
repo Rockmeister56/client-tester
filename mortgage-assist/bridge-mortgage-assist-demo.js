@@ -1,7 +1,7 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/15/2026, 11:43:43 PM
+// Generated: 3/16/2026, 12:17:41 AM
 // Client ID: mortgage-assist-demo
-// Version: 5.3 - SINGLE WIDGET FIX (COMPLETE)
+// Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T06:43:43.943Z"
+    "updatedAt": "2026-03-16T07:17:41.677Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -159,7 +159,6 @@
         card.className = 'splash-card';
         card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
 
-        // Build HTML with proper escaping
         let cardHTML = `
             <h1>${config.title || 'Meet Tess'}</h1>
             <h2>${config.subtitle || 'Your Personal AI Smart Guide'}</h2>
@@ -170,7 +169,6 @@
             </div>
         `;
 
-        // Add branding footer if exists
         if (config.branding?.name || config.branding?.logo) {
             cardHTML += `
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 6px; color: rgba(255,255,255,0.4); font-size: 0.75rem;">
@@ -193,32 +191,19 @@
         document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
 
         const primaryBtn = document.getElementById('activateTessBtn');
-        primaryBtn.onmouseover = () => {
-            primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.hoverTop || '#ffd700'}, ${config.primaryButton?.hoverBottom || '#e0b000'})`;
-            primaryBtn.style.transform = 'scale(1.02)';
-        };
-        primaryBtn.onmouseout = () => {
-            primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'})`;
-            primaryBtn.style.transform = 'scale(1)';
-        };
-
+        primaryBtn.onmouseover = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.hoverTop || '#ffd700'}, ${config.primaryButton?.hoverBottom || '#e0b000'})`; primaryBtn.style.transform = 'scale(1.02)'; };
+        primaryBtn.onmouseout = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'})`; primaryBtn.style.transform = 'scale(1)'; };
         const secondaryBtn = document.getElementById('justBrowsingBtn');
-        secondaryBtn.onmouseover = () => {
-            secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`;
-            secondaryBtn.style.transform = 'scale(1.02)';
-        };
-        secondaryBtn.onmouseout = () => {
-            secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`;
-            secondaryBtn.style.transform = 'scale(1)';
-        };
+        secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
+        secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
     }
 
     function activateTess() {
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
-            splashWidget.innerHTML = ''; // Clear contents
+            splashWidget.innerHTML = ''; 
             if (splashWidget.parentNode) {
-                splashWidget.parentNode.removeChild(splashWidget); // Nuclear remove
+                splashWidget.parentNode.removeChild(splashWidget); 
             }
         }
 
@@ -289,5 +274,5 @@
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
     else { initWidget(); }
 
-    console.log('✅ Botemia Bridge v5.3 loaded for', window.BotemiaConfig.name);
+    console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
 })();
