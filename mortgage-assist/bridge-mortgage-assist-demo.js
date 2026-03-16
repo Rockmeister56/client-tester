@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 2:34:56 AM
+// Generated: 3/16/2026, 9:48:38 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T09:34:56.400Z"
+    "updatedAt": "2026-03-16T16:48:38.091Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -283,18 +283,100 @@
         }, 100);
     }
 
+    function showPersistentAvatar() {
+        // Remove existing avatar button if any
+        const existingBtn = document.getElementById('persistent-avatar-btn');
+        if (existingBtn) existingBtn.remove();
+        
+        // Create avatar button
+        const avatarBtn = document.createElement('div');
+        avatarBtn.id = 'persistent-avatar-btn';
+        
+        // Get position from splash module settings
+        const avatarPosition = localStorage.getItem('avatarPosition') || 'right';
+        const avatarBottom = localStorage.getItem('avatarBottom') || '20px';
+        const avatarSide = localStorage.getItem('avatarSide') || '20px';
+        
+        // Style the avatar button
+        avatarBtn.style.cssText = `
+            position: fixed;
+            ${avatarPosition === 'right' ? 'right' : 'left'}: ${avatarSide};
+            bottom: ${avatarBottom};
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            z-index: 999999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            animation: slideIn 0.5s ease;
+        `;
+        
+        // Add avatar image or icon
+        avatarBtn.innerHTML = `
+            <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7--v1.png" 
+                 style="width: 50px; height: 50px; border-radius: 50%;">
+        `;
+        
+        // Add hover effect
+        avatarBtn.addEventListener('mouseenter', () => {
+            avatarBtn.style.transform = 'scale(1.1)';
+        });
+        avatarBtn.addEventListener('mouseleave', () => {
+            avatarBtn.style.transform = 'scale(1)';
+        });
+        
+        // Click handler - activates Tess the same as "Get AI Help" button
+        avatarBtn.addEventListener('click', () => {
+            console.log("🖱️ Avatar button clicked - activating Tess");
+            avatarBtn.remove(); // Remove avatar button
+            activateTess(); // Same function that Get AI Help uses
+        });
+        
+        document.body.appendChild(avatarBtn);
+        
+        // Add animation keyframes if not exists
+        if (!document.getElementById('avatar-animations')) {
+            const style = document.createElement('style');
+            style.id = 'avatar-animations';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
     function justBrowsing() {
+        console.log("👆 Just Browsing clicked - showing persistent avatar");
+        
+        // Remove splash screen elements
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) splashWidget.remove();
 
-        if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
-            window.mainWidget = createMainWidget();
-            document.body.appendChild(window.mainWidget);
+        
+        // Get splash config for persistent button settings
+        const config = window.BotemiaConfig.modules?.splashScreen;
+        if (config?.persistentButton?.enabled) {
+            // Show persistent avatar button
+            showPersistentAvatar();
+        } else {
+            // Fallback to showing main widget directly
+            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
+                window.mainWidget = createMainWidget();
+                document.body.appendChild(window.mainWidget);
+            }
+            window.mainWidget.style.display = 'block';
         }
-        window.mainWidget.style.display = 'block';
     }
 
     window.disableBridgeTriggers = false;
