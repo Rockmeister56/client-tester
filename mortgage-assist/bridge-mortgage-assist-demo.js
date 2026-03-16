@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/16/2026, 12:30:17 AM
+// Generated: 3/16/2026, 12:54:34 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T07:30:17.121Z"
+    "updatedAt": "2026-03-16T07:54:34.082Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -199,6 +199,13 @@
     }
 
     function activateTess() {
+        console.log("🖱️ Click detected: Capturing user gesture for audio...");
+        try {
+            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
+                window.mainWidget.micOn(); 
+            }
+        } catch(e) { console.warn("Audio pre-check:", e); }
+
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = ''; 
@@ -208,12 +215,7 @@
         }
 
         const overlay = document.getElementById('splashOverlay');
-        if (overlay) {
-            overlay.innerHTML = '';
-            if (overlay.parentNode) {
-                overlay.parentNode.removeChild(overlay);
-            }
-        }
+        if (overlay) overlay.remove();
 
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
@@ -223,17 +225,14 @@
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             setTimeout(() => {
-                console.log("🎤 Attempting to turn on microphone...");
+                console.log("🎤 Finalizing audio state...");
                 try {
                     if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
                         window.mainWidget.micOn();
-                        console.log("✅ Microphone turned on.");
-                    } else {
-                        console.warn("⚠️ Widget ready, but micOn not available yet.");
                     }
-                } catch (e) { console.error("❌ Mic error:", e); }
-            }, 500);
-        }, 500);
+                } catch (e) {}
+            }, 500); 
+        }, 100); 
     }
 
     function justBrowsing() {
