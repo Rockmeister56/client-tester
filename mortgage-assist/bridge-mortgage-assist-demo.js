@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/15/2026, 11:00:38 PM
+// Generated: 3/15/2026, 11:28:11 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.3 - SINGLE WIDGET FIX (COMPLETE)
 
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-16T06:00:38.884Z"
+    "updatedAt": "2026-03-16T06:28:11.248Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -134,9 +134,9 @@
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
-        widget.setAttribute('initial-state', 'minimized');
         widget.id = 'main-widget';
         widget.style.display = 'none';
         return widget;
