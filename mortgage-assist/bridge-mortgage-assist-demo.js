@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 12:32:20 PM
+// Generated: 3/17/2026, 12:56:01 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -21,7 +21,7 @@
             "agentId": "agent_7b0776ef6b855de5",
             "title": "Meet Tess",
             "subtitle": "Your Personal AI Smart Guide",
-            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3Mzc3NTkxNywiZXhwIjoxODA1MzExOTE3fQ.lkEjdUhTCgj62ZaGi-9POwTkZT3L7paB_G17EnSBJus",
+            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3Mzc3NzMzMCwiZXhwIjoxODA1MzEzMzMwfQ.x9ZwR2dUeNwCaMEVSEXkhuMjBm9aGGgKfy3p1gfj7QE",
             "tessVideoFit": "cover",
             "gradientCenter": "#1e4a8a",
             "gradientOuter": "#0a1a2f",
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-17T19:32:20.062Z"
+    "updatedAt": "2026-03-17T19:56:01.550Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -100,10 +100,11 @@
         }
         .splash-avatar-container lemon-slice-widget {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100% !important;
-            height: 100% !important;
+            top: 50%;
+            left: 45%;  /* Changed from 50% to 45% to shift left */
+            transform: translate(-50%, -50%);
+            width: 280px !important;
+            height: 400px !important;
             max-width: none !important;
             max-height: none !important;
             border-radius: 18px;
@@ -175,9 +176,9 @@
 
         if (config.branding?.name || config.branding?.logo) {
             cardHTML += `
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 6px; color: rgba(255,255,255,0.4); font-size: 0.75rem;">
-                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 18px; opacity: 0.6;">' : ''}
-                    ${config.branding?.name ? '<span>' + config.branding.name + '</span>' : ''}
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 12px; color: rgba(255,255,255,0.4); font-size: 1rem;">
+                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 40px; width: auto; opacity: 0.8;">' : ''}
+                    ${config.branding?.name ? '<span style="font-size: 20px;">' + config.branding.name + '</span>' : ''}
                 </div>
             `;
         }
