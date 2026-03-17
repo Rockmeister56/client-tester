@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 12:56:01 PM
+// Generated: 3/17/2026, 1:25:35 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -21,7 +21,7 @@
             "agentId": "agent_7b0776ef6b855de5",
             "title": "Meet Tess",
             "subtitle": "Your Personal AI Smart Guide",
-            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3Mzc3NzMzMCwiZXhwIjoxODA1MzEzMzMwfQ.x9ZwR2dUeNwCaMEVSEXkhuMjBm9aGGgKfy3p1gfj7QE",
+            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3Mzc3OTA5MywiZXhwIjoxODA1MzE1MDkzfQ.yEAkmgi1mrt9DZsbuZfTNa2v1sod59HTjdtktslK5Aw",
             "tessVideoFit": "cover",
             "gradientCenter": "#1e4a8a",
             "gradientOuter": "#0a1a2f",
@@ -43,7 +43,7 @@
             },
             "persistentButton": {
                 "enabled": true,
-                "position": "bottom-left",
+                "position": "middle-right",
                 "action": "activate-tess",
                 "gradientTop": "#f8c400",
                 "gradientBottom": "#d4a000"
@@ -83,7 +83,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-17T19:56:01.550Z"
+    "updatedAt": "2026-03-17T20:25:35.752Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
@@ -165,7 +165,7 @@
         card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
 
         let cardHTML = `
-            <h1>${config.title || 'Meet Tess'}</h1>
+            <h1>✨ ${config.title || 'Meet Tess'} 🤗</h1>
             <h2>${config.subtitle || 'Your Personal AI Smart Guide'}</h2>
             <div class="splash-avatar-container" id="splashAvatarContainer"></div>
             <div class="button-group">
