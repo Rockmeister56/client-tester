@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 1:51:17 AM
+// Generated: 3/17/2026, 12:32:20 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -21,7 +21,8 @@
             "agentId": "agent_7b0776ef6b855de5",
             "title": "Meet Tess",
             "subtitle": "Your Personal AI Smart Guide",
-            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzczNTM0MywiZXhwIjoxODA1MjcxMzQzfQ.k_NZ1_1yFlV4NPHcxS6mDtkblGmBw1iqHOkcS4iYtfs",
+            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3Mzc3NTkxNywiZXhwIjoxODA1MzExOTE3fQ.lkEjdUhTCgj62ZaGi-9POwTkZT3L7paB_G17EnSBJus",
+            "tessVideoFit": "cover",
             "gradientCenter": "#1e4a8a",
             "gradientOuter": "#0a1a2f",
             "primaryButton": {
@@ -49,7 +50,7 @@
             },
             "branding": {
                 "name": "",
-                "logo": "data:image/png;base64,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"
+                "logo": "data:image/png;base64,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"
             }
         },
         "testimonial": {
@@ -63,7 +64,6 @@
             "images": [
                 {
                     "name": "Tess Intro",
-                    "url": "blob:https://mobilewise.netlify.app/22400717-b033-4eaf-80ab-4b35fe5e503a",
                     "caption": "",
                     "link": "",
                     "triggerMatch": [
@@ -83,14 +83,14 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-17T08:51:17.391Z"
+    "updatedAt": "2026-03-17T19:32:20.062Z"
 };
 
     // ===== ADD SPLASH SCREEN CSS =====
     const style = document.createElement('style');
     style.textContent = `
         .splash-avatar-container {
-            width: 260px; height: 380px; margin: 0 auto 25px;
+            width: 210px; height: 330px; margin: 0 auto 25px;
             border-radius: 20px; overflow: hidden;
             background: #000;
             box-shadow: 0 20px 30px rgba(0,0,0,0.5);
@@ -99,10 +99,14 @@
             position: relative;
         }
         .splash-avatar-container lemon-slice-widget {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 280px !important; height: 400px !important;
-            max-width: none !important; max-height: none !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            max-height: none !important;
+            border-radius: 18px;
         }
         .splash-card {
             background: radial-gradient(circle at center, #1e4a8a 0%, #0a1a2f 80%);
@@ -287,7 +291,7 @@
         const config = window.BotemiaConfig.modules?.splashScreen;
         const persistentConfig = config?.persistentButton || {};
         
-        // Get position from config (NOT localStorage)
+        // Get position from config
         const position = persistentConfig.position || 'bottom-left';
         console.log("📌 Avatar position from config:", position);
         
@@ -319,24 +323,32 @@
                 positionStyles = 'bottom: 20px; left: 20px;';
         }
         
-        // Style the avatar button
+        // Style the avatar button - with !important to override page CSS
         avatarBtn.style.cssText = `
-            position: fixed;
-            ${positionStyles}
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, ${persistentConfig.gradientTop || '#f8c400'} 0%, ${persistentConfig.gradientBottom || '#d4a000'} 100%);
-            cursor: pointer;
-            z-index: 999999;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            transition: transform 0.3s ease;
+            position: fixed !important;
+            ${positionStyles.replace(/;/g, ' !important;')}
+            width: 180px !important;
+            height: 180px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, ${persistentConfig.gradientTop || '#f8c400'} 0%, ${persistentConfig.gradientBottom || '#d4a000'} 100%) !important;
+            cursor: pointer !important;
+            z-index: 999999 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            transition: transform 0.3s ease !important;
         `;
+        
+        // DEBUG: Check if styles were applied
+        console.log("Applied position styles:", {
+            bottom: avatarBtn.style.bottom,
+            left: avatarBtn.style.left,
+            top: avatarBtn.style.top,
+            right: avatarBtn.style.right,
+            position: avatarBtn.style.position
+        });
         
         // Check for video URL first
         const tessVideoUrl = config?.tessVideoUrl;
