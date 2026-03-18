@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 8:50:15 PM
+// Generated: 3/17/2026, 9:19:04 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -10,7 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
-    "agentId": "agent_7b0776ef6b855de5",
+    "agentId": "",
     "widgetId": "",
     "apiKey": "",
     "environment": "production",
@@ -18,7 +18,7 @@
     "modules": {
         "splashScreen": {
             "enabled": true,
-            "agentId": "agent_7b0776ef6b855de5",
+            "agentId": "",
             "title": "Meet Tess",
             "subtitle": "Your Personal AI Smart Guide",
             "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ",
@@ -44,7 +44,7 @@
             },
             "persistentButton": {
                 "enabled": true,
-                "position": "bottom-left",
+                "position": "middle-right",
                 "action": "activate-tess",
                 "gradientTop": "#f8c400",
                 "gradientBottom": "#d4a000"
@@ -84,13 +84,13 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-18T03:50:15.688Z"
+    "updatedAt": "2026-03-18T04:19:04.130Z"
 };
 
     const style = document.createElement('style');
     style.textContent = `
         .splash-avatar-container {
-            width: 264px; height: 384px; margin: 0 auto 25px;
+            width: 290px; height: 384px; margin: 0 auto 25px;
             border-radius: 20px; overflow: hidden;
             background: #000;
             box-shadow: 0 20px 30px rgba(0,0,0,0.5);
@@ -169,7 +169,7 @@
 
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        widget.setAttribute('agent-id', '');
         widget.setAttribute('inline', '');
         widget.setAttribute('custom-minimized-width', '280');
         widget.setAttribute('custom-minimized-height', '400');
@@ -181,7 +181,7 @@
 
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        widget.setAttribute('agent-id', '');
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
@@ -210,6 +210,7 @@
         let cardHTML = `
             <h1>✨ ${config.title || 'Meet Tess'} 🤗</h1>
             <h2>${config.subtitle || 'Your Personal AI Smart Guide'}</h2>
+            <div style="color: #f8c400; font-size: 0.9rem; margin-top: -10px; margin-bottom: 10px; font-style: italic;">Your personal guide for...</div>
             <div class="splash-avatar-container" id="splashAvatarContainer"></div>
             <div class="button-group">
                 <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
@@ -220,7 +221,7 @@
         if (config.branding?.name || config.branding?.logo) {
             cardHTML += `
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 12px; color: rgba(255,255,255,0.4); font-size: 1rem;">
-                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 40px; width: auto; opacity: 0.8;">' : ''}
+                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 46px; width: auto; opacity: 0.8;">' : ''}
                     ${config.branding?.name ? '<span style="font-size: 20px;">' + config.branding.name + '</span>' : ''}
                 </div>
             `;
