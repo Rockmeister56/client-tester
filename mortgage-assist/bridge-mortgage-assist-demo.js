@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 11:28:25 PM
+// Generated: 3/17/2026, 11:48:28 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -62,21 +62,7 @@
         },
         "smartScreen": {
             "action": "showBestMatch",
-            "images": [
-                {
-                    "name": "Tess Intro",
-                    "caption": "",
-                    "link": "",
-                    "triggerMatch": [
-                        "Hi my name is Tess how can I help you today?"
-                    ],
-                    "imageSize": "400px",
-                    "bgColor": "white",
-                    "backdropOpacity": 0.5,
-                    "showTitle": true,
-                    "borderColor": "#f8c400"
-                }
-            ]
+            "images": []
         },
         "websiteInfo": {
             "triggers": [],
@@ -84,7 +70,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-18T06:28:25.868Z"
+    "updatedAt": "2026-03-18T06:48:28.724Z"
 };
 
     const style = document.createElement('style');
@@ -111,7 +97,7 @@
         }
         .splash-card {
             background: radial-gradient(circle at center, #1e4a8a 0%, #0a1a2f 80%);
-            border-radius: 48px; padding: 40px 30px;
+            border-radius: 48px; padding: 20px 30px 40px 30px;
             max-width: 475px; width: 90%; text-align: center;
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
             animation: slideUp 0.4s ease;
@@ -219,7 +205,7 @@
 
         // Add white footer area with logo
         cardHTML += `
-            <div style="margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 20px; margin-left: -30px; margin-right: -30px; margin-bottom: -40px; width: calc(100% + 60px);">
+            <div style="margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 20px; width: 100%; box-sizing: border-box;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
                     ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
                     ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
