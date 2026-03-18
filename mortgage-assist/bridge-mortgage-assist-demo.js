@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 11:18:21 PM
+// Generated: 3/17/2026, 11:28:25 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -84,7 +84,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-18T06:18:21.774Z"
+    "updatedAt": "2026-03-18T06:28:25.868Z"
 };
 
     const style = document.createElement('style');
@@ -112,7 +112,7 @@
         .splash-card {
             background: radial-gradient(circle at center, #1e4a8a 0%, #0a1a2f 80%);
             border-radius: 48px; padding: 40px 30px;
-            max-width: 47500px; width: 90%; text-align: center;
+            max-width: 475px; width: 90%; text-align: center;
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
             animation: slideUp 0.4s ease;
         }
@@ -209,7 +209,7 @@
 
         let cardHTML = `
             <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
-            <h2>${config.subtitle || 'Your Personal AI Smart Guide'}</h2>
+            <h2>${config.subtitle || 'Your Personal AI Web Guide'}</h2>
             <div class="splash-avatar-container" id="splashAvatarContainer"></div>
             <div class="button-group">
                 <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
