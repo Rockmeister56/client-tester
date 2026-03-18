@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 9:44:19 PM
+// Generated: 3/17/2026, 11:18:21 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -84,13 +84,13 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-18T04:44:19.364Z"
+    "updatedAt": "2026-03-18T06:18:21.774Z"
 };
 
     const style = document.createElement('style');
     style.textContent = `
         .splash-avatar-container {
-            width: 235px; height: 384px; margin: 0 auto 25px;
+            width: 220px; height: 384px; margin: 0 auto 25px;
             border-radius: 20px; overflow: hidden;
             background: #000;
             box-shadow: 0 20px 30px rgba(0,0,0,0.5);
@@ -112,7 +112,7 @@
         .splash-card {
             background: radial-gradient(circle at center, #1e4a8a 0%, #0a1a2f 80%);
             border-radius: 48px; padding: 40px 30px;
-            max-width: 600px; width: 90%; text-align: center;
+            max-width: 47500px; width: 90%; text-align: center;
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
             animation: slideUp 0.4s ease;
         }
@@ -217,15 +217,15 @@
             </div>
         `;
 
-        if (config.branding?.name || config.branding?.logo) {
-            cardHTML += `
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 12px; color: rgba(255,255,255,0.4); font-size: 1rem;">
-                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 46px; width: auto; opacity: 0.8;">' : ''}
-                    ${config.branding?.name ? '<span style="font-size: 20px;">' + config.branding.name + '</span>' : ''}
+        // Add white footer area with logo
+        cardHTML += `
+            <div style="margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 20px; margin-left: -30px; margin-right: -30px; margin-bottom: -40px; width: calc(100% + 60px);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
+                    ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
                 </div>
-            `;
-        }
-
+            </div>
+        `;
         card.innerHTML = cardHTML;
 
         overlay.appendChild(card);
