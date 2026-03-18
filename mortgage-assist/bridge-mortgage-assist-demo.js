@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 9:33:28 PM
+// Generated: 3/17/2026, 9:44:19 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -84,13 +84,13 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-18T04:33:28.698Z"
+    "updatedAt": "2026-03-18T04:44:19.364Z"
 };
 
     const style = document.createElement('style');
     style.textContent = `
         .splash-avatar-container {
-            width: 250px; height: 384px; margin: 0 auto 25px;
+            width: 235px; height: 384px; margin: 0 auto 25px;
             border-radius: 20px; overflow: hidden;
             background: #000;
             box-shadow: 0 20px 30px rgba(0,0,0,0.5);
@@ -208,7 +208,7 @@
         card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
 
         let cardHTML = `
-            <h1>✨ ${config.title || 'Meet Tess'} 🤗</h1>
+            <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
             <h2>${config.subtitle || 'Your Personal AI Smart Guide'}</h2>
             <div class="splash-avatar-container" id="splashAvatarContainer"></div>
             <div class="button-group">
