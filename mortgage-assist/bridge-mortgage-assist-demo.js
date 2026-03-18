@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 11:48:28 PM
+// Generated: 3/17/2026, 11:59:34 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -70,7 +70,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-18T06:48:28.724Z"
+    "updatedAt": "2026-03-18T06:59:34.841Z"
 };
 
     const style = document.createElement('style');
@@ -205,8 +205,8 @@
 
         // Add white footer area with logo
         cardHTML += `
-            <div style="margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 20px; width: 100%; box-sizing: border-box;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <div style="margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; width: calc(100% + 60px); margin-left: -30px; margin-right: -30px; margin-bottom: -40px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; padding: 0 30px;">
                     ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
                     ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
                 </div>
