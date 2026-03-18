@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 1:25:35 PM
+// Generated: 3/17/2026, 8:50:15 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -21,8 +21,9 @@
             "agentId": "agent_7b0776ef6b855de5",
             "title": "Meet Tess",
             "subtitle": "Your Personal AI Smart Guide",
-            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3Mzc3OTA5MywiZXhwIjoxODA1MzE1MDkzfQ.yEAkmgi1mrt9DZsbuZfTNa2v1sod59HTjdtktslK5Aw",
+            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ",
             "tessVideoFit": "cover",
+            "tickerKeywords": "Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans",
             "gradientCenter": "#1e4a8a",
             "gradientOuter": "#0a1a2f",
             "primaryButton": {
@@ -43,7 +44,7 @@
             },
             "persistentButton": {
                 "enabled": true,
-                "position": "middle-right",
+                "position": "bottom-left",
                 "action": "activate-tess",
                 "gradientTop": "#f8c400",
                 "gradientBottom": "#d4a000"
@@ -83,14 +84,13 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-03-17T20:25:35.752Z"
+    "updatedAt": "2026-03-18T03:50:15.688Z"
 };
 
-    // ===== ADD SPLASH SCREEN CSS =====
     const style = document.createElement('style');
     style.textContent = `
         .splash-avatar-container {
-            width: 210px; height: 330px; margin: 0 auto 25px;
+            width: 264px; height: 384px; margin: 0 auto 25px;
             border-radius: 20px; overflow: hidden;
             background: #000;
             box-shadow: 0 20px 30px rgba(0,0,0,0.5);
@@ -101,7 +101,7 @@
         .splash-avatar-container lemon-slice-widget {
             position: absolute;
             top: 50%;
-            left: 45%;  /* Changed from 50% to 45% to shift left */
+            left: 45%;
             transform: translate(-50%, -50%);
             width: 280px !important;
             height: 400px !important;
@@ -121,6 +121,49 @@
         .button-group { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
         .primary-btn, .secondary-btn { padding: 12px 20px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 200px; border: none; transition: all 0.2s; }
         .primary-btn:hover, .secondary-btn:hover { transform: scale(1.02); }
+        .ticker-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(248,196,0,0.2), rgba(0,0,0,0.9));
+            backdrop-filter: blur(2px);
+            color: #f8c400;
+            padding: 6px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            z-index: 10;
+            pointer-events: none;
+            border-top: 2px solid #f8c400;
+            border-bottom: none;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+        .ticker-content {
+            display: inline-block;
+            animation: ticker 25s linear infinite;
+            padding-left: 100%;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 25px;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .ticker-item i {
+            margin-right: 8px;
+            color: #f8c400;
+            font-size: 12px;
+            filter: drop-shadow(0 0 3px rgba(248,196,0,0.5));
+        }
     `;
     document.head.appendChild(style);
 
@@ -192,6 +235,32 @@
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
 
+        // Add ticker tape if keywords exist
+        const tickerKeywords = config.tickerKeywords;
+        if (tickerKeywords) {
+            const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
+            
+            if (keywords.length > 0) {
+                const tickerContainer = document.createElement('div');
+                tickerContainer.className = 'ticker-container';
+                
+                const tickerContent = document.createElement('div');
+                tickerContent.className = 'ticker-content';
+                
+                // Duplicate keywords for seamless looping
+                const allKeywords = [...keywords, ...keywords];
+                
+                allKeywords.forEach(keyword => {
+                    const span = document.createElement('span');
+                    span.className = 'ticker-item';
+                    span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
+                    tickerContent.appendChild(span);
+                });
+                
+                tickerContainer.appendChild(tickerContent);
+                container.appendChild(tickerContainer);
+            }
+        }
         document.getElementById('activateTessBtn').addEventListener('click', activateTess);
         document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
 
