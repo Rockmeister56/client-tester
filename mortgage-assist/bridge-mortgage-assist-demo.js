@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/18/2026, 11:15:41 PM
+// Generated: 3/18/2026, 11:23:06 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -77,7 +77,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-19T06:15:41.448Z"
+    "updatedAt": "2026-03-19T06:23:06.546Z"
 };
 
     const style = document.createElement('style');
@@ -539,4 +539,72 @@
     else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
+    // ===== PRE-QUALIFICATION CONTROLLER =====
+    class PreQualificationController {
+        constructor() {
+            this.isActive = false;
+            this.currentStep = 0;
+            this.script = null;
+            this.answers = {};
+            this.setupMessageListener();
+        }
+
+        setupMessageListener() {
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'START_PRE_QUAL') {
+                    console.log('🎯 Starting pre-qualification interview');
+                    this.loadAndStartInterview();
+                }
+                if (event.data.type === 'TRIGGER_DETECTED' && event.data.phrase === 'I want to get pre-qualified') {
+                    this.loadAndStartInterview();
+                }
+            });
+        }
+
+        async loadAndStartInterview() {
+            try {
+                const response = await fetch(
+                    'https://fcgbusobfdwnpoqyuzoe.supabase.co/rest/v1/knowledge_base?select=answer_template&category=eq.mortgage',
+                    {
+                        headers: {
+                            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk'
+                        }
+                    }
+                );
+                const data = await response.json();
+                if (data && data[0]) {
+                    this.script = data[0].answer_template;
+                    this.startInterview();
+                }
+            } catch (error) {
+                console.error('Failed to load script:', error);
+            }
+        }
+
+        async startInterview() {
+            if (!this.script || !this.script.steps) return;
+            this.isActive = true;
+            this.currentStep = 0;
+            const tessSteps = this.script.steps.filter(step => step.speaker === 'tess');
+            for (let step of tessSteps) {
+                if (!this.isActive) break;
+                if (window.mainWidget && typeof window.mainWidget.sendMessage === 'function') {
+                    await window.mainWidget.sendMessage(step.text);
+                }
+                await this.waitForResponse(step);
+            }
+            this.isActive = false;
+        }
+
+        waitForResponse(step) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('Response received for:', step.field);
+                    resolve();
+                }, 3000);
+            });
+        }
+    }
+
+    window.preQualController = new PreQualificationController();
 })();
