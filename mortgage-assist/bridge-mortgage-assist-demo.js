@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/17/2026, 11:59:34 PM
+// Generated: 3/18/2026, 11:15:41 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -20,7 +20,7 @@
             "enabled": true,
             "agentId": "agent_7b0776ef6b855de5",
             "title": "Meet Tess",
-            "subtitle": "Your Personal AI Web Guide",
+            "subtitle": "Your Personal AI Smart Guide",
             "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ",
             "tessVideoFit": "cover",
             "tickerKeywords": "Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans",
@@ -68,9 +68,16 @@
             "triggers": [],
             "infoType": "navigation",
             "action": "showSmartNavigation"
+        },
+        "preQualification": {
+            "enabled": true,
+            "knowledgeBaseScript": "mortgage",
+            "triggerPhrase": "I want to get pre-qualified",
+            "emailSubject": "New Lead: {{name}}",
+            "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-18T06:59:34.841Z"
+    "updatedAt": "2026-03-19T06:15:41.448Z"
 };
 
     const style = document.createElement('style');
@@ -203,10 +210,10 @@
             </div>
         `;
 
-        // Add white footer area with logo
+        // Add white footer area with logo - EXACT DIMENSIONS
         cardHTML += `
-            <div style="margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; width: calc(100% + 60px); margin-left: -30px; margin-right: -30px; margin-bottom: -40px;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; padding: 0 30px;">
+            <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
                     ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
                     ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
                 </div>
