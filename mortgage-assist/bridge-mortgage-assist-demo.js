@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/18/2026, 11:34:19 PM
+// Generated: 3/19/2026, 8:12:50 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -10,6 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
+    "websiteUrl": "https://client-tester.netlify.app/mortgage-assist/",
     "agentId": "agent_7b0776ef6b855de5",
     "widgetId": "",
     "apiKey": "",
@@ -77,7 +78,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-19T06:34:19.172Z"
+    "updatedAt": "2026-03-19T15:12:50.029Z"
 };
 
     const style = document.createElement('style');
@@ -595,13 +596,33 @@
             this.isActive = true;
             this.currentStep = 0;
             const tessSteps = this.script.steps.filter(step => step.speaker === 'tess');
+            
+            // Get the widget
+            const widget = document.querySelector('lemon-slice-widget');
+            if (!widget) {
+                console.error('No widget found');
+                return;
+            }
+
+            // Make sure widget is active
+            widget.setAttribute('controlled-widget-state', 'active');
+            
+            // Small delay for widget to wake up
+            await new Promise(r => setTimeout(r, 500));
+
             for (let step of tessSteps) {
                 if (!this.isActive) break;
-                if (window.mainWidget && typeof window.mainWidget.sendMessage === 'function') {
-                    await window.mainWidget.sendMessage(step.text);
+                
+                console.log('Sending:', step.text);
+                try {
+                    await widget.sendMessage(step.text);
+                } catch (e) {
+                    console.error('Failed to send:', e);
                 }
+                
                 await this.waitForResponse(step);
             }
+            
             this.isActive = false;
         }
 
