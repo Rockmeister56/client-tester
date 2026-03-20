@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/19/2026, 9:35:22 AM
+// Generated: 3/19/2026, 5:36:08 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -78,7 +78,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-19T16:35:22.547Z"
+    "updatedAt": "2026-03-20T00:36:08.305Z"
 };
 
     const style = document.createElement('style');
@@ -661,6 +661,71 @@
     // Call it when bridge loads
     setTimeout(announceToTCS, 2000);
 
+    // ===== TCS MESSAGE HANDLER =====
+    window.addEventListener('message', function(event) {
+        // Log for debugging
+        console.log('📨 Client received message:', event.data?.type);
+        
+        // 1. HANDSHAKE: TCS says "I'm Ready"
+        if (event.data?.type === 'TCS_READY') {
+            console.log('✅ TCS Ready signal received! Responding...');
+            
+            // Respond back so TCS knows we are here
+            if (event.source) {
+                event.source.postMessage({
+                    type: 'CLIENT_INFO',
+                    clientId: window.BotemiaConfig.id,
+                    name: window.BotemiaConfig.name,
+                    url: window.location.href,
+                    timestamp: Date.now(),
+                    status: 'ready'
+                }, '*');
+                
+                console.log('📤 Sent CLIENT_INFO to TCS');
+            }
+        }
+        
+        // 2. COMMANDS: Handle triggers from TCS
+        if (event.data?.type === 'TCS_COMMAND') {
+            console.log('🎯 Command received:', event.data.command);
+            
+            switch(event.data.command) {
+                case 'START_PRE_QUAL':
+                    if (window.preQualController) {
+                        window.preQualController.loadAndStartInterview();
+                    }
+                    break;
+                    
+                case 'SHOW_TESTIMONIAL':
+                    console.log('Show testimonial:', event.data.data);
+                    // Add your testimonial display logic here
+                    break;
+                    
+                case 'SHOW_VIDEO':
+                    console.log('Show video:', event.data.data);
+                    // Add your video display logic here
+                    break;
+                    
+                case 'SHOW_SMART_SCREEN':
+                    console.log('Show smart screen:', event.data.data);
+                    // Add your smart screen logic here
+                    break;
+            }
+        }
+        
+        // 3. PING: Health check from TCS
+        if (event.data?.type === 'PING') {
+            if (event.source) {
+                event.source.postMessage({
+                    type: 'PONG',
+                    clientId: window.BotemiaConfig.id,
+                    timestamp: Date.now()
+                }, '*');
+            }
+        }
+    });
+
+    console.log('✅ TCS message listener installed');
     window.preQualController = new PreQualificationController();
 
 })();
