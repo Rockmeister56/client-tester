@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/19/2026, 5:36:08 PM
+// Generated: 3/20/2026, 10:32:44 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -17,6 +17,11 @@
     "environment": "production",
     "industry": "mortgage",
     "modules": {
+        "emailConfig": {
+            "loanOfficerEmail": "mobilewise.ai@gmail.com",
+            "ccEmail": "",
+            "emailSubject": "New Lead: {{name}}"
+        },
         "splashScreen": {
             "enabled": true,
             "agentId": "agent_7b0776ef6b855de5",
@@ -78,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-20T00:36:08.305Z"
+    "updatedAt": "2026-03-20T17:32:44.590Z"
 };
 
     const style = document.createElement('style');
@@ -540,12 +545,44 @@
     else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
+
     // ===== PRE-QUALIFICATION CONTROLLER =====
+   // WITH THIS (the full 16-question script):
+const PRE_QUAL_SCRIPT = {
+    "steps": [
+        {"speaker": "tess", "text": "Great! Let's get you pre-qualified. First, what's your full name?", "field": "firstName"},
+        {"speaker": "user", "text": "[User responds with name]"},
+        {"speaker": "tess", "text": "And what's your last name?", "field": "lastName"},
+        {"speaker": "user", "text": "[User responds with last name]"},
+        {"speaker": "tess", "text": "What's the best email address to send your pre-qualification letter to?", "field": "email"},
+        {"speaker": "user", "text": "[User responds with email]"},
+        {"speaker": "tess", "text": "And your phone number?", "field": "phone"},
+        {"speaker": "user", "text": "[User responds with phone]"},
+        {"speaker": "tess", "text": "Are you employed, self-employed, retired, or other?", "field": "employmentStatus", "options": ["Employed", "Self-Employed", "Retired", "Other"]},
+        {"speaker": "user", "text": "[User selects status]"},
+        {"speaker": "tess", "text": "Approximately what's your annual household income?", "field": "annualIncome"},
+        {"speaker": "user", "text": "[User provides amount]"},
+        {"speaker": "tess", "text": "Now let's talk about credit. How would you describe your credit?", "field": "creditScore", "options": ["Excellent (740+)", "Good (700-739)", "Fair (620-699)", "Challenged (below 620)"]},
+        {"speaker": "user", "text": "[User selects range]"},
+        {"speaker": "tess", "text": "How much are you planning to put down?", "field": "downPayment", "options": ["Less than 3%", "3-5%", "5-10%", "10-20%", "20%+"]},
+        {"speaker": "user", "text": "[User selects range]"},
+        {"speaker": "tess", "text": "Are you looking to purchase a home or refinance?", "field": "loanPurpose", "options": ["Purchase a home", "Refinance current home"]},
+        {"speaker": "user", "text": "[User selects option]"},
+        {"speaker": "tess", "text": "What type of property?", "field": "propertyType", "options": ["Single family home", "Condominium", "Townhouse"]},
+        {"speaker": "user", "text": "[User selects type]"},
+        {"speaker": "tess", "text": "Are you a first-time homebuyer?", "field": "firstTimeBuyer", "options": ["Yes", "No"]},
+        {"speaker": "user", "text": "[User selects yes/no]"},
+        {"speaker": "tess", "text": "What's your timeline?", "field": "timeline", "options": ["Already have an offer", "Looking now - next 30 days", "1-3 months", "3-6 months"]},
+        {"speaker": "user", "text": "[User selects timeline]"},
+        {"speaker": "tess", "text": "Perfect! I'll send this to our loan officer. They'll contact you soon!"}
+    ]
+};
+
     class PreQualificationController {
         constructor() {
             this.isActive = false;
             this.currentStep = 0;
-            this.script = null;
+            this.script = PRE_QUAL_SCRIPT; // Embedded directly!
             this.answers = {};
             this.setupMessageListener();
         }
@@ -563,32 +600,13 @@
         }
 
         async loadAndStartInterview() {
-            try {
-                const response = await fetch(
-                    'https://fcgbusobfdwnpoqyuzoe.supabase.co/rest/v1/knowledge_base?select=answer_template&category=eq.mortgage',
-                    {
-                        headers: {
-                            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk'
-                        }
-                    }
-                );
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    const fullScriptEntry = data.find(entry => 
-                        typeof entry.answer_template === 'string' && 
-                        entry.answer_template.trim().startsWith('{')
-                    );
-                    if (fullScriptEntry) {
-                        this.script = JSON.parse(fullScriptEntry.answer_template);
-                        console.log('✅ Full script loaded with ', this.script.steps?.length, ' steps');
-                        this.startInterview();
-                    } else {
-                        console.error('No full script found');
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to load script:', error);
-            }
+            console.log('🎯 Starting pre-qualification with embedded script');
+            
+            // Script is already embedded! No fetch needed.
+            this.script = PRE_QUAL_SCRIPT;
+            
+            console.log(`✅ Loaded ${this.script.steps?.length || 0} steps from embedded script`);
+            this.startInterview();
         }
 
         async startInterview() {
@@ -623,6 +641,9 @@
                 await this.waitForResponse(step);
             }
             
+            // Send email after interview completes
+            await this.sendEmail();
+            
             this.isActive = false;
         }
 
@@ -630,9 +651,52 @@
             return new Promise((resolve) => {
                 setTimeout(() => {
                     console.log('Response received for:', step.field);
+                    // Store answer (you will need to capture actual response)
+                    if (step.field) {
+                        this.answers[step.field] = "User response"; // Replace with actual capture
+                    }
                     resolve();
                 }, 3000);
             });
+        }
+
+            async sendEmail() {
+            console.log("📧 Sending pre-qualification emails...");
+            
+            try {
+                // ===== EMAIL 1: TO LOAN OFFICER (YOU) =====
+                await emailjs.send(
+                    "service_b9bppgb",
+                    "template_uix9cyx", // Template with ALL details
+                    {
+                        to_email: "loans@clientcompany.com",
+                        cc_email: "",
+                        subject: `New Pre-Qual Lead: ${this.answers.firstName || "Client"} ${this.answers.lastName || ""}`,
+                        first_name: this.answers.firstName || "",
+                        last_name: this.answers.lastName || "",
+                        email: this.answers.email || "",
+                        phone: this.answers.phone || "",
+                        full_answers: JSON.stringify(this.answers, null, 2)
+                    }
+                );
+                console.log("✅ Loan officer email sent");
+
+                // ===== EMAIL 2: TO CLIENT (DEMO / CONFIRMATION) =====
+                if (this.answers.email) {
+                    await emailjs.send(
+                        "service_b9bppgb",
+                        "template_8kx812d", // Simpler template
+                        {
+                            to_email: this.answers.email, // CLIENT email
+                            first_name: this.answers.firstName || "Valued Client",
+                            message: "Thank you for completing your pre-qualification! A loan officer will contact you within 15 minutes."
+                        }
+                    );
+                    console.log("✅ Client confirmation email sent");
+                }
+            } catch (error) {
+                console.error("❌ Failed to send emails:", error);
+            }
         }
     }
 
