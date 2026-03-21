@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/20/2026, 10:32:44 AM
+// Generated: 3/21/2026, 1:16:51 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,8 +83,12 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-20T17:32:44.590Z"
+    "updatedAt": "2026-03-21T08:16:51.857Z"
 };
+
+    // ===== EMBEDDED PRE-QUAL SCRIPT =====
+    const PRE_QUAL_SCRIPT = { steps: [] };
+    console.warn('⚠️ No PRE_QUAL_SCRIPT found');
 
     const style = document.createElement('style');
     style.textContent = `
@@ -545,39 +549,6 @@
     else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
-
-    // ===== PRE-QUALIFICATION CONTROLLER =====
-   // WITH THIS (the full 16-question script):
-const PRE_QUAL_SCRIPT = {
-    "steps": [
-        {"speaker": "tess", "text": "Great! Let's get you pre-qualified. First, what's your full name?", "field": "firstName"},
-        {"speaker": "user", "text": "[User responds with name]"},
-        {"speaker": "tess", "text": "And what's your last name?", "field": "lastName"},
-        {"speaker": "user", "text": "[User responds with last name]"},
-        {"speaker": "tess", "text": "What's the best email address to send your pre-qualification letter to?", "field": "email"},
-        {"speaker": "user", "text": "[User responds with email]"},
-        {"speaker": "tess", "text": "And your phone number?", "field": "phone"},
-        {"speaker": "user", "text": "[User responds with phone]"},
-        {"speaker": "tess", "text": "Are you employed, self-employed, retired, or other?", "field": "employmentStatus", "options": ["Employed", "Self-Employed", "Retired", "Other"]},
-        {"speaker": "user", "text": "[User selects status]"},
-        {"speaker": "tess", "text": "Approximately what's your annual household income?", "field": "annualIncome"},
-        {"speaker": "user", "text": "[User provides amount]"},
-        {"speaker": "tess", "text": "Now let's talk about credit. How would you describe your credit?", "field": "creditScore", "options": ["Excellent (740+)", "Good (700-739)", "Fair (620-699)", "Challenged (below 620)"]},
-        {"speaker": "user", "text": "[User selects range]"},
-        {"speaker": "tess", "text": "How much are you planning to put down?", "field": "downPayment", "options": ["Less than 3%", "3-5%", "5-10%", "10-20%", "20%+"]},
-        {"speaker": "user", "text": "[User selects range]"},
-        {"speaker": "tess", "text": "Are you looking to purchase a home or refinance?", "field": "loanPurpose", "options": ["Purchase a home", "Refinance current home"]},
-        {"speaker": "user", "text": "[User selects option]"},
-        {"speaker": "tess", "text": "What type of property?", "field": "propertyType", "options": ["Single family home", "Condominium", "Townhouse"]},
-        {"speaker": "user", "text": "[User selects type]"},
-        {"speaker": "tess", "text": "Are you a first-time homebuyer?", "field": "firstTimeBuyer", "options": ["Yes", "No"]},
-        {"speaker": "user", "text": "[User selects yes/no]"},
-        {"speaker": "tess", "text": "What's your timeline?", "field": "timeline", "options": ["Already have an offer", "Looking now - next 30 days", "1-3 months", "3-6 months"]},
-        {"speaker": "user", "text": "[User selects timeline]"},
-        {"speaker": "tess", "text": "Perfect! I'll send this to our loan officer. They'll contact you soon!"}
-    ]
-};
-
     class PreQualificationController {
         constructor() {
             this.isActive = false;
@@ -611,6 +582,16 @@ const PRE_QUAL_SCRIPT = {
 
         async startInterview() {
             if (!this.script || !this.script.steps) return;
+            
+            // 🔥 DISABLE DEFAULT LEMONSLICE RESPONSES DURING PRE-QUAL
+            // This prevents Tess from talking over herself
+            if (window.mainWidget) {
+                window.mainWidget.setAttribute('hide-ui', 'true');
+                console.log('🔇 Disabled default responses during pre-qual');
+            }
+            // Disable bridge triggers to prevent interruptions
+            window.disableBridgeTriggers = true;
+            
             this.isActive = true;
             this.currentStep = 0;
             const tessSteps = this.script.steps.filter(step => step.speaker === 'tess');
@@ -619,6 +600,9 @@ const PRE_QUAL_SCRIPT = {
             const widget = document.querySelector('lemon-slice-widget');
             if (!widget) {
                 console.error('No widget found');
+                // Re-enable if error
+                window.disableBridgeTriggers = false;
+                if (window.mainWidget) window.mainWidget.setAttribute('hide-ui', 'false');
                 return;
             }
 
@@ -643,6 +627,13 @@ const PRE_QUAL_SCRIPT = {
             
             // Send email after interview completes
             await this.sendEmail();
+            
+            // 🔥 RE-ENABLE DEFAULT RESPONSES AFTER PRE-QUAL COMPLETES
+            if (window.mainWidget) {
+                window.mainWidget.setAttribute('hide-ui', 'false');
+                console.log('🔊 Re-enabled default responses');
+            }
+            window.disableBridgeTriggers = false;
             
             this.isActive = false;
         }
