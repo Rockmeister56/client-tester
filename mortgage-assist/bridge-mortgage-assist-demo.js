@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/21/2026, 1:16:51 AM
+// Generated: 3/21/2026, 1:39:06 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,12 +83,387 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-21T08:16:51.857Z"
+    "updatedAt": "2026-03-21T08:39:06.482Z"
 };
 
     // ===== EMBEDDED PRE-QUAL SCRIPT =====
-    const PRE_QUAL_SCRIPT = { steps: [] };
-    console.warn('⚠️ No PRE_QUAL_SCRIPT found');
+    const PRE_QUAL_SCRIPT = {
+    "name": "mortgage-pre-qualification",
+    "industry": "mortgage",
+    "steps": [
+        {
+            "sequence": 1,
+            "speaker": "tess",
+            "text": "Tess: You've definitely come to the right place. ✅",
+            "options": null
+        },
+        {
+            "sequence": 2,
+            "speaker": "user",
+            "text": "User: [Provides name]",
+            "options": null
+        },
+        {
+            "sequence": 3,
+            "speaker": "tess",
+            "text": "Tess: Great! Let's get you pre-qualified. First, what's your full name?",
+            "field": "firstName",
+            "type": "text",
+            "options": null
+        },
+        {
+            "sequence": 4,
+            "speaker": "user",
+            "text": "User: [Responds with name]",
+            "options": null
+        },
+        {
+            "sequence": 5,
+            "speaker": "tess",
+            "text": "Tess: And what's your last name?",
+            "field": "lastName",
+            "type": "text",
+            "options": null
+        },
+        {
+            "sequence": 6,
+            "speaker": "user",
+            "text": "User: [Responds with last name]",
+            "options": null
+        },
+        {
+            "sequence": 7,
+            "speaker": "tess",
+            "text": "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
+            "field": "email",
+            "type": "email",
+            "options": null
+        },
+        {
+            "sequence": 8,
+            "speaker": "user",
+            "text": "User: [Responds with email]",
+            "options": null
+        },
+        {
+            "sequence": 9,
+            "speaker": "tess",
+            "text": "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
+            "field": "phone",
+            "type": "phone",
+            "options": null
+        },
+        {
+            "sequence": 10,
+            "speaker": "user",
+            "text": "User: [Responds with phone]",
+            "options": null
+        },
+        {
+            "sequence": 11,
+            "speaker": "tess",
+            "text": "Tess: Got it. You're doing great—we're about a quarter of the way through.",
+            "options": null
+        },
+        {
+            "sequence": 12,
+            "speaker": "tess",
+            "text": "Tess: Are you employed, self-employed, retired, or other?",
+            "field": "employmentStatus",
+            "type": "choice",
+            "options": [
+                "Employed",
+                "Self-Employed",
+                "Retired",
+                "Other"
+            ]
+        },
+        {
+            "sequence": 13,
+            "speaker": "user",
+            "text": "User: [Selects status]",
+            "options": null
+        },
+        {
+            "sequence": 14,
+            "speaker": "tess",
+            "text": "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
+            "field": "selfEmployedDocumentation",
+            "type": "choice",
+            "options": [
+                "Tax Returns",
+                "Bank Statements",
+                "Both"
+            ]
+        },
+        {
+            "sequence": 15,
+            "speaker": "user",
+            "text": "User: [Responds]",
+            "options": null
+        },
+        {
+            "sequence": 16,
+            "speaker": "tess",
+            "text": "Tess: And are you W-2 or 1099?",
+            "field": "employedDocumentation",
+            "type": "choice",
+            "options": [
+                "W-2",
+                "1099"
+            ]
+        },
+        {
+            "sequence": 17,
+            "speaker": "user",
+            "text": "User: [Responds]",
+            "options": null
+        },
+        {
+            "sequence": 18,
+            "speaker": "tess",
+            "text": "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
+            "field": "annualIncome",
+            "type": "currency",
+            "options": null
+        },
+        {
+            "sequence": 19,
+            "speaker": "user",
+            "text": "User: [Provides amount]",
+            "options": null
+        },
+        {
+            "sequence": 20,
+            "speaker": "tess",
+            "text": "Tess: Thank you. That gives me a clear picture.",
+            "options": null
+        },
+        {
+            "sequence": 21,
+            "speaker": "tess",
+            "text": "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
+            "field": "incomeDocumentation",
+            "type": "choice",
+            "options": [
+                "W-2s",
+                "Tax Returns",
+                "Bank Statements"
+            ]
+        },
+        {
+            "sequence": 22,
+            "speaker": "user",
+            "text": "User: [Selects option]",
+            "options": null
+        },
+        {
+            "sequence": 23,
+            "speaker": "tess",
+            "text": "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
+            "field": "creditScore",
+            "type": "choice",
+            "options": [
+                "Excellent (740+)",
+                "Good (700-739)",
+                "Fair (620-699)",
+                "Challenged (below 620)",
+                "Not sure"
+            ]
+        },
+        {
+            "sequence": 24,
+            "speaker": "user",
+            "text": "User: [Selects range]",
+            "options": null
+        },
+        {
+            "sequence": 25,
+            "speaker": "tess",
+            "text": "Tess: How much are you planning to put down? Just a range is fine.",
+            "field": "downPayment",
+            "type": "choice",
+            "options": [
+                "Less than 3%",
+                "3-5%",
+                "5-10%",
+                "10-20%",
+                "20%+"
+            ]
+        },
+        {
+            "sequence": 26,
+            "speaker": "user",
+            "text": "User: [Selects range]",
+            "options": null
+        },
+        {
+            "sequence": 27,
+            "speaker": "tess",
+            "text": "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
+            "options": null
+        },
+        {
+            "sequence": 28,
+            "speaker": "tess",
+            "text": "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
+            "field": "downPaymentSource",
+            "type": "choice",
+            "options": [
+                "Savings",
+                "Gift from family",
+                "Sale of current home",
+                "Investment/401k",
+                "Other"
+            ]
+        },
+        {
+            "sequence": 29,
+            "speaker": "user",
+            "text": "User: [Selects source]",
+            "options": null
+        },
+        {
+            "sequence": 30,
+            "speaker": "tess",
+            "text": "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
+            "field": "bankruptcyHistory",
+            "type": "choice",
+            "options": [
+                "Yes",
+                "No",
+                "Prefer not to say"
+            ]
+        },
+        {
+            "sequence": 31,
+            "speaker": "user",
+            "text": "User: [Selects option]",
+            "options": null
+        },
+        {
+            "sequence": 32,
+            "speaker": "tess",
+            "text": "Tess: Are you looking to purchase a home or refinance an existing one?",
+            "field": "loanPurpose",
+            "type": "choice",
+            "options": [
+                "Purchase a home",
+                "Refinance current home",
+                "Cash-out refinance"
+            ]
+        },
+        {
+            "sequence": 33,
+            "speaker": "user",
+            "text": "User: [Selects option]",
+            "options": null
+        },
+        {
+            "sequence": 34,
+            "speaker": "tess",
+            "text": "Tess: What type of property are you buying or refinancing?",
+            "field": "propertyType",
+            "type": "choice",
+            "options": [
+                "Single family home",
+                "Condominium",
+                "Townhouse",
+                "Multi-family (2-4 units)",
+                "Manufactured home"
+            ]
+        },
+        {
+            "sequence": 35,
+            "speaker": "user",
+            "text": "User: [Selects type]",
+            "options": null
+        },
+        {
+            "sequence": 36,
+            "speaker": "tess",
+            "text": "Tess: Are you a first-time homebuyer?",
+            "field": "firstTimeBuyer",
+            "type": "choice",
+            "options": [
+                "Yes",
+                "No"
+            ]
+        },
+        {
+            "sequence": 37,
+            "speaker": "user",
+            "text": "User: [Selects yes/no]",
+            "options": null
+        },
+        {
+            "sequence": 38,
+            "speaker": "tess",
+            "text": "Tess: Have you or your spouse served in the military?",
+            "field": "militaryService",
+            "type": "choice",
+            "options": [
+                "Yes - Active duty",
+                "Yes - Veteran",
+                "No"
+            ]
+        },
+        {
+            "sequence": 39,
+            "speaker": "user",
+            "text": "User: [Selects option]",
+            "options": null
+        },
+        {
+            "sequence": 40,
+            "speaker": "tess",
+            "text": "Tess: Last question—what's your timeline for purchasing or refinancing?",
+            "field": "timeline",
+            "type": "choice",
+            "options": [
+                "Already have an offer",
+                "Looking now - next 30 days",
+                "1-3 months",
+                "3-6 months",
+                "Just exploring"
+            ]
+        },
+        {
+            "sequence": 41,
+            "speaker": "user",
+            "text": "User: [Selects timeline]",
+            "options": null
+        },
+        {
+            "sequence": 42,
+            "speaker": "tess",
+            "text": "Tess: That's it! You're all done. ✅",
+            "options": null
+        }
+    ],
+    "extracted_fields": [
+        "firstName",
+        "lastName",
+        "email",
+        "phone",
+        "employmentStatus",
+        "selfEmployedDocumentation",
+        "employedDocumentation",
+        "annualIncome",
+        "incomeDocumentation",
+        "creditScore",
+        "downPayment",
+        "downPaymentSource",
+        "bankruptcyHistory",
+        "loanPurpose",
+        "propertyType",
+        "firstTimeBuyer",
+        "militaryService",
+        "timeline"
+    ],
+    "upload_date": "2026-03-21T08:38:58.495Z"
+};
+    console.log('✅ PRE_QUAL_SCRIPT embedded with', PRE_QUAL_SCRIPT.steps?.length, 'steps');
 
     const style = document.createElement('style');
     style.textContent = `
