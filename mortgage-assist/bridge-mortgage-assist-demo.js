@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/21/2026, 4:36:08 AM
+// Generated: 3/21/2026, 2:18:25 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-21T11:36:07.641Z"
+    "updatedAt": "2026-03-21T21:18:25.084Z"
 };
 
     // ===== EMBEDDED PRE-QUAL SCRIPT =====
@@ -461,7 +461,7 @@
         "militaryService",
         "timeline"
     ],
-    "upload_date": "2026-03-21T11:26:17.696Z"
+    "upload_date": "2026-03-21T21:18:10.442Z"
 };
     console.log('✅ PRE_QUAL_SCRIPT embedded with', PRE_QUAL_SCRIPT.steps?.length, 'steps');
 
@@ -553,8 +553,21 @@
         widget.setAttribute('custom-minimized-height', '400');
         widget.setAttribute('initial-state', 'active');
         widget.setAttribute('hide-ui', '');
+        widget.setAttribute('suppress-initial-message', 'true');
         widget.id = 'splash-widget';
         return widget;
+    }
+
+    function forceMortgageIntro(widget) {
+        const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
+        console.log('[Bridge] Forcing Intro:', message);
+        try {
+            if (typeof widget.sendMessage === 'function') {
+                widget.sendMessage(message);
+            }
+        } catch (e) {
+            console.error('[Bridge] Intro error:', e);
+        }
     }
 
     function createMainWidget() {
@@ -565,7 +578,30 @@
         widget.setAttribute('custom-minimized-height', '216');
         widget.id = 'main-widget';
         widget.style.display = 'none';
+        widget.addEventListener('ready', () => {
+            console.log('[Bridge] Widget Ready. Initializing Intro...');
+            forceMortgageIntro(widget);
+        });
         return widget;
+    }
+
+    function forceMortgageIntro(widget) {
+        // The exact intro you want her to say
+        const introMessage = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
+        
+        // Wait a split second for the widget to fully initialize
+        setTimeout(() => {
+            try {
+                if (typeof widget.sendMessage === 'function') {
+                    console.log("🗣️ Sending intro message to widget...");
+                    widget.sendMessage(introMessage);
+                } else {
+                    console.warn("Widget does not support sendMessage yet.");
+                }
+            } catch (e) {
+                console.error("Error forcing intro:", e);
+            }
+        }, 500);
     }
 
     function showSplash() {
