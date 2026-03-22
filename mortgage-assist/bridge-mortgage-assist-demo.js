@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 9:37:33 AM
+// Generated: 3/22/2026, 10:14:50 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-22T16:37:33.374Z"
+    "updatedAt": "2026-03-22T17:14:50.188Z"
 };
 
     const style = document.createElement('style');
@@ -248,11 +248,32 @@
             this.isActive = false;
             this.script = null;
             this.answers = {};
+            this.setupMessageListener(); // Turn on the Ears
+        }
+
+        // THE EARS: Listen for User Speech
+        setupMessageListener() {
+            window.addEventListener('message', (event) => {
+                // Listen for the start signal
+                if (event.data.type === 'START_PRE_QUAL') {
+                    console.log('🎯 Trigger received. Starting interview.');
+                    this.startInterview();
+                }
+                
+                // Listen for User Speech to process answers
+                if (event.data.type === 'transcript' && this.isActive) {
+                     this.handleUserInput(event.data.text);
+                }
+                // Fallback for other LemonSlice event names
+                if (event.data.role === 'user' && this.isActive) {
+                     this.handleUserInput(event.data.content);
+                }
+            });
         }
 
         startInterview() {
             console.log("🎯 Starting pre-qualification interview");
-            this.script = createSmartPreQualScript();
+            this.script = createSmartPreQualScript(); // Load SMART script
             this.isActive = true;
             const firstMessage = this.script.start();
             this.speak(firstMessage);
@@ -783,105 +804,6 @@
     else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
-    class PreQualificationController {
-        constructor() {
-            this.isActive = false;
-            this.script = PRE_QUAL_SCRIPT; // The new smart script
-            this.answers = {};
-            this.widget = null;
-            this.setupMessageListener();
-        }
-
-        setupMessageListener() {
-            window.addEventListener('message', (event) => {
-                // Listen for the start signal
-                if (event.data.type === 'START_PRE_QUAL') {
-                    console.log('🎯 Trigger received. Starting interview.');
-                    this.startInterview();
-                }
-                
-                // 🔥 CRITICAL: Listen for User Speech to process answers
-                if (event.data.type === 'transcript' && this.isActive) {
-                     this.handleUserInput(event.data.text);
-                }
-                // Fallback for other LemonSlice event names
-                if (event.data.role === 'user' && this.isActive) {
-                     this.handleUserInput(event.data.content);
-                }
-            });
-        }
-
-        async startInterview() {
-            if (this.isActive) return; // Already running
-            
-            this.widget = document.querySelector('lemon-slice-widget');
-            if (!this.widget) return;
-
-            // 🔥 DISABLE DEFAULT LEMONSLICE RESPONSES
-            if (window.mainWidget) {
-                window.mainWidget.setAttribute('hide-ui', 'true');
-                console.log('🔇 Disabled default AI responses');
-            }
-            window.disableBridgeTriggers = true;
-            
-            this.isActive = true;
-            
-            // Initialize the Smart Script
-            this.script.active = true;
-            this.script.currentStepIndex = 0;
-            this.script.responses = {};
-            
-            // Ask the first question
-            const firstQ = this.script.start();
-            this.speak(firstQ);
-        }
-
-        // NEW: Process user input using the Script Logic
-        handleUserInput(userText) {
-            console.log(`👤 User Answer: ${userText}`);
-            
-            // Pass answer to the script to get next question
-            const nextResponse = this.script.processResponse(userText);
-            
-            if (nextResponse) {
-                this.speak(nextResponse);
-            }
-            
-            // Check if the script marked itself as complete
-            if (!this.script.active) {
-                this.completeInterview();
-            }
-        }
-
-        speak(text) {
-            if (!text) return;
-            console.log(`🤖 Tess: ${text}`);
-            if (this.widget && typeof this.widget.sendMessage === 'function') {
-                this.widget.sendMessage(text);
-            }
-        }
-
-        async completeInterview() {
-            console.log('✅ Interview Complete!');
-            this.isActive = false;
-            
-            // Collect data
-            const leadData = this.script.getResults();
-            this.answers = leadData; // Save to old variable for email compatibility
-            
-            // Send Email (Reusing your old function)
-            await this.sendEmail();
-            
-            // 🔥 RE-ENABLE DEFAULT RESPONSES
-            if (window.mainWidget) {
-                window.mainWidget.setAttribute('hide-ui', 'false');
-                console.log('🔊 Re-enabled default AI responses');
-            }
-            window.disableBridgeTriggers = false;
-        }
-
-    }
-
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
         // Try opener first
