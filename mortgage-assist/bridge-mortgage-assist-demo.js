@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 10:55:14 AM
+// Generated: 3/22/2026, 11:14:35 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-22T17:55:14.615Z"
+    "updatedAt": "2026-03-22T18:14:35.184Z"
 };
 
     const style = document.createElement('style');
@@ -422,26 +422,22 @@
     }
 
     function forceMortgageIntro(widget) {
-        console.log('[Bridge] Forcing Intro (Audit Style)...');
+        // The exact intro you want her to say
+        const introMessage = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
-        // 1. Ensure widget is active and unmuted
-        widget.setAttribute('controlled-widget-state', 'active');
-        try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
-        
-        // 2. Construct the message
-        const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
-        
-        // 3. Send to widget (Delay ensures stability)
+        // Wait a split second for the widget to fully initialize
         setTimeout(() => {
             try {
                 if (typeof widget.sendMessage === 'function') {
-                    console.log('🗣️ Speaking intro...');
-                    widget.sendMessage(message);
+                    console.log("🗣️ Sending intro message to widget...");
+                    widget.sendMessage(introMessage);
+                } else {
+                    console.warn("Widget does not support sendMessage yet.");
                 }
             } catch (e) {
-                console.error('[Bridge] Intro error:', e);
+                console.error("Error forcing intro:", e);
             }
-        }, 1500);
+        }, 500);
     }
 
     function showSplash() {
