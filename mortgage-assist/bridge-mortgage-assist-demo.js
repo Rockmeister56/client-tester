@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 10:14:50 AM
+// Generated: 3/22/2026, 10:27:03 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-22T17:14:50.188Z"
+    "updatedAt": "2026-03-22T17:27:02.922Z"
 };
 
     const style = document.createElement('style');
@@ -281,6 +281,7 @@
 
         handleUserInput(userText) {
             if (!this.isActive) return;
+            if (!this.script) { console.warn("⚠️ Script not ready."); return; }
             console.log(`👤 User said: ${userText}`);
             const nextResponse = this.script.processResponse(userText);
             if (nextResponse) { this.speak(nextResponse); }
