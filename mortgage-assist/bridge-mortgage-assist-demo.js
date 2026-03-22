@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/21/2026, 2:18:25 PM
+// Generated: 3/22/2026, 9:37:33 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -78,392 +78,13 @@
         "preQualification": {
             "enabled": true,
             "knowledgeBaseScript": "mortgage",
-            "triggerPhrase": "I want to get pre-qualified",
+            "triggerPhrase": "Let's get you pre-qualified",
             "emailSubject": "New Lead: {{name}}",
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-21T21:18:25.084Z"
+    "updatedAt": "2026-03-22T16:37:33.374Z"
 };
-
-    // ===== EMBEDDED PRE-QUAL SCRIPT =====
-    const PRE_QUAL_SCRIPT = {
-    "name": "mortgage-pre-qualification",
-    "industry": "mortgage",
-    "steps": [
-        {
-            "sequence": 1,
-            "speaker": "tess",
-            "text": "Tess: You've definitely come to the right place. ✅",
-            "options": null
-        },
-        {
-            "sequence": 2,
-            "speaker": "user",
-            "text": "User: [Provides name]",
-            "options": null
-        },
-        {
-            "sequence": 3,
-            "speaker": "tess",
-            "text": "Tess: Great! Let's get you pre-qualified. First, what's your full name?",
-            "field": "firstName",
-            "type": "text",
-            "options": null
-        },
-        {
-            "sequence": 4,
-            "speaker": "user",
-            "text": "User: [Responds with name]",
-            "options": null
-        },
-        {
-            "sequence": 5,
-            "speaker": "tess",
-            "text": "Tess: And what's your last name?",
-            "field": "lastName",
-            "type": "text",
-            "options": null
-        },
-        {
-            "sequence": 6,
-            "speaker": "user",
-            "text": "User: [Responds with last name]",
-            "options": null
-        },
-        {
-            "sequence": 7,
-            "speaker": "tess",
-            "text": "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
-            "field": "email",
-            "type": "email",
-            "options": null
-        },
-        {
-            "sequence": 8,
-            "speaker": "user",
-            "text": "User: [Responds with email]",
-            "options": null
-        },
-        {
-            "sequence": 9,
-            "speaker": "tess",
-            "text": "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
-            "field": "phone",
-            "type": "phone",
-            "options": null
-        },
-        {
-            "sequence": 10,
-            "speaker": "user",
-            "text": "User: [Responds with phone]",
-            "options": null
-        },
-        {
-            "sequence": 11,
-            "speaker": "tess",
-            "text": "Tess: Got it. You're doing great—we're about a quarter of the way through.",
-            "options": null
-        },
-        {
-            "sequence": 12,
-            "speaker": "tess",
-            "text": "Tess: Are you employed, self-employed, retired, or other?",
-            "field": "employmentStatus",
-            "type": "choice",
-            "options": [
-                "Employed",
-                "Self-Employed",
-                "Retired",
-                "Other"
-            ]
-        },
-        {
-            "sequence": 13,
-            "speaker": "user",
-            "text": "User: [Selects status]",
-            "options": null
-        },
-        {
-            "sequence": 14,
-            "speaker": "tess",
-            "text": "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
-            "field": "selfEmployedDocumentation",
-            "type": "choice",
-            "options": [
-                "Tax Returns",
-                "Bank Statements",
-                "Both"
-            ]
-        },
-        {
-            "sequence": 15,
-            "speaker": "user",
-            "text": "User: [Responds]",
-            "options": null
-        },
-        {
-            "sequence": 16,
-            "speaker": "tess",
-            "text": "Tess: And are you W-2 or 1099?",
-            "field": "employedDocumentation",
-            "type": "choice",
-            "options": [
-                "W-2",
-                "1099"
-            ]
-        },
-        {
-            "sequence": 17,
-            "speaker": "user",
-            "text": "User: [Responds]",
-            "options": null
-        },
-        {
-            "sequence": 18,
-            "speaker": "tess",
-            "text": "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
-            "field": "annualIncome",
-            "type": "currency",
-            "options": null
-        },
-        {
-            "sequence": 19,
-            "speaker": "user",
-            "text": "User: [Provides amount]",
-            "options": null
-        },
-        {
-            "sequence": 20,
-            "speaker": "tess",
-            "text": "Tess: Thank you. That gives me a clear picture.",
-            "options": null
-        },
-        {
-            "sequence": 21,
-            "speaker": "tess",
-            "text": "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
-            "field": "incomeDocumentation",
-            "type": "choice",
-            "options": [
-                "W-2s",
-                "Tax Returns",
-                "Bank Statements"
-            ]
-        },
-        {
-            "sequence": 22,
-            "speaker": "user",
-            "text": "User: [Selects option]",
-            "options": null
-        },
-        {
-            "sequence": 23,
-            "speaker": "tess",
-            "text": "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
-            "field": "creditScore",
-            "type": "choice",
-            "options": [
-                "Excellent (740+)",
-                "Good (700-739)",
-                "Fair (620-699)",
-                "Challenged (below 620)",
-                "Not sure"
-            ]
-        },
-        {
-            "sequence": 24,
-            "speaker": "user",
-            "text": "User: [Selects range]",
-            "options": null
-        },
-        {
-            "sequence": 25,
-            "speaker": "tess",
-            "text": "Tess: How much are you planning to put down? Just a range is fine.",
-            "field": "downPayment",
-            "type": "choice",
-            "options": [
-                "Less than 3%",
-                "3-5%",
-                "5-10%",
-                "10-20%",
-                "20%+"
-            ]
-        },
-        {
-            "sequence": 26,
-            "speaker": "user",
-            "text": "User: [Selects range]",
-            "options": null
-        },
-        {
-            "sequence": 27,
-            "speaker": "tess",
-            "text": "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
-            "options": null
-        },
-        {
-            "sequence": 28,
-            "speaker": "tess",
-            "text": "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
-            "field": "downPaymentSource",
-            "type": "choice",
-            "options": [
-                "Savings",
-                "Gift from family",
-                "Sale of current home",
-                "Investment/401k",
-                "Other"
-            ]
-        },
-        {
-            "sequence": 29,
-            "speaker": "user",
-            "text": "User: [Selects source]",
-            "options": null
-        },
-        {
-            "sequence": 30,
-            "speaker": "tess",
-            "text": "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
-            "field": "bankruptcyHistory",
-            "type": "choice",
-            "options": [
-                "Yes",
-                "No",
-                "Prefer not to say"
-            ]
-        },
-        {
-            "sequence": 31,
-            "speaker": "user",
-            "text": "User: [Selects option]",
-            "options": null
-        },
-        {
-            "sequence": 32,
-            "speaker": "tess",
-            "text": "Tess: Are you looking to purchase a home or refinance an existing one?",
-            "field": "loanPurpose",
-            "type": "choice",
-            "options": [
-                "Purchase a home",
-                "Refinance current home",
-                "Cash-out refinance"
-            ]
-        },
-        {
-            "sequence": 33,
-            "speaker": "user",
-            "text": "User: [Selects option]",
-            "options": null
-        },
-        {
-            "sequence": 34,
-            "speaker": "tess",
-            "text": "Tess: What type of property are you buying or refinancing?",
-            "field": "propertyType",
-            "type": "choice",
-            "options": [
-                "Single family home",
-                "Condominium",
-                "Townhouse",
-                "Multi-family (2-4 units)",
-                "Manufactured home"
-            ]
-        },
-        {
-            "sequence": 35,
-            "speaker": "user",
-            "text": "User: [Selects type]",
-            "options": null
-        },
-        {
-            "sequence": 36,
-            "speaker": "tess",
-            "text": "Tess: Are you a first-time homebuyer?",
-            "field": "firstTimeBuyer",
-            "type": "choice",
-            "options": [
-                "Yes",
-                "No"
-            ]
-        },
-        {
-            "sequence": 37,
-            "speaker": "user",
-            "text": "User: [Selects yes/no]",
-            "options": null
-        },
-        {
-            "sequence": 38,
-            "speaker": "tess",
-            "text": "Tess: Have you or your spouse served in the military?",
-            "field": "militaryService",
-            "type": "choice",
-            "options": [
-                "Yes - Active duty",
-                "Yes - Veteran",
-                "No"
-            ]
-        },
-        {
-            "sequence": 39,
-            "speaker": "user",
-            "text": "User: [Selects option]",
-            "options": null
-        },
-        {
-            "sequence": 40,
-            "speaker": "tess",
-            "text": "Tess: Last question—what's your timeline for purchasing or refinancing?",
-            "field": "timeline",
-            "type": "choice",
-            "options": [
-                "Already have an offer",
-                "Looking now - next 30 days",
-                "1-3 months",
-                "3-6 months",
-                "Just exploring"
-            ]
-        },
-        {
-            "sequence": 41,
-            "speaker": "user",
-            "text": "User: [Selects timeline]",
-            "options": null
-        },
-        {
-            "sequence": 42,
-            "speaker": "tess",
-            "text": "Tess: That's it! You're all done. ✅",
-            "options": null
-        }
-    ],
-    "extracted_fields": [
-        "firstName",
-        "lastName",
-        "email",
-        "phone",
-        "employmentStatus",
-        "selfEmployedDocumentation",
-        "employedDocumentation",
-        "annualIncome",
-        "incomeDocumentation",
-        "creditScore",
-        "downPayment",
-        "downPaymentSource",
-        "bankruptcyHistory",
-        "loanPurpose",
-        "propertyType",
-        "firstTimeBuyer",
-        "militaryService",
-        "timeline"
-    ],
-    "upload_date": "2026-03-21T21:18:10.442Z"
-};
-    console.log('✅ PRE_QUAL_SCRIPT embedded with', PRE_QUAL_SCRIPT.steps?.length, 'steps');
 
     const style = document.createElement('style');
     style.textContent = `
@@ -570,6 +191,203 @@
         }
     }
 
+    // ===== SMART PRE-QUAL SCRIPT =====
+    function createSmartPreQualScript() {
+        const steps = [
+            // These steps will be populated by your parser
+            // based on the HTML knowledge base
+            { id: "securityOpening", type: "message", text: "You've definitely come to the right place. ✅\n\nBefore we begin, I want to put your mind at ease about something important.\n\nEverything you share with me today—your income, your credit, your personal information—is totally confidential. Our entire system runs on 128-bit bank-grade encryption, the same level of security used by major financial institutions.\n\nYour information never gets sold. Never gets misused. It goes directly to our licensed loan officers, and it's used for one purpose only: getting you the best possible rate and service.\n\nSo you can speak freely. I'm here to help, not to judge.\n\nNow—who am I speaking with today?" },
+            { id: "firstName", type: "question", question: "Great! Let's get you pre-qualified. First, what's your full name?", field: "firstName", validator: (input) => input && input.trim().length > 0, errorMessage: "I didn't catch that. Could you please tell me your full name?", next: "lastName" },
+            { id: "lastName", type: "question", question: "And what's your last name?", field: "lastName", validator: (input) => input && input.trim().length > 0, errorMessage: "What's your last name?", next: "email" },
+            { id: "email", type: "question", question: "What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.", field: "email", validator: (input) => input.includes('@') && input.includes('.'), errorMessage: "Please provide a valid email address (like name@example.com).", next: "phone" },
+            { id: "phone", type: "question", question: "And your phone number? In case our loan team needs to reach you quickly with your approval options.", field: "phone", validator: (input) => input.replace(/[^0-9]/g, '').length >= 10, errorMessage: "Please provide a valid 10-digit phone number.", next: "progressUpdate1" },
+            { id: "progressUpdate1", type: "message", text: "Got it. You're doing great—we're about a quarter of the way through." },
+            { id: "employmentStatus", type: "question", question: "Are you employed, self-employed, retired, or other?", field: "employmentStatus", options: ["Employed", "Self-Employed", "Retired", "Other"], validator: (input) => ["employed", "self-employed", "retired", "other"].some(opt => input.toLowerCase().includes(opt)), errorMessage: "Please select one: Employed, Self-Employed, Retired, or Other.", next: (input) => { if (input.toLowerCase().includes("self-employed")) return "selfEmployedDocumentation"; if (input.toLowerCase().includes("employed")) return "employedDocumentation"; return "annualIncome"; } },
+            { id: "selfEmployedDocumentation", type: "question", question: "Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?", field: "selfEmployedDocumentation", options: ["Tax Returns", "Bank Statements", "Both"], validator: (input) => ["tax returns", "bank statements", "both"].some(opt => input.toLowerCase().includes(opt)), errorMessage: "Please choose: Tax Returns, Bank Statements, or Both.", next: "annualIncome" },
+            { id: "employedDocumentation", type: "question", question: "And are you W-2 or 1099?", field: "employedDocumentation", options: ["W-2", "1099"], validator: (input) => input.toLowerCase().includes("w-2") || input.toLowerCase().includes("1099"), errorMessage: "Please specify W-2 or 1099.", next: "annualIncome" },
+            { id: "annualIncome", type: "question", question: "Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.", field: "annualIncome", validator: (input) => { const num = parseFloat(input.replace(/[^0-9.]/g, '')); return !isNaN(num) && num > 0; }, errorMessage: "Please provide a valid income amount (like $75,000).", next: "thankYouUpdate" },
+            { id: "thankYouUpdate", type: "message", text: "Thank you. That gives me a clear picture." },
+            { id: "incomeDocumentation", type: "question", question: "And do you typically document your income with W-2s, tax returns, or bank statements?", field: "incomeDocumentation", options: ["W-2s", "Tax Returns", "Bank Statements"], validator: (input) => ["w-2", "tax return", "bank statement"].some(opt => input.toLowerCase().includes(opt)), errorMessage: "Please choose: W-2s, Tax Returns, or Bank Statements.", next: "creditScore" },
+            { id: "creditScore", type: "question", question: "Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?", field: "creditScore", options: ["Excellent (740+)", "Good (700-739)", "Fair (620-699)", "Challenged (below 620)", "Not sure"], validator: (input) => true, next: "downPayment" },
+            { id: "downPayment", type: "question", question: "How much are you planning to put down? Just a range is fine.", field: "downPayment", options: ["Less than 3%", "3-5%", "5-10%", "10-20%", "20%+"], validator: (input) => true, next: "downPaymentFeedback" },
+            { id: "downPaymentFeedback", type: "message", text: "Got it. And just so you know—that range is totally workable. We have programs specifically for that." },
+            { id: "downPaymentSource", type: "question", question: "Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?", field: "downPaymentSource", options: ["Savings", "Gift from family", "Sale of current home", "Investment/401k", "Other"], validator: (input) => true, next: "bankruptcyHistory" },
+            { id: "bankruptcyHistory", type: "question", question: "Have you had any bankruptcies or foreclosures in the last 7 years?", field: "bankruptcyHistory", options: ["Yes", "No", "Prefer not to say"], validator: (input) => true, next: "loanPurpose" },
+            { id: "loanPurpose", type: "question", question: "Are you looking to purchase a home or refinance an existing one?", field: "loanPurpose", options: ["Purchase a home", "Refinance current home", "Cash-out refinance"], validator: (input) => true, next: "propertyType" },
+            { id: "propertyType", type: "question", question: "What type of property are you buying or refinancing?", field: "propertyType", options: ["Single family home", "Condominium", "Townhouse", "Multi-family (2-4 units)", "Manufactured home"], validator: (input) => true, next: "firstTimeBuyer" },
+            { id: "firstTimeBuyer", type: "question", question: "Are you a first-time homebuyer?", field: "firstTimeBuyer", options: ["Yes", "No"], validator: (input) => true, next: "militaryService" },
+            { id: "militaryService", type: "question", question: "Have you or your spouse served in the military?", field: "militaryService", options: ["Yes - Active duty", "Yes - Veteran", "No"], validator: (input) => true, next: "timeline" },
+            { id: "timeline", type: "question", question: "Last question—what's your timeline for purchasing or refinancing?", field: "timeline", options: ["Already have an offer", "Looking now - next 30 days", "1-3 months", "3-6 months", "Just exploring"], validator: (input) => true, next: "completion" },
+            { id: "completion", type: "completion", text: "That's it! You're all done. ✅\n\nI'm generating your pre-qualification file right now with everything you've shared.\n\n📧 Email sent to your inbox 📧\n\nCC'd to: our loan team at Asset Mortgage\n\nYour dedicated loan officer will receive this within seconds. They'll review your information and reach out within 15 minutes with your personalized pre-approval options.\n\nIs there anything else I can help you with while you wait?" }
+        ];
+
+        return {
+            steps: steps,
+            responses: {},
+            currentStepIndex: 0,
+            active: false,
+            start: function() { this.active = true; this.currentStepIndex = 0; this.responses = {}; return this.getCurrentQuestion(); },
+            processResponse: function(userInput) {
+                if (!this.active) return null;
+                const currentStep = this.steps[this.currentStepIndex];
+                if (currentStep.type === "message") { this.currentStepIndex++; return this.getCurrentQuestion(); }
+                if (currentStep.validator && !currentStep.validator(userInput)) { return currentStep.errorMessage || "I didn't quite catch that. Could you please try again?"; }
+                if (currentStep.field) { this.responses[currentStep.field] = userInput; console.log(`✅ Stored ${currentStep.field}:`, userInput); }
+                let nextStepId = typeof currentStep.next === "function" ? currentStep.next(userInput) : currentStep.next;
+                const nextIndex = this.steps.findIndex(s => s.id === nextStepId);
+                if (nextIndex !== -1) { this.currentStepIndex = nextIndex; } else { this.active = false; const completionStep = this.steps.find(s => s.type === "completion"); if (completionStep) { return completionStep.text; } return "Thank you! Your pre-qualification is complete."; }
+                return this.getCurrentQuestion();
+            },
+            getCurrentQuestion: function() { const step = this.steps[this.currentStepIndex]; if (!step) return null; if (step.type === "question") { return step.question; } else { return step.text; } },
+            getResults: function() { return this.responses; }
+        };
+    }
+
+    class PreQualificationController {
+        constructor() {
+            this.isActive = false;
+            this.script = null;
+            this.answers = {};
+        }
+
+        startInterview() {
+            console.log("🎯 Starting pre-qualification interview");
+            this.script = createSmartPreQualScript();
+            this.isActive = true;
+            const firstMessage = this.script.start();
+            this.speak(firstMessage);
+        }
+
+        handleUserInput(userText) {
+            if (!this.isActive) return;
+            console.log(`👤 User said: ${userText}`);
+            const nextResponse = this.script.processResponse(userText);
+            if (nextResponse) { this.speak(nextResponse); }
+            if (!this.script.active) {
+                console.log("✅ Interview Complete!", this.script.getResults());
+                this.answers = this.script.getResults();
+                this.sendEmail();
+                this.isActive = false;
+            }
+        }
+
+        speak(text) {
+            console.log(`🤖 Tess says: ${text}`);
+            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+                window.mainWidget.sendMessage(text);
+            }
+        }
+
+        async sendEmail() {
+            console.log("📧 Sending pre-qualification emails...");
+            
+            try {
+                // ===== EMAIL 1: TO LOAN OFFICER =====
+                await emailjs.send(
+                    "service_b9bppgb",
+                    "template_uix9cyx",
+                    {
+                        to_email: "loans@clientcompany.com",
+                        cc_email: "",
+                        subject: "New Pre-Qual Lead: {{firstName}} {{lastName}}".replace("{{firstName}}", this.answers.firstName || "Client").replace("{{lastName}}", this.answers.lastName || ""),
+                        first_name: this.answers.firstName || "",
+                        last_name: this.answers.lastName || "",
+                        email: this.answers.email || "",
+                        phone: this.answers.phone || "",
+                        full_answers: JSON.stringify(this.answers, null, 2)
+                    }
+                );
+                console.log("✅ Loan officer email sent");
+
+                // ===== EMAIL 2: TO CLIENT =====
+                if (this.answers.email) {
+                    await emailjs.send(
+                        "service_b9bppgb",
+                        "template_8kx812d",
+                        {
+                            to_email: this.answers.email,
+                            first_name: this.answers.firstName || "Valued Client",
+                            message: "Thank you for completing your pre-qualification! A loan officer will contact you within 15 minutes."
+                        }
+                    );
+                    console.log("✅ Client confirmation email sent");
+                }
+            } catch (error) {
+                console.error("❌ Failed to send emails:", error);
+            }
+        }
+    }
+
+    // ===== GLOBAL TRIGGER LISTENER =====
+    function setupTriggerListener(widget) {
+        console.log('👂 Setting up external trigger listener...');
+
+        // Method 1: Listen for the widget's 'response' event
+        widget.addEventListener('response', (event) => {
+            const aiText = event.detail?.text || event.detail || '';
+            checkForTrigger(aiText);
+        });
+
+        // Method 2: Listen for generic 'message' events (backup)
+        window.addEventListener('message', (event) => {
+            // LemonSlice often sends transcriptions this way
+            if (event.data && event.data.type === 'ai_response') {
+                 checkForTrigger(event.data.text);
+            }
+            // Some versions send 'transcript'
+            if (event.data && event.data.type === 'transcript') {
+                 checkForTrigger(event.data.text);
+            }
+        });
+    }
+
+    function checkForTrigger(text) {
+        if (!text) return;
+        // Look for the exact phrase Tess is supposed to say
+        if (text.includes("LET'S GET YOU PRE-QUALIFIED") || text.includes("get you pre-qualified")) {
+            console.log("🎯 TRIGGER PHRASE DETECTED EXTERNALLY!");
+            firePreQualTrigger();
+        }
+    }
+
+    function firePreQualTrigger() {
+        if (window.preQualFired) return; // Safety stop
+        window.preQualFired = true;
+        
+        console.log("🚀 Sending START_PRE_QUAL to Controller...");
+        window.dispatchEvent(new CustomEvent('message', { 
+            detail: { type: 'START_PRE_QUAL' } 
+        }));
+        
+        // Direct call (most reliable)
+        if (window.preQualController) {
+            window.preQualController.startInterview();
+        }
+    }
+
+    // ===== INITIALIZE THE CONTROLLER =====
+    window.preQualController = new PreQualificationController();
+
+    // Listen for User Speech to feed the Controller
+    window.addEventListener("message", (event) => {
+        if (event.data && event.data.type === "transcript" && window.preQualController.isActive) {
+            window.preQualController.handleUserInput(event.data.text);
+        }
+        // Fallback for other LemonSlice event structures
+        if (event.data && event.data.role === "user" && window.preQualController.isActive) {
+             window.preQualController.handleUserInput(event.data.content);
+        }
+    });
+
+    // Listen for START_PRE_QUAL trigger
+    window.addEventListener("message", (event) => {
+        if (event.data && event.data.type === "START_PRE_QUAL") {
+            console.log("🚀 Received START_PRE_QUAL from Trigger Dashboard");
+            if (window.preQualController) {
+                window.preQualController.startInterview();
+            }
+        }
+    });
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
@@ -578,6 +396,11 @@
         widget.setAttribute('custom-minimized-height', '216');
         widget.id = 'main-widget';
         widget.style.display = 'none';
+        widget.addEventListener('ready', () => {
+            console.log('[Bridge] Widget Ready. Initializing Listeners...');
+            setupTriggerListener(widget);
+            forceMortgageIntro(widget);
+        });
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Widget Ready. Initializing Intro...');
             forceMortgageIntro(widget);
@@ -963,143 +786,100 @@
     class PreQualificationController {
         constructor() {
             this.isActive = false;
-            this.currentStep = 0;
-            this.script = PRE_QUAL_SCRIPT; // Embedded directly!
+            this.script = PRE_QUAL_SCRIPT; // The new smart script
             this.answers = {};
+            this.widget = null;
             this.setupMessageListener();
         }
 
         setupMessageListener() {
             window.addEventListener('message', (event) => {
+                // Listen for the start signal
                 if (event.data.type === 'START_PRE_QUAL') {
-                    console.log('🎯 Starting pre-qualification interview');
-                    this.loadAndStartInterview();
+                    console.log('🎯 Trigger received. Starting interview.');
+                    this.startInterview();
                 }
-                if (event.data.type === 'TRIGGER_DETECTED' && event.data.phrase === 'I want to get pre-qualified') {
-                    this.loadAndStartInterview();
+                
+                // 🔥 CRITICAL: Listen for User Speech to process answers
+                if (event.data.type === 'transcript' && this.isActive) {
+                     this.handleUserInput(event.data.text);
+                }
+                // Fallback for other LemonSlice event names
+                if (event.data.role === 'user' && this.isActive) {
+                     this.handleUserInput(event.data.content);
                 }
             });
-        }
-
-        async loadAndStartInterview() {
-            console.log('🎯 Starting pre-qualification with embedded script');
-            
-            // Script is already embedded! No fetch needed.
-            this.script = PRE_QUAL_SCRIPT;
-            
-            console.log(`✅ Loaded ${this.script.steps?.length || 0} steps from embedded script`);
-            this.startInterview();
         }
 
         async startInterview() {
-            if (!this.script || !this.script.steps) return;
+            if (this.isActive) return; // Already running
             
-            // 🔥 DISABLE DEFAULT LEMONSLICE RESPONSES DURING PRE-QUAL
-            // This prevents Tess from talking over herself
+            this.widget = document.querySelector('lemon-slice-widget');
+            if (!this.widget) return;
+
+            // 🔥 DISABLE DEFAULT LEMONSLICE RESPONSES
             if (window.mainWidget) {
                 window.mainWidget.setAttribute('hide-ui', 'true');
-                console.log('🔇 Disabled default responses during pre-qual');
+                console.log('🔇 Disabled default AI responses');
             }
-            // Disable bridge triggers to prevent interruptions
             window.disableBridgeTriggers = true;
             
             this.isActive = true;
-            this.currentStep = 0;
-            const tessSteps = this.script.steps.filter(step => step.speaker === 'tess');
             
-            // Get the widget
-            const widget = document.querySelector('lemon-slice-widget');
-            if (!widget) {
-                console.error('No widget found');
-                // Re-enable if error
-                window.disableBridgeTriggers = false;
-                if (window.mainWidget) window.mainWidget.setAttribute('hide-ui', 'false');
-                return;
-            }
-
-            // Make sure widget is active
-            widget.setAttribute('controlled-widget-state', 'active');
+            // Initialize the Smart Script
+            this.script.active = true;
+            this.script.currentStepIndex = 0;
+            this.script.responses = {};
             
-            // Small delay for widget to wake up
-            await new Promise(r => setTimeout(r, 500));
+            // Ask the first question
+            const firstQ = this.script.start();
+            this.speak(firstQ);
+        }
 
-            for (let step of tessSteps) {
-                if (!this.isActive) break;
-                
-                console.log('Sending:', step.text);
-                try {
-                    await widget.sendMessage(step.text);
-                } catch (e) {
-                    console.error('Failed to send:', e);
-                }
-                
-                await this.waitForResponse(step);
+        // NEW: Process user input using the Script Logic
+        handleUserInput(userText) {
+            console.log(`👤 User Answer: ${userText}`);
+            
+            // Pass answer to the script to get next question
+            const nextResponse = this.script.processResponse(userText);
+            
+            if (nextResponse) {
+                this.speak(nextResponse);
             }
             
-            // Send email after interview completes
+            // Check if the script marked itself as complete
+            if (!this.script.active) {
+                this.completeInterview();
+            }
+        }
+
+        speak(text) {
+            if (!text) return;
+            console.log(`🤖 Tess: ${text}`);
+            if (this.widget && typeof this.widget.sendMessage === 'function') {
+                this.widget.sendMessage(text);
+            }
+        }
+
+        async completeInterview() {
+            console.log('✅ Interview Complete!');
+            this.isActive = false;
+            
+            // Collect data
+            const leadData = this.script.getResults();
+            this.answers = leadData; // Save to old variable for email compatibility
+            
+            // Send Email (Reusing your old function)
             await this.sendEmail();
             
-            // 🔥 RE-ENABLE DEFAULT RESPONSES AFTER PRE-QUAL COMPLETES
+            // 🔥 RE-ENABLE DEFAULT RESPONSES
             if (window.mainWidget) {
                 window.mainWidget.setAttribute('hide-ui', 'false');
-                console.log('🔊 Re-enabled default responses');
+                console.log('🔊 Re-enabled default AI responses');
             }
             window.disableBridgeTriggers = false;
-            
-            this.isActive = false;
         }
 
-        waitForResponse(step) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    console.log('Response received for:', step.field);
-                    // Store answer (you will need to capture actual response)
-                    if (step.field) {
-                        this.answers[step.field] = "User response"; // Replace with actual capture
-                    }
-                    resolve();
-                }, 3000);
-            });
-        }
-
-            async sendEmail() {
-            console.log("📧 Sending pre-qualification emails...");
-            
-            try {
-                // ===== EMAIL 1: TO LOAN OFFICER (YOU) =====
-                await emailjs.send(
-                    "service_b9bppgb",
-                    "template_uix9cyx", // Template with ALL details
-                    {
-                        to_email: "loans@clientcompany.com",
-                        cc_email: "",
-                        subject: `New Pre-Qual Lead: ${this.answers.firstName || "Client"} ${this.answers.lastName || ""}`,
-                        first_name: this.answers.firstName || "",
-                        last_name: this.answers.lastName || "",
-                        email: this.answers.email || "",
-                        phone: this.answers.phone || "",
-                        full_answers: JSON.stringify(this.answers, null, 2)
-                    }
-                );
-                console.log("✅ Loan officer email sent");
-
-                // ===== EMAIL 2: TO CLIENT (DEMO / CONFIRMATION) =====
-                if (this.answers.email) {
-                    await emailjs.send(
-                        "service_b9bppgb",
-                        "template_8kx812d", // Simpler template
-                        {
-                            to_email: this.answers.email, // CLIENT email
-                            first_name: this.answers.firstName || "Valued Client",
-                            message: "Thank you for completing your pre-qualification! A loan officer will contact you within 15 minutes."
-                        }
-                    );
-                    console.log("✅ Client confirmation email sent");
-                }
-            } catch (error) {
-                console.error("❌ Failed to send emails:", error);
-            }
-        }
     }
 
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
@@ -1192,6 +972,4 @@
     });
 
     console.log('✅ TCS message listener installed');
-    window.preQualController = new PreQualificationController();
-
 })();
