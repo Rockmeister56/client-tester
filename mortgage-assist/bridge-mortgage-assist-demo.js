@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 11:14:35 AM
+// Generated: 3/22/2026, 2:56:57 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-22T18:14:35.184Z"
+    "updatedAt": "2026-03-22T21:56:56.952Z"
 };
 
     const style = document.createElement('style');
@@ -414,30 +414,30 @@
             setupTriggerListener(widget);
             forceMortgageIntro(widget);
         });
-        widget.addEventListener('ready', () => {
-            console.log('[Bridge] Widget Ready. Initializing Intro...');
-            forceMortgageIntro(widget);
-        });
         return widget;
     }
 
     function forceMortgageIntro(widget) {
-        // The exact intro you want her to say
-        const introMessage = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
+        console.log('[Bridge] Forcing Intro (Audit Style)...');
         
-        // Wait a split second for the widget to fully initialize
+        // 1. Ensure widget is active and unmuted
+        widget.setAttribute('controlled-widget-state', 'active');
+        try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
+        
+        // 2. Construct the message
+        const message = "Hi! I am Tess, your personal AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
+        
+        // 3. Send to widget (Delay ensures stability)
         setTimeout(() => {
             try {
                 if (typeof widget.sendMessage === 'function') {
-                    console.log("🗣️ Sending intro message to widget...");
-                    widget.sendMessage(introMessage);
-                } else {
-                    console.warn("Widget does not support sendMessage yet.");
+                    console.log('🗣️ Speaking intro...');
+                    widget.sendMessage(message);
                 }
             } catch (e) {
-                console.error("Error forcing intro:", e);
+                console.error('[Bridge] Intro error:', e);
             }
-        }, 500);
+        }, 1500);
     }
 
     function showSplash() {
@@ -852,7 +852,8 @@
             switch(event.data.command) {
                 case 'START_PRE_QUAL':
                     if (window.preQualController) {
-                        window.preQualController.loadAndStartInterview();
+                        console.log('🚀 TCS Trigger: Starting Interview');
+                        window.preQualController.startInterview();
                     }
                     break;
                     
@@ -884,6 +885,5 @@
             }
         }
     });
-
     console.log('✅ TCS message listener installed');
 })();
