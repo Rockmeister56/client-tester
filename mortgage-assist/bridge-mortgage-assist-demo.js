@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 10:39:00 AM
+// Generated: 3/23/2026, 11:15:19 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-23T17:39:00.417Z"
+    "updatedAt": "2026-03-23T18:15:15.977Z"
 };
 
     const style = document.createElement('style');
@@ -717,13 +717,6 @@
     }
 
     window.disableBridgeTriggers = false;
-    window.addEventListener('message', function(event) {
-        if (event.data.type === 'DASHBOARD_COMMAND') {
-            if (event.data.command === 'toggleOverlays') { window.disableBridgeTriggers = event.data.disabled; }
-            return;
-        }
-        if (event.data.type === 'MODULE_TRIGGERED' && !window.disableBridgeTriggers) { window.showModule(event.data.module, event.data.triggerPhrase); }
-    });
 
     // ===== LOAD WIDGET =====
     function initWidget() {
@@ -743,7 +736,6 @@
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
-        // Try opener first
         if (window.opener) {
             window.opener.postMessage({
                 type: 'BRIDGE_ACTIVE',
@@ -751,31 +743,36 @@
                 url: window.location.href
             }, '*');
         }
-        
-        // Also broadcast to any listening TCS
         const channel = new BroadcastChannel('botemia-discovery');
         channel.postMessage({
             type: 'CLIENT_INFO',
             clientId: window.BotemiaConfig.id,
             url: window.location.href
         });
-        
         console.log('📢 Announced to TCS via broadcast');
     }
 
-    // Call it when bridge loads
     setTimeout(announceToTCS, 2000);
 
-    // ===== TCS MESSAGE HANDLER =====
     window.addEventListener('message', function(event) {
-        // Log for debugging
-        console.log('📨 Client received message:', event.data?.type);
+        
+        // 🔥 CRITICAL FIX: Ignore empty/undefined messages immediately
+        if (!event.data || !event.data.type) return;
+        
+        console.log('📨 Client received message:', event.data.type);
+        
+        // Handle Dashboard Commands
+        if (event.data.type === 'DASHBOARD_COMMAND') {
+            if (event.data.command === 'toggleOverlays') { window.disableBridgeTriggers = event.data.disabled; }
+            return;
+        }
+        
+        // Handle Module Triggers
+        if (event.data.type === 'MODULE_TRIGGERED' && !window.disableBridgeTriggers) { window.showModule(event.data.module, event.data.triggerPhrase); }
         
         // 1. HANDSHAKE: TCS says "I'm Ready"
         if (event.data?.type === 'TCS_READY') {
             console.log('✅ TCS Ready signal received! Responding...');
-            
-            // Respond back so TCS knows we are here
             if (event.source) {
                 event.source.postMessage({
                     type: 'CLIENT_INFO',
@@ -785,7 +782,6 @@
                     timestamp: Date.now(),
                     status: 'ready'
                 }, '*');
-                
                 console.log('📤 Sent CLIENT_INFO to TCS');
             }
         }
@@ -793,28 +789,21 @@
         // 2. COMMANDS: Handle triggers from TCS
         if (event.data?.type === 'TCS_COMMAND') {
             console.log('🎯 Command received:', event.data.command);
-            
             switch(event.data.command) {
                 case 'START_PRE_QUAL':
                     if (window.preQualController) {
                         console.log('🚀 TCS Trigger: Starting Interview');
-                        window.preQualController.startInterview(); // ✅ FIXED FUNCTION NAME
+                        window.preQualController.startInterview();
                     }
                     break;
-                    
                 case 'SHOW_TESTIMONIAL':
                     console.log('Show testimonial:', event.data.data);
-                    // Add your testimonial display logic here
                     break;
-                    
                 case 'SHOW_VIDEO':
                     console.log('Show video:', event.data.data);
-                    // Add your video display logic here
                     break;
-                    
                 case 'SHOW_SMART_SCREEN':
                     console.log('Show smart screen:', event.data.data);
-                    // Add your smart screen logic here
                     break;
             }
         }
