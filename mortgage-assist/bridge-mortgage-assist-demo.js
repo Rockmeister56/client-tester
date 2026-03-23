@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 11:20:40 PM
+// Generated: 3/23/2026, 10:39:00 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-23T06:20:40.072Z"
+    "updatedAt": "2026-03-23T17:39:00.417Z"
 };
 
     const style = document.createElement('style');
@@ -236,44 +236,26 @@
             this.isActive = false;
             this.script = null;
             this.answers = {};
-            this.setupMessageListener(); // Turn on the Ears
-        }
-
-        // THE EARS: Listen for User Speech
-        setupMessageListener() {
-            window.addEventListener('message', (event) => {
-                // Listen for the start signal
-                if (event.data.type === 'START_PRE_QUAL') {
-                    console.log('🎯 Trigger received. Starting interview.');
-                    this.startInterview();
-                }
-                
-                // Listen for User Speech to process answers
-                if (event.data.type === 'transcript' && this.isActive) {
-                     this.handleUserInput(event.data.text);
-                }
-                // Fallback for other LemonSlice event names
-                if (event.data.role === 'user' && this.isActive) {
-                     this.handleUserInput(event.data.content);
-                }
-            });
         }
 
         startInterview() {
+            if (this.isActive) return;
             console.log("🎯 Starting pre-qualification interview");
-            this.script = createSmartPreQualScript(); // Load SMART script
+            this.script = createSmartPreQualScript();
             this.isActive = true;
             const firstMessage = this.script.start();
             this.speak(firstMessage);
         }
 
         handleUserInput(userText) {
-            if (!this.isActive) return;
-            if (!this.script) { console.warn("⚠️ Script not ready."); return; }
+            if (!this.isActive || !this.script) return;
+            
+            // Ignore her own voice
             if (userText.includes("I'm Tess") || userText.includes("pre-qualified")) {
                 console.log("🛑 Ignoring self-speech.");
                 return;
             }
+            
             console.log(`👤 User said: ${userText}`);
             const nextResponse = this.script.processResponse(userText);
             if (nextResponse) { this.speak(nextResponse); }
@@ -284,6 +266,7 @@
                 this.isActive = false;
             }
         }
+
         speak(text) {
             console.log(`🤖 Tess says: ${text}`);
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
@@ -331,67 +314,26 @@
         }
     }
 
-    // ===== GLOBAL TRIGGER LISTENER =====
-    function setupTriggerListener(widget) {
-        console.log('👂 Setting up external trigger listener...');
-
-        // Method 1: Listen for the widget's 'response' event
-        widget.addEventListener('response', (event) => {
-            const aiText = event.detail?.text || event.detail || '';
-            checkForTrigger(aiText);
-        });
-
-        // Method 2: Listen for generic 'message' events (backup)
-        window.addEventListener('message', (event) => {
-            // LemonSlice often sends transcriptions this way
-            if (event.data && event.data.type === 'ai_response') {
-                 checkForTrigger(event.data.text);
-            }
-            // Some versions send 'transcript'
-            if (event.data && event.data.type === 'transcript') {
-                 checkForTrigger(event.data.text);
-            }
-        });
-    }
-
-    function checkForTrigger(text) {
-        if (!text) return;
-        // Look for the exact phrase Tess is supposed to say
-        if (text.includes("LET'S GET YOU PRE-QUALIFIED") || text.includes("get you pre-qualified")) {
-            console.log("🎯 TRIGGER PHRASE DETECTED EXTERNALLY!");
-            firePreQualTrigger();
-        }
-    }
-
-    function firePreQualTrigger() {
-        if (window.preQualFired) return; // Safety stop
-        window.preQualFired = true;
-        
-        console.log("🚀 Sending START_PRE_QUAL to Controller...");
-        window.dispatchEvent(new CustomEvent('message', { 
-            detail: { type: 'START_PRE_QUAL' } 
-        }));
-        
-        // Direct call (most reliable)
-        if (window.preQualController) {
-            window.preQualController.startInterview();
-        }
-    }
-
-    // ===== INITIALIZE THE CONTROLLER =====
     window.preQualController = new PreQualificationController();
 
-    // Listen for User Speech to feed the Controller
     window.addEventListener("message", (event) => {
         if (event.data && event.data.type === "transcript" && window.preQualController.isActive) {
             window.preQualController.handleUserInput(event.data.text);
         }
-        // Fallback for other LemonSlice event structures
+        // Fallback for LemonSlice's other event names
         if (event.data && event.data.role === "user" && window.preQualController.isActive) {
              window.preQualController.handleUserInput(event.data.content);
         }
     });
 
+    window.addEventListener("message", (event) => {
+        if (event.data && event.data.type === "START_PRE_QUAL") {
+            console.log("🚀 Received START_PRE_QUAL from Trigger Dashboard");
+            if (window.preQualController) {
+                window.preQualController.startInterview();
+            }
+        }
+    });
     // Listen for START_PRE_QUAL trigger
     window.addEventListener("message", (event) => {
         if (event.data && event.data.type === "START_PRE_QUAL") {
