@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 2:56:57 PM
+// Generated: 3/22/2026, 10:45:22 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-22T21:56:56.952Z"
+    "updatedAt": "2026-03-23T05:45:22.210Z"
 };
 
     const style = document.createElement('style');
@@ -374,7 +374,7 @@
         
         // Direct call (most reliable)
         if (window.preQualController) {
-            window.preQualController.startInterview();
+            window.preQualController.startInterview(); // ✅ FIXED: Changed from loadAndStartInterview
         }
     }
 
@@ -418,25 +418,29 @@
     }
 
     function forceMortgageIntro(widget) {
-        console.log('[Bridge] Forcing Intro (Audit Style)...');
+        // SAFETY 1: Don't intro if already in interview
+        if (window.preQualController && window.preQualController.isActive) {
+            console.log('[Bridge] Skipping intro - Interview already active.');
+            return;
+        }
         
-        // 1. Ensure widget is active and unmuted
+        console.log('[Bridge] Forcing Intro...');
         widget.setAttribute('controlled-widget-state', 'active');
+        
+        // 🔥 SAFETY 2: DISABLE TRIGGERS DURING INTRO
+        // This stops the "Phantom Loop" where she hears her own voice
+        window.preQualFired = true;
+        
         try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
         
-        // 2. Construct the message
-        const message = "Hi! I am Tess, your personal AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
+        const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
-        // 3. Send to widget (Delay ensures stability)
         setTimeout(() => {
             try {
                 if (typeof widget.sendMessage === 'function') {
-                    console.log('🗣️ Speaking intro...');
                     widget.sendMessage(message);
                 }
-            } catch (e) {
-                console.error('[Bridge] Intro error:', e);
-            }
+            } catch (e) { console.error('[Bridge] Intro error:', e); }
         }, 1500);
     }
 
