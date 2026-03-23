@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 12:15:50 PM
+// Generated: 3/23/2026, 12:29:07 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-23T19:15:50.099Z"
+    "updatedAt": "2026-03-23T19:29:07.813Z"
 };
 
     const style = document.createElement('style');
@@ -344,6 +344,13 @@
         }
     });
     function createMainWidget() {
+        const existing = document.getElementById('splash-widget');
+        if (existing) {
+            console.log("[Bridge] Found existing Splash Widget, re-using.");
+            existing.id = 'main-widget'; // Rename it
+            return existing;
+        }
+
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.setAttribute('initial-state', 'minimized');
@@ -354,6 +361,7 @@
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Widget Ready. Initializing Listeners...');
             setupTriggerListener(widget);
+            setTimeout(() => { forceMortgageIntro(widget); }, 500);
         });
         
         return widget;
@@ -490,9 +498,16 @@
     }
 
     function activateTess() {
-        console.log("🖱️ Click detected: Revealing Tess...");
+        console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
-        // 1. NUKE THE SPLASH WIDGET
+        // 1. Try to pre-warm audio
+        try {
+            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
+                window.mainWidget.micOn();
+            }
+        } catch(e) { console.warn("Audio pre-check:", e); }
+
+        // 2. NUKE THE SPLASH WIDGET (Critical for stopping video conflict)
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = '';
@@ -501,33 +516,40 @@
             }
         }
 
-        // 2. Remove the overlay
+        // 3. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
-        // 3. REVEAL MAIN WIDGET
-        if (window.mainWidget) {
+        // 4. CREATE MAIN WIDGET (Fresh Start)
+        setTimeout(() => {
+            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
+                window.mainWidget = createMainWidget();
+                window.mainWidget.setAttribute('hide-ui', 'true');
+                document.body.appendChild(window.mainWidget);
+            }
+            
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // 4. Activate Audio
+            // 5. Turn on mic with proper async handling
             setTimeout(async () => {
+                console.log("🎤 Finalizing audio state...");
                 try {
-                    await window.mainWidget.micOn?.();
-                    await window.mainWidget.unmute?.();
-                    await forceUnmute();
-                    console.log("✅ Microphone activated");
+                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                        await window.mainWidget.micOn();
+                        await window.mainWidget.unmute?.();
+                        console.log("✅ Microphone activated");
+                        
+                        // Force unmute shadow DOM as backup
+                        await forceUnmute();
+                        
+                    }
                 } catch (e) {
                     console.error("❌ Mic activation failed:", e);
+                    forceUnmute();
                 }
-            }, 100);
-        } else {
-            console.error("❌ Main Widget not found! Creating now...");
-            // Fallback if widget wasn't pre-created
-            window.mainWidget = createMainWidget();
-            window.mainWidget.style.display = 'block';
-            document.body.appendChild(window.mainWidget);
-        }
+            }, 3000);
+        }, 100);
     }
 
     function showPersistentAvatar() {
@@ -705,15 +727,6 @@
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
         setTimeout(() => { showSplash(); }, 100);
-        setTimeout(() => {
-            if (!window.mainWidget) {
-                console.log("[Bridge] Pre-creating Main Widget for stability...");
-                window.mainWidget = createMainWidget();
-                window.mainWidget.style.display = 'none';
-                window.mainWidget.setAttribute('hide-ui', 'true');
-                document.body.appendChild(window.mainWidget);
-            }
-        }, 2000);
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
