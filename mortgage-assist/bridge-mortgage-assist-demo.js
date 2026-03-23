@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 11:46:24 AM
+// Generated: 3/23/2026, 12:15:50 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-23T18:46:24.209Z"
+    "updatedAt": "2026-03-23T19:15:50.099Z"
 };
 
     const style = document.createElement('style');
@@ -490,16 +490,9 @@
     }
 
     function activateTess() {
-        console.log("🖱️ Click detected: Capturing user gesture for audio...");
+        console.log("🖱️ Click detected: Revealing Tess...");
         
-        // 1. Try to pre-warm audio
-        try {
-            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
-                window.mainWidget.micOn();
-            }
-        } catch(e) { console.warn("Audio pre-check:", e); }
-
-        // 2. NUKE THE SPLASH WIDGET
+        // 1. NUKE THE SPLASH WIDGET
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = '';
@@ -508,48 +501,33 @@
             }
         }
 
-        // 3. Remove the overlay
+        // 2. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
-        // 4. CREATE MAIN WIDGET (Fast Transition)
-        setTimeout(() => {
-            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
-                window.mainWidget = createMainWidget();
-                // CRITICAL: Set hide-ui to prevent text messages
-                window.mainWidget.setAttribute('hide-ui', 'true');
-                document.body.appendChild(window.mainWidget);
-            }
-            
+        // 3. REVEAL MAIN WIDGET
+        if (window.mainWidget) {
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // 5. Turn on mic with proper async handling
+            // 4. Activate Audio
             setTimeout(async () => {
-                console.log("🎤 Finalizing audio state...");
                 try {
-                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                        await window.mainWidget.micOn();
-                        await window.mainWidget.unmute?.();
-                        console.log("✅ Microphone activated");
-                        
-                        // Force unmute shadow DOM as backup
-                        await forceUnmute();
-                        
-                        // Send welcome message (audio only due to hide-ui)
-                        setTimeout(() => {
-                            if (window.mainWidget && typeof window.mainWidget.sendMessage === 'function') {
-                                window.mainWidget.sendMessage("Hi! I'm Tess. How can I help you today?");
-                            }
-                        }, 1000);
-                    }
+                    await window.mainWidget.micOn?.();
+                    await window.mainWidget.unmute?.();
+                    await forceUnmute();
+                    console.log("✅ Microphone activated");
                 } catch (e) {
                     console.error("❌ Mic activation failed:", e);
-                    // Fallback to forceUnmute
-                    forceUnmute();
                 }
-            }, 3000);
-        }, 100);
+            }, 100);
+        } else {
+            console.error("❌ Main Widget not found! Creating now...");
+            // Fallback if widget wasn't pre-created
+            window.mainWidget = createMainWidget();
+            window.mainWidget.style.display = 'block';
+            document.body.appendChild(window.mainWidget);
+        }
     }
 
     function showPersistentAvatar() {
@@ -718,16 +696,24 @@
 
     window.disableBridgeTriggers = false;
 
-    // ===== LOAD WIDGET =====
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
-        setTimeout(() => { showSplash(); }, 100);
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
+        setTimeout(() => { showSplash(); }, 100);
+        setTimeout(() => {
+            if (!window.mainWidget) {
+                console.log("[Bridge] Pre-creating Main Widget for stability...");
+                window.mainWidget = createMainWidget();
+                window.mainWidget.style.display = 'none';
+                window.mainWidget.setAttribute('hide-ui', 'true');
+                document.body.appendChild(window.mainWidget);
+            }
+        }, 2000);
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
