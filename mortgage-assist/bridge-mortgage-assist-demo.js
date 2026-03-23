@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/22/2026, 10:45:22 PM
+// Generated: 3/22/2026, 11:20:40 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-23T05:45:22.210Z"
+    "updatedAt": "2026-03-23T06:20:40.072Z"
 };
 
     const style = document.createElement('style');
@@ -374,7 +374,7 @@
         
         // Direct call (most reliable)
         if (window.preQualController) {
-            window.preQualController.startInterview(); // ✅ FIXED: Changed from loadAndStartInterview
+            window.preQualController.startInterview();
         }
     }
 
@@ -418,30 +418,29 @@
     }
 
     function forceMortgageIntro(widget) {
-        // SAFETY 1: Don't intro if already in interview
-        if (window.preQualController && window.preQualController.isActive) {
-            console.log('[Bridge] Skipping intro - Interview already active.');
-            return;
-        }
+        diagLog("Intro Function Triggered");
         
-        console.log('[Bridge] Forcing Intro...');
         widget.setAttribute('controlled-widget-state', 'active');
-        
-        // 🔥 SAFETY 2: DISABLE TRIGGERS DURING INTRO
-        // This stops the "Phantom Loop" where she hears her own voice
-        window.preQualFired = true;
+        diagLog("Widget state set to active");
         
         try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
+        diagLog("Mic/Unmute attempted");
         
         const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
         setTimeout(() => {
+            diagLog("Timeout finished. Sending message...");
             try {
                 if (typeof widget.sendMessage === 'function') {
                     widget.sendMessage(message);
+                    diagLog("Message sent successfully");
+                } else {
+                    diagLog("ERROR: sendMessage missing");
                 }
-            } catch (e) { console.error('[Bridge] Intro error:', e); }
-        }, 1500);
+            } catch (e) {
+                diagLog("CRASH: " + e.message);
+            }
+        }, 3000);
     }
 
     function showSplash() {
@@ -857,7 +856,7 @@
                 case 'START_PRE_QUAL':
                     if (window.preQualController) {
                         console.log('🚀 TCS Trigger: Starting Interview');
-                        window.preQualController.startInterview();
+                        window.preQualController.startInterview(); // ✅ FIXED FUNCTION NAME
                     }
                     break;
                     
