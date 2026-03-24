@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/24/2026, 12:06:57 AM
+// Generated: 3/24/2026, 12:21:41 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T07:06:57.793Z"
+    "updatedAt": "2026-03-24T07:21:41.334Z"
 };
 
     const style = document.createElement('style');
@@ -316,6 +316,10 @@
 
     window.preQualController = new PreQualificationController();
 
+    if (typeof diagLog === "undefined") {
+        window.diagLog = function(msg) { console.log("[DIAG]", msg); };
+    }
+
     window.addEventListener("message", (event) => {
         if (event.data && event.data.type === "transcript" && window.preQualController.isActive) {
             window.preQualController.handleUserInput(event.data.text);
@@ -334,15 +338,7 @@
             }
         }
     });
-    // Listen for START_PRE_QUAL trigger
-    window.addEventListener("message", (event) => {
-        if (event.data && event.data.type === "START_PRE_QUAL") {
-            console.log("🚀 Received START_PRE_QUAL from Trigger Dashboard");
-            if (window.preQualController) {
-                window.preQualController.startInterview();
-            }
-        }
-    });
+
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
@@ -352,35 +348,35 @@
         widget.id = 'main-widget';
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
-            console.log('[Bridge] Widget Ready. Initializing Listeners...');
-            setupTriggerListener(widget);
+            console.log('[Bridge] Widget Ready. Sending intro...');
+            forceMortgageIntro(widget);
         });
         
         return widget;
     }
 
     function forceMortgageIntro(widget) {
-        diagLog("Intro Function Triggered");
+        console.log("🎯 Intro Function Triggered");
         
         widget.setAttribute('controlled-widget-state', 'active');
-        diagLog("Widget state set to active");
+        console.log("Widget state set to active");
         
         try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
-        diagLog("Mic/Unmute attempted");
+        console.log("Mic/Unmute attempted");
         
         const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
         setTimeout(() => {
-            diagLog("Timeout finished. Sending message...");
+            console.log("Timeout finished. Sending message...");
             try {
                 if (typeof widget.sendMessage === 'function') {
                     widget.sendMessage(message);
-                    diagLog("Message sent successfully");
+                    console.log("✅ Intro message sent successfully");
                 } else {
-                    diagLog("ERROR: sendMessage missing");
+                    console.error("ERROR: sendMessage missing");
                 }
             } catch (e) {
-                diagLog("CRASH: " + e.message);
+                console.error("CRASH: " + e.message);
             }
         }, 3000);
     }
