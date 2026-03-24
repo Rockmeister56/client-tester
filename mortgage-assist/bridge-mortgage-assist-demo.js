@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 9:52:57 PM
+// Generated: 3/23/2026, 11:02:38 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T04:52:57.064Z"
+    "updatedAt": "2026-03-24T06:02:38.200Z"
 };
 
     const style = document.createElement('style');
@@ -343,6 +343,24 @@
             }
         }
     });
+    function setupTessTriggerListener(widget) {
+        console.log("👂 Setting up Tess trigger listener...");
+        
+        widget.addEventListener("response", (event) => {
+            const tessMessage = event.detail?.text || event.detail || "";
+            if (tessMessage) {
+                console.log("🤖 Tess said:", tessMessage);
+                if (tessMessage.toLowerCase().includes("let's get you pre-qualified") ||
+                    tessMessage.toLowerCase().includes("get you pre-qualified")) {
+                    console.log("🎯 TRIGGER PHRASE DETECTED!");
+                    if (window.preQualController && !window.preQualController.isActive) {
+                        window.preQualController.startInterview();
+                    }
+                }
+            }
+        });
+    }
+
     function createMainWidget() {
         const existing = document.getElementById('splash-widget');
         if (existing) {
@@ -360,6 +378,7 @@
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Widget Ready. Initializing Listeners...');
+            setupTessTriggerListener(widget);
             setTimeout(() => { forceMortgageIntro(widget); }, 500);
         });
         
