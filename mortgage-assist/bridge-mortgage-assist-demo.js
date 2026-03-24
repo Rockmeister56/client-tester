@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/24/2026, 9:56:20 AM
+// Generated: 3/24/2026, 10:20:33 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T16:56:19.916Z"
+    "updatedAt": "2026-03-24T17:20:32.988Z"
 };
 
     const style = document.createElement('style');
@@ -334,15 +334,7 @@
             }
         }
     });
-    // Listen for START_PRE_QUAL trigger
-    window.addEventListener("message", (event) => {
-        if (event.data && event.data.type === "START_PRE_QUAL") {
-            console.log("🚀 Received START_PRE_QUAL from Trigger Dashboard");
-            if (window.preQualController) {
-                window.preQualController.startInterview();
-            }
-        }
-    });
+
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
@@ -383,110 +375,6 @@
                 diagLog("CRASH: " + e.message);
             }
         }, 3000);
-    }
-
-    function showSplash() {
-        const config = window.BotemiaConfig.modules?.splashScreen;
-        if (!config || !config.enabled) return;
-
-        const overlay = document.createElement('div');
-        overlay.className = 'splash-overlay';
-        overlay.id = 'splashOverlay';
-        overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center; z-index: 99999;
-        `;
-
-        const card = document.createElement('div');
-        card.className = 'splash-card';
-        card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
-
-        let cardHTML = `
-            <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
-            <h2>${config.subtitle || 'Your Personal AI Web Guide'}</h2>
-            <div class="splash-avatar-container" id="splashAvatarContainer"></div>
-            <div class="button-group">
-                <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
-                <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
-            </div>
-        `;
-
-        // Add white footer area with logo - EXACT DIMENSIONS
-        cardHTML += `
-            <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
-                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
-                    ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
-                </div>
-            </div>
-        `;
-        card.innerHTML = cardHTML;
-
-        overlay.appendChild(card);
-        document.body.appendChild(overlay);
-
-        const container = document.getElementById('splashAvatarContainer');
-        const splashWidget = createSplashWidget();
-        container.appendChild(splashWidget);
-
-        // Add ticker tape if keywords exist
-        const tickerKeywords = config.tickerKeywords;
-        if (tickerKeywords) {
-            const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
-            
-            if (keywords.length > 0) {
-                const tickerContainer = document.createElement('div');
-                tickerContainer.className = 'ticker-container';
-                
-                const tickerContent = document.createElement('div');
-                tickerContent.className = 'ticker-content';
-                
-                // Duplicate keywords for seamless looping
-                const allKeywords = [...keywords, ...keywords];
-                
-                allKeywords.forEach(keyword => {
-                    const span = document.createElement('span');
-                    span.className = 'ticker-item';
-                    span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
-                    tickerContent.appendChild(span);
-                });
-                
-                tickerContainer.appendChild(tickerContent);
-                container.appendChild(tickerContainer);
-            }
-        }
-        document.getElementById('activateTessBtn').addEventListener('click', activateTess);
-        document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
-
-        const primaryBtn = document.getElementById('activateTessBtn');
-        primaryBtn.onmouseover = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.hoverTop || '#ffd700'}, ${config.primaryButton?.hoverBottom || '#e0b000'})`; primaryBtn.style.transform = 'scale(1.02)'; };
-        primaryBtn.onmouseout = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'})`; primaryBtn.style.transform = 'scale(1)'; };
-        const secondaryBtn = document.getElementById('justBrowsingBtn');
-        secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
-        secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
-    }
-
-    async function forceUnmute() {
-        if (window.mainWidget) {
-            // 1. API Calls
-            try {
-                await window.mainWidget.micOn?.();
-                await window.mainWidget.unmute?.();
-            } catch(e) {
-                console.warn("Force unmute API error", e);
-            }
-            // 2. Nuclear Shadow DOM Unmute
-            try {
-                const shadow = window.mainWidget.shadowRoot;
-                if (shadow) {
-                    const v = shadow.querySelector('video');
-                    const a = shadow.querySelector('audio');
-                    if (v) { v.muted = false; v.volume = 1.0; v.play(); }
-                    if (a) { a.muted = false; a.volume = 1.0; a.play(); }
-                }
-            } catch(e) {}
-        }
     }
 
     function activateTess() {
@@ -535,8 +423,7 @@
                         // Force unmute shadow DOM as backup
                         await forceUnmute();
                         
-                        // 🔥 NEW: WAKE UP THE CONTROLLER
-                        // Manually start the interview if we are in "Test Mode" or just say Hi.
+                        // 🔥 WAKE UP CALL: This starts the interview
                         if (window.preQualController) {
                             console.log("🚀 Manually triggering interview start...");
                             window.preQualController.startInterview();
