@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 4:58:30 PM
+// Generated: 3/23/2026, 9:52:57 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-23T23:58:29.950Z"
+    "updatedAt": "2026-03-24T04:52:57.064Z"
 };
 
     const style = document.createElement('style');
@@ -360,7 +360,6 @@
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Widget Ready. Initializing Listeners...');
-            setupTriggerListener(widget);
             setTimeout(() => { forceMortgageIntro(widget); }, 500);
         });
         
@@ -507,7 +506,7 @@
             }
         } catch(e) { console.warn("Audio pre-check:", e); }
 
-        // 2. NUKE THE SPLASH WIDGET (Critical for stopping video conflict)
+        // 2. NUKE THE SPLASH WIDGET
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = '';
@@ -520,7 +519,7 @@
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
-        // 4. CREATE MAIN WIDGET (Fresh Start)
+        // 4. CREATE MAIN WIDGET
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
@@ -531,7 +530,7 @@
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // 5. Turn on mic with proper async handling
+            // 5. Activate Audio
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
                 try {
@@ -542,6 +541,13 @@
                         
                         // Force unmute shadow DOM as backup
                         await forceUnmute();
+                        
+                        // 🔥 NEW: WAKE UP THE CONTROLLER
+                        // Manually start the interview if we are in "Test Mode" or just say Hi.
+                        if (window.preQualController) {
+                            console.log("🚀 Manually triggering interview start...");
+                            window.preQualController.startInterview();
+                        }
                         
                     }
                 } catch (e) {
