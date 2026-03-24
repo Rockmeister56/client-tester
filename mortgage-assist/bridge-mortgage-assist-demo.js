@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/24/2026, 10:20:33 AM
+// Generated: 3/24/2026, 10:35:46 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T17:20:32.988Z"
+    "updatedAt": "2026-03-24T17:35:46.085Z"
 };
 
     const style = document.createElement('style');
@@ -377,6 +377,88 @@
         }, 3000);
     }
 
+    function showSplash() {
+        const config = window.BotemiaConfig.modules?.splashScreen;
+        if (!config || !config.enabled) return;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'splash-overlay';
+        overlay.id = 'splashOverlay';
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 99999;
+        `;
+
+        const card = document.createElement('div');
+        card.className = 'splash-card';
+        card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
+
+        let cardHTML = `
+            <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
+            <h2>${config.subtitle || 'Your Personal AI Web Guide'}</h2>
+            <div class="splash-avatar-container" id="splashAvatarContainer"></div>
+            <div class="button-group">
+                <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
+                <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
+            </div>
+        `;
+
+        // Add white footer area with logo - EXACT DIMENSIONS
+        cardHTML += `
+            <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
+                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
+                    ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
+                </div>
+            </div>
+        `;
+        card.innerHTML = cardHTML;
+
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+
+        const container = document.getElementById('splashAvatarContainer');
+        const splashWidget = createSplashWidget();
+        container.appendChild(splashWidget);
+
+        // Add ticker tape if keywords exist
+        const tickerKeywords = config.tickerKeywords;
+        if (tickerKeywords) {
+            const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
+            
+            if (keywords.length > 0) {
+                const tickerContainer = document.createElement('div');
+                tickerContainer.className = 'ticker-container';
+                
+                const tickerContent = document.createElement('div');
+                tickerContent.className = 'ticker-content';
+                
+                // Duplicate keywords for seamless looping
+                const allKeywords = [...keywords, ...keywords];
+                
+                allKeywords.forEach(keyword => {
+                    const span = document.createElement('span');
+                    span.className = 'ticker-item';
+                    span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
+                    tickerContent.appendChild(span);
+                });
+                
+                tickerContainer.appendChild(tickerContent);
+                container.appendChild(tickerContainer);
+            }
+        }
+        document.getElementById('activateTessBtn').addEventListener('click', activateTess);
+        document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
+
+        const primaryBtn = document.getElementById('activateTessBtn');
+        primaryBtn.onmouseover = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.hoverTop || '#ffd700'}, ${config.primaryButton?.hoverBottom || '#e0b000'})`; primaryBtn.style.transform = 'scale(1.02)'; };
+        primaryBtn.onmouseout = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'})`; primaryBtn.style.transform = 'scale(1)'; };
+        const secondaryBtn = document.getElementById('justBrowsingBtn');
+        secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
+        secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
+    }
+
     function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
@@ -604,16 +686,15 @@
 
     window.disableBridgeTriggers = false;
 
-    // ===== LOAD WIDGET =====
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
-        setTimeout(() => { showSplash(); }, 100);
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
+        setTimeout(() => { showSplash(); }, 100);
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
