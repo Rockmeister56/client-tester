@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/24/2026, 8:40:17 AM
+// Generated: 3/24/2026, 9:56:20 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T15:40:16.921Z"
+    "updatedAt": "2026-03-24T16:56:19.916Z"
 };
 
     const style = document.createElement('style');
@@ -316,10 +316,6 @@
 
     window.preQualController = new PreQualificationController();
 
-    if (typeof diagLog === "undefined") {
-        window.diagLog = function(msg) { console.log("[DIAG]", msg); };
-    }
-
     window.addEventListener("message", (event) => {
         if (event.data && event.data.type === "transcript" && window.preQualController.isActive) {
             window.preQualController.handleUserInput(event.data.text);
@@ -338,7 +334,15 @@
             }
         }
     });
-
+    // Listen for START_PRE_QUAL trigger
+    window.addEventListener("message", (event) => {
+        if (event.data && event.data.type === "START_PRE_QUAL") {
+            console.log("🚀 Received START_PRE_QUAL from Trigger Dashboard");
+            if (window.preQualController) {
+                window.preQualController.startInterview();
+            }
+        }
+    });
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
@@ -348,36 +352,35 @@
         widget.id = 'main-widget';
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
-            console.log('[Bridge] Main Widget Ready.');
-            forceMortgageIntro(widget);
+            console.log('[Bridge] Widget Ready. Initializing Listeners...');
+            setupTriggerListener(widget);
         });
         
         return widget;
     }
 
     function forceMortgageIntro(widget) {
-        if (window.preQualController && window.preQualController.isActive) {
-            console.log('[Bridge] Skipping intro - Interview already active.');
-            return;
-        }
-        
-        console.log("🎯 Intro Function Triggered");
+        diagLog("Intro Function Triggered");
         
         widget.setAttribute('controlled-widget-state', 'active');
-        window.preQualFired = true;
+        diagLog("Widget state set to active");
         
         try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
+        diagLog("Mic/Unmute attempted");
         
         const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
         setTimeout(() => {
+            diagLog("Timeout finished. Sending message...");
             try {
                 if (typeof widget.sendMessage === 'function') {
                     widget.sendMessage(message);
-                    console.log("✅ Intro message sent successfully");
+                    diagLog("Message sent successfully");
+                } else {
+                    diagLog("ERROR: sendMessage missing");
                 }
             } catch (e) {
-                console.error("CRASH: " + e.message);
+                diagLog("CRASH: " + e.message);
             }
         }, 3000);
     }
@@ -484,6 +487,68 @@
                 }
             } catch(e) {}
         }
+    }
+
+    function activateTess() {
+        console.log("🖱️ Click detected: Capturing user gesture for audio...");
+        
+        // 1. Try to pre-warm audio
+        try {
+            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
+                window.mainWidget.micOn();
+            }
+        } catch(e) { console.warn("Audio pre-check:", e); }
+
+        // 2. NUKE THE SPLASH WIDGET
+        const splashWidget = document.getElementById('splash-widget');
+        if (splashWidget) {
+            splashWidget.innerHTML = '';
+            if (splashWidget.parentNode) {
+                splashWidget.parentNode.removeChild(splashWidget);
+            }
+        }
+
+        // 3. Remove the overlay
+        const overlay = document.getElementById('splashOverlay');
+        if (overlay) overlay.remove();
+
+        // 4. CREATE MAIN WIDGET
+        setTimeout(() => {
+            if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
+                window.mainWidget = createMainWidget();
+                window.mainWidget.setAttribute('hide-ui', 'true');
+                document.body.appendChild(window.mainWidget);
+            }
+            
+            window.mainWidget.style.display = 'block';
+            window.mainWidget.setAttribute('controlled-widget-state', 'active');
+            
+            // 5. Activate Audio
+            setTimeout(async () => {
+                console.log("🎤 Finalizing audio state...");
+                try {
+                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                        await window.mainWidget.micOn();
+                        await window.mainWidget.unmute?.();
+                        console.log("✅ Microphone activated");
+                        
+                        // Force unmute shadow DOM as backup
+                        await forceUnmute();
+                        
+                        // 🔥 NEW: WAKE UP THE CONTROLLER
+                        // Manually start the interview if we are in "Test Mode" or just say Hi.
+                        if (window.preQualController) {
+                            console.log("🚀 Manually triggering interview start...");
+                            window.preQualController.startInterview();
+                        }
+                        
+                    }
+                } catch (e) {
+                    console.error("❌ Mic activation failed:", e);
+                    forceUnmute();
+                }
+            }, 3000);
+        }, 100);
     }
 
     function showPersistentAvatar() {
@@ -652,15 +717,16 @@
 
     window.disableBridgeTriggers = false;
 
+    // ===== LOAD WIDGET =====
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
+        setTimeout(() => { showSplash(); }, 100);
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
-        setTimeout(() => { showSplash(); }, 100);
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
