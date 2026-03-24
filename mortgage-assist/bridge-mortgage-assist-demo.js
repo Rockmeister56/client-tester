@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 11:53:42 PM
+// Generated: 3/24/2026, 12:06:57 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T06:53:42.475Z"
+    "updatedAt": "2026-03-24T07:06:57.793Z"
 };
 
     const style = document.createElement('style');
@@ -717,16 +717,15 @@
 
     window.disableBridgeTriggers = false;
 
-    // ===== LOAD WIDGET =====
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
-        setTimeout(() => { showSplash(); }, 100);
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
+        setTimeout(() => { showSplash(); }, 100);
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
