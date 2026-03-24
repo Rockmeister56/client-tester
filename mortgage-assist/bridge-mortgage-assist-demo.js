@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/23/2026, 11:43:10 PM
+// Generated: 3/23/2026, 11:53:42 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T06:43:10.711Z"
+    "updatedAt": "2026-03-24T06:53:42.475Z"
 };
 
     const style = document.createElement('style');
@@ -344,13 +344,6 @@
         }
     });
     function createMainWidget() {
-        const existing = document.getElementById('splash-widget');
-        if (existing) {
-            console.log("[Bridge] Found existing Splash Widget, re-using.");
-            existing.id = 'main-widget'; // Rename it
-            return existing;
-        }
-
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.setAttribute('initial-state', 'minimized');
@@ -360,7 +353,7 @@
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Widget Ready. Initializing Listeners...');
-            setTimeout(() => { forceMortgageIntro(widget); }, 500);
+            setupTriggerListener(widget);
         });
         
         return widget;
@@ -724,15 +717,16 @@
 
     window.disableBridgeTriggers = false;
 
+    // ===== LOAD WIDGET =====
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
+        setTimeout(() => { showSplash(); }, 100);
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
-        setTimeout(() => { showSplash(); }, 100);
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
