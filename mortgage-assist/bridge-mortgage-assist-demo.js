@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/24/2026, 10:35:46 AM
+// Generated: 3/24/2026, 6:36:18 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "loans@clientcompany.com",
+            "loanOfficerEmail": "mobilewise.ai@gmail.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-24T17:35:46.085Z"
+    "updatedAt": "2026-03-25T01:36:18.417Z"
 };
 
     const style = document.createElement('style');
@@ -314,26 +314,112 @@
         }
     }
 
-    window.preQualController = new PreQualificationController();
+    let lastTriggerTime = 0;
+    const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
 
-    window.addEventListener("message", (event) => {
-        if (event.data && event.data.type === "transcript" && window.preQualController.isActive) {
-            window.preQualController.handleUserInput(event.data.text);
-        }
-        // Fallback for LemonSlice's other event names
-        if (event.data && event.data.role === "user" && window.preQualController.isActive) {
-             window.preQualController.handleUserInput(event.data.content);
-        }
-    });
-
-    window.addEventListener("message", (event) => {
-        if (event.data && event.data.type === "START_PRE_QUAL") {
-            console.log("🚀 Received START_PRE_QUAL from Trigger Dashboard");
-            if (window.preQualController) {
-                window.preQualController.startInterview();
+    function setupUniversalListener() {
+        console.log("👂 Universal Listener Activated.");
+        
+        window.addEventListener("message", (event) => {
+            
+            // SAFETY: Ignore garbage messages
+            if (!event.data || !event.data.type) return;
+            
+            const msgType = event.data.type;
+            const msgText = (event.data.text || event.data.content || "").toLowerCase();
+            
+            // Only process Transcripts (User Speech) and AI Responses (Tess Speech)
+            const isValidTrigger = (msgType === "transcript" || msgType === "ai_response");
+            if (!isValidTrigger) return;
+            
+            console.log(`📨 Heard: "${msgText}"`);
+            
+            // ========================================
+            // MODULE TRIGGERS (Triggered by Tess)
+            // ========================================
+            
+            // Check for cooldown
+            const now = Date.now();
+            if (now - lastTriggerTime < TRIGGER_COOLDOWN) return;
+            
+            // 1. TESTIMONIAL TRIGGER
+            if (msgText.includes("testimonial") || msgText.includes("success story")) {
+                console.log("🎯 Trigger: TESTIMONIAL");
+                lastTriggerTime = now;
+                // window.showModule("testimonial", "Testimonial"); // Uncomment when ready
             }
+            
+            // 2. SMART SCREEN TRIGGER
+            if (msgText.includes("show you") || msgText.includes("example")) {
+                console.log("🎯 Trigger: SMART SCREEN");
+                lastTriggerTime = now;
+                // window.showModule("smartScreen", "Example"); // Uncomment when ready
+            }
+            
+            // ========================================
+            // PRE-QUAL TRIGGER (Triggered by User)
+            // ========================================
+            
+            // Only run if Controller is NOT already active
+            if (window.preQualController && !window.preQualController.isActive) {
+                
+                const preQualIntents = [
+                    "get pre-qualified",
+                    "pre qualify",
+                    "let\'s get pre-qualified",
+                    "start the pre-qualification"
+                ];
+                
+                for (const intent of preQualIntents) {
+                    if (msgText.includes(intent)) {
+                        console.log("🎯 Trigger: START PRE-QUAL (User Intent)");
+                        lastTriggerTime = now;
+                        window.preQualController.startInterview();
+                        return; // Stop listening once triggered
+                    }
+                }
+            }
+            
+            // ========================================
+            // INTERVIEW EARS (Feeding answers)
+            // ========================================
+            
+            // If Interview is active, feed user speech to Controller
+            if (window.preQualController && window.preQualController.isActive) {
+                if (msgType === "transcript") {
+                    window.preQualController.handleUserInput(event.data.text);
+                }
+            }
+            
+        });
+    }
+
+    setupUniversalListener();
+
+    setTimeout(() => {
+        if (typeof setupUniversalListener === "function") {
+            console.log("🎧 Fallback: Starting Universal Listener");
+            setupUniversalListener();
+        } else {
+            console.error("❌ setupUniversalListener not found!");
         }
-    });
+    }, 100);
+
+    function createMainWidget() {
+        const widget = document.createElement('lemon-slice-widget');
+        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        widget.setAttribute('initial-state', 'minimized');
+        widget.setAttribute('custom-minimized-width', '144');
+        widget.setAttribute('custom-minimized-height', '216');
+        widget.id = 'main-widget';
+        widget.style.display = 'none';
+        widget.addEventListener('ready', () => {
+            console.log('[Bridge] Main Widget Ready.');
+            forceMortgageIntro(widget);
+        });
+        
+        return widget;
+    }
 
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
@@ -457,6 +543,28 @@
         const secondaryBtn = document.getElementById('justBrowsingBtn');
         secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
+    }
+
+    async function forceUnmute() {
+        if (window.mainWidget) {
+            // 1. API Calls
+            try {
+                await window.mainWidget.micOn?.();
+                await window.mainWidget.unmute?.();
+            } catch(e) {
+                console.warn("Force unmute API error", e);
+            }
+            // 2. Nuclear Shadow DOM Unmute
+            try {
+                const shadow = window.mainWidget.shadowRoot;
+                if (shadow) {
+                    const v = shadow.querySelector('video');
+                    const a = shadow.querySelector('audio');
+                    if (v) { v.muted = false; v.volume = 1.0; v.play(); }
+                    if (a) { a.muted = false; a.volume = 1.0; a.play(); }
+                }
+            } catch(e) {}
+        }
     }
 
     function activateTess() {
