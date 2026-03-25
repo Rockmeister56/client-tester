@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/25/2026, 2:46:34 AM
+// Generated: 3/25/2026, 4:04:16 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-25T09:46:34.258Z"
+    "updatedAt": "2026-03-25T11:04:16.188Z"
 };
 
     const style = document.createElement('style');
@@ -177,58 +177,6 @@
         widget.setAttribute('suppress-initial-message', 'true');
         widget.id = 'splash-widget';
         return widget;
-    }
-
-    // ===== SMART PRE-QUAL SCRIPT =====
-    function createSmartPreQualScript() {
-        const steps = [
-            // These steps will be populated by your parser
-            // based on the HTML knowledge base
-            { id: "securityOpening", type: "message", text: "You've definitely come to the right place. ✅\n\nBefore we begin, I want to put your mind at ease about something important.\n\nEverything you share with me today—your income, your credit, your personal information—is totally confidential. Our entire system runs on 128-bit bank-grade encryption, the same level of security used by major financial institutions.\n\nYour information never gets sold. Never gets misused. It goes directly to our licensed loan officers, and it's used for one purpose only: getting you the best possible rate and service.\n\nSo you can speak freely. I'm here to help, not to judge.\n\nNow—who am I speaking with today?" },
-            { id: "firstName", type: "question", question: "Great! Let's get you pre-qualified. First, what's your full name?", field: "firstName", validator: (input) => input && input.trim().length > 0, errorMessage: "I didn't catch that. Could you please tell me your full name?", next: "lastName" },
-            { id: "lastName", type: "question", question: "And what's your last name?", field: "lastName", validator: (input) => input && input.trim().length > 0, errorMessage: "What's your last name?", next: "email" },
-            { id: "email", type: "question", question: "What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.", field: "email", validator: (input) => input.includes('@') && input.includes('.'), errorMessage: "Please provide a valid email address (like name@example.com).", next: "phone" },
-            { id: "phone", type: "question", question: "And your phone number? In case our loan team needs to reach you quickly with your approval options.", field: "phone", validator: (input) => input.replace(/[^0-9]/g, '').length >= 10, errorMessage: "Please provide a valid 10-digit phone number.", next: "progressUpdate1" },
-            { id: "progressUpdate1", type: "message", text: "Got it. You're doing great—we're about a quarter of the way through." },
-            { id: "employmentStatus", type: "question", question: "Are you employed, self-employed, retired, or other?", field: "employmentStatus", options: ["Employed", "Self-Employed", "Retired", "Other"], validator: (input) => ["employed", "self-employed", "retired", "other"].some(opt => input.toLowerCase().includes(opt)), errorMessage: "Please select one: Employed, Self-Employed, Retired, or Other.", next: (input) => { if (input.toLowerCase().includes("self-employed")) return "selfEmployedDocumentation"; if (input.toLowerCase().includes("employed")) return "employedDocumentation"; return "annualIncome"; } },
-            { id: "selfEmployedDocumentation", type: "question", question: "Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?", field: "selfEmployedDocumentation", options: ["Tax Returns", "Bank Statements", "Both"], validator: (input) => ["tax returns", "bank statements", "both"].some(opt => input.toLowerCase().includes(opt)), errorMessage: "Please choose: Tax Returns, Bank Statements, or Both.", next: "annualIncome" },
-            { id: "employedDocumentation", type: "question", question: "And are you W-2 or 1099?", field: "employedDocumentation", options: ["W-2", "1099"], validator: (input) => input.toLowerCase().includes("w-2") || input.toLowerCase().includes("1099"), errorMessage: "Please specify W-2 or 1099.", next: "annualIncome" },
-            { id: "annualIncome", type: "question", question: "Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.", field: "annualIncome", validator: (input) => { const num = parseFloat(input.replace(/[^0-9.]/g, '')); return !isNaN(num) && num > 0; }, errorMessage: "Please provide a valid income amount (like $75,000).", next: "thankYouUpdate" },
-            { id: "thankYouUpdate", type: "message", text: "Thank you. That gives me a clear picture." },
-            { id: "incomeDocumentation", type: "question", question: "And do you typically document your income with W-2s, tax returns, or bank statements?", field: "incomeDocumentation", options: ["W-2s", "Tax Returns", "Bank Statements"], validator: (input) => ["w-2", "tax return", "bank statement"].some(opt => input.toLowerCase().includes(opt)), errorMessage: "Please choose: W-2s, Tax Returns, or Bank Statements.", next: "creditScore" },
-            { id: "creditScore", type: "question", question: "Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?", field: "creditScore", options: ["Excellent (740+)", "Good (700-739)", "Fair (620-699)", "Challenged (below 620)", "Not sure"], validator: (input) => true, next: "downPayment" },
-            { id: "downPayment", type: "question", question: "How much are you planning to put down? Just a range is fine.", field: "downPayment", options: ["Less than 3%", "3-5%", "5-10%", "10-20%", "20%+"], validator: (input) => true, next: "downPaymentFeedback" },
-            { id: "downPaymentFeedback", type: "message", text: "Got it. And just so you know—that range is totally workable. We have programs specifically for that." },
-            { id: "downPaymentSource", type: "question", question: "Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?", field: "downPaymentSource", options: ["Savings", "Gift from family", "Sale of current home", "Investment/401k", "Other"], validator: (input) => true, next: "bankruptcyHistory" },
-            { id: "bankruptcyHistory", type: "question", question: "Have you had any bankruptcies or foreclosures in the last 7 years?", field: "bankruptcyHistory", options: ["Yes", "No", "Prefer not to say"], validator: (input) => true, next: "loanPurpose" },
-            { id: "loanPurpose", type: "question", question: "Are you looking to purchase a home or refinance an existing one?", field: "loanPurpose", options: ["Purchase a home", "Refinance current home", "Cash-out refinance"], validator: (input) => true, next: "propertyType" },
-            { id: "propertyType", type: "question", question: "What type of property are you buying or refinancing?", field: "propertyType", options: ["Single family home", "Condominium", "Townhouse", "Multi-family (2-4 units)", "Manufactured home"], validator: (input) => true, next: "firstTimeBuyer" },
-            { id: "firstTimeBuyer", type: "question", question: "Are you a first-time homebuyer?", field: "firstTimeBuyer", options: ["Yes", "No"], validator: (input) => true, next: "militaryService" },
-            { id: "militaryService", type: "question", question: "Have you or your spouse served in the military?", field: "militaryService", options: ["Yes - Active duty", "Yes - Veteran", "No"], validator: (input) => true, next: "timeline" },
-            { id: "timeline", type: "question", question: "Last question—what's your timeline for purchasing or refinancing?", field: "timeline", options: ["Already have an offer", "Looking now - next 30 days", "1-3 months", "3-6 months", "Just exploring"], validator: (input) => true, next: "completion" },
-            { id: "completion", type: "completion", text: "That's it! You're all done. ✅\n\nI'm generating your pre-qualification file right now with everything you've shared.\n\n📧 Email sent to your inbox 📧\n\nCC'd to: our loan team at Asset Mortgage\n\nYour dedicated loan officer will receive this within seconds. They'll review your information and reach out within 15 minutes with your personalized pre-approval options.\n\nIs there anything else I can help you with while you wait?" }
-        ];
-
-        return {
-            steps: steps,
-            responses: {},
-            currentStepIndex: 0,
-            active: false,
-            start: function() { this.active = true; this.currentStepIndex = 0; this.responses = {}; return this.getCurrentQuestion(); },
-            processResponse: function(userInput) {
-                if (!this.active) return null;
-                const currentStep = this.steps[this.currentStepIndex];
-                if (currentStep.type === "message") { this.currentStepIndex++; return this.getCurrentQuestion(); }
-                if (currentStep.validator && !currentStep.validator(userInput)) { return currentStep.errorMessage || "I didn't quite catch that. Could you please try again?"; }
-                if (currentStep.field) { this.responses[currentStep.field] = userInput; console.log(`✅ Stored ${currentStep.field}:`, userInput); }
-                let nextStepId = typeof currentStep.next === "function" ? currentStep.next(userInput) : currentStep.next;
-                const nextIndex = this.steps.findIndex(s => s.id === nextStepId);
-                if (nextIndex !== -1) { this.currentStepIndex = nextIndex; } else { this.active = false; const completionStep = this.steps.find(s => s.type === "completion"); if (completionStep) { return completionStep.text; } return "Thank you! Your pre-qualification is complete."; }
-                return this.getCurrentQuestion();
-            },
-            getCurrentQuestion: function() { const step = this.steps[this.currentStepIndex]; if (!step) return null; if (step.type === "question") { return step.question; } else { return step.text; } },
-            getResults: function() { return this.responses; }
-        };
     }
 
     class PreQualificationController {
