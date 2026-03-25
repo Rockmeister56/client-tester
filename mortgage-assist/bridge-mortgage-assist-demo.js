@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/25/2026, 11:40:20 AM
+// Generated: 3/25/2026, 1:14:11 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-25T18:40:19.561Z"
+    "updatedAt": "2026-03-25T20:14:10.704Z"
 };
 
     const style = document.createElement('style');
@@ -182,15 +182,13 @@
     class PreQualificationController {
         constructor() {
             this.isActive = false;
-            this.script = null;
+            this.script = window.preQualScript;
             this.answers = {};
         }
 
         startInterview() {
             if (this.isActive) return;
             console.log("🎯 Starting pre-qualification interview");
-            // Use the Imported Knowledge Base instead of generating a new one
-            this.script = window.preQualScript;
             this.isActive = true;
             const firstMessage = this.script.start();
             this.speak(firstMessage);
@@ -198,30 +196,69 @@
 
         handleUserInput(userText) {
             if (!this.isActive || !this.script) return;
-            
-            // Ignore her own voice
-            if (userText.includes("I'm Tess") || userText.includes("pre-qualified")) {
-                console.log("🛑 Ignoring self-speech.");
-                return;
-            }
-            
             console.log(`👤 User said: ${userText}`);
             const nextResponse = this.script.processResponse(userText);
             if (nextResponse) { this.speak(nextResponse); }
             if (!this.script.active) {
                 console.log("✅ Interview Complete!", this.script.getResults());
                 this.answers = this.script.getResults();
-                this.sendEmail();
                 this.isActive = false;
             }
         }
 
         speak(text) {
+            if (!text) return;
             console.log(`🤖 Tess says: ${text}`);
-            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
-                window.mainWidget.sendMessage(text);
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget && typeof widget.sendMessage === "function") {
+                widget.sendMessage(text);
             }
         }
+    }
+
+    window.preQualController = new PreQualificationController();
+    console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
+
+    function setupUniversalListener() {
+        console.log("👂 Universal Listener Activated.");
+        
+        window.addEventListener("message", (event) => {
+            if (!event.data || !event.data.type) return;
+            
+            const msgType = event.data.type;
+            const msgText = (event.data.text || event.data.content || "").toLowerCase();
+            
+            // Check for user transcript (speech)
+            if (msgType === "transcript") {
+                console.log(`📨 Heard: "${msgText}"`);
+                
+                // Check for pre-qual intent
+                const preQualIntents = [
+                    "get pre-qualified",
+                    "pre qualify",
+                    "let\'s get pre-qualified",
+                    "start the pre-qualification"
+                ];
+                
+                for (const intent of preQualIntents) {
+                    if (msgText.includes(intent)) {
+                        console.log("🎯 PRE-QUAL TRIGGER DETECTED!");
+                        if (window.preQualController && !window.preQualController.isActive) {
+                            window.preQualController.startInterview();
+                        }
+                        return;
+                    }
+                }
+                
+                // Feed to active interview
+                if (window.preQualController && window.preQualController.isActive) {
+                    window.preQualController.handleUserInput(event.data.text);
+                }
+            }
+        });
+    }
+
+    setupUniversalListener();
 
         async sendEmail() {
             console.log("📧 Sending pre-qualification emails...");
