@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/25/2026, 4:04:16 AM
+// Generated: 3/25/2026, 11:40:20 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-25T11:04:16.188Z"
+    "updatedAt": "2026-03-25T18:40:19.561Z"
 };
 
     const style = document.createElement('style');
@@ -346,172 +346,264 @@
 
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
-        currentStep: 0,
         steps: [
             { 
                 id: "step_0", 
-                question: "Tess: You've definitely come to the right place. ✅", 
+                type: "message",
+                text: "Tess: You've definitely come to the right place. ✅",
+                question: "Tess: You've definitely come to the right place. ✅",
                 field: "",
-                type: "text",
+                validation: "text",
                 options: null
             },
             { 
                 id: "firstName", 
-                question: "Tess: Great! Let's get you pre-qualified. First, what's your full name?", 
+                type: "message",
+                text: "Tess: Great! Let's get you pre-qualified. First, what's your full name?",
+                question: "Tess: Great! Let's get you pre-qualified. First, what's your full name?",
                 field: "firstName",
-                type: "text",
+                validation: "text",
                 options: null
             },
             { 
                 id: "lastName", 
-                question: "Tess: And what's your last name?", 
+                type: "message",
+                text: "Tess: And what's your last name?",
+                question: "Tess: And what's your last name?",
                 field: "lastName",
-                type: "text",
+                validation: "text",
                 options: null
             },
             { 
                 id: "email", 
-                question: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.", 
+                type: "message",
+                text: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
+                question: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
                 field: "email",
-                type: "email",
+                validation: "email",
                 options: null
             },
             { 
                 id: "phone", 
-                question: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.", 
+                type: "message",
+                text: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
+                question: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
                 field: "phone",
-                type: "phone",
+                validation: "phone",
                 options: null
             },
             { 
                 id: "step_10", 
-                question: "Tess: Got it. You're doing great—we're about a quarter of the way through.", 
+                type: "message",
+                text: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
+                question: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
                 field: "",
-                type: "text",
+                validation: "text",
                 options: null
             },
             { 
                 id: "employmentStatus", 
-                question: "Tess: Are you employed, self-employed, retired, or other?", 
+                type: "message",
+                text: "Tess: Are you employed, self-employed, retired, or other?",
+                question: "Tess: Are you employed, self-employed, retired, or other?",
                 field: "employmentStatus",
-                type: "choice",
+                validation: "choice",
                 options: ["Employed","Self-Employed","Retired","Other"]
             },
             { 
                 id: "selfEmployedDocumentation", 
-                question: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?", 
+                type: "message",
+                text: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
+                question: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
                 field: "selfEmployedDocumentation",
-                type: "choice",
+                validation: "choice",
                 options: ["Tax Returns","Bank Statements","Both"]
             },
             { 
                 id: "employedDocumentation", 
-                question: "Tess: And are you W-2 or 1099?", 
+                type: "message",
+                text: "Tess: And are you W-2 or 1099?",
+                question: "Tess: And are you W-2 or 1099?",
                 field: "employedDocumentation",
-                type: "choice",
+                validation: "choice",
                 options: ["W-2","1099"]
             },
             { 
                 id: "annualIncome", 
-                question: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.", 
+                type: "message",
+                text: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
+                question: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
                 field: "annualIncome",
-                type: "currency",
+                validation: "currency",
                 options: null
             },
             { 
                 id: "step_19", 
-                question: "Tess: Thank you. That gives me a clear picture.", 
+                type: "message",
+                text: "Tess: Thank you. That gives me a clear picture.",
+                question: "Tess: Thank you. That gives me a clear picture.",
                 field: "",
-                type: "text",
+                validation: "text",
                 options: null
             },
             { 
                 id: "incomeDocumentation", 
-                question: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?", 
+                type: "message",
+                text: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
+                question: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
                 field: "incomeDocumentation",
-                type: "choice",
+                validation: "choice",
                 options: ["W-2s","Tax Returns","Bank Statements"]
             },
             { 
                 id: "creditScore", 
-                question: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?", 
+                type: "message",
+                text: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
+                question: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
                 field: "creditScore",
-                type: "choice",
+                validation: "choice",
                 options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
             },
             { 
                 id: "downPayment", 
-                question: "Tess: How much are you planning to put down? Just a range is fine.", 
+                type: "message",
+                text: "Tess: How much are you planning to put down? Just a range is fine.",
+                question: "Tess: How much are you planning to put down? Just a range is fine.",
                 field: "downPayment",
-                type: "choice",
+                validation: "choice",
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
                 id: "step_26", 
-                question: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.", 
+                type: "message",
+                text: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
+                question: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
                 field: "",
-                type: "text",
+                validation: "text",
                 options: null
             },
             { 
                 id: "downPaymentSource", 
-                question: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?", 
+                type: "message",
+                text: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
+                question: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
                 field: "downPaymentSource",
-                type: "choice",
+                validation: "choice",
                 options: ["Savings","Gift from family","Sale of current home","Investment/401k","Other"]
             },
             { 
                 id: "bankruptcyHistory", 
-                question: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?", 
+                type: "message",
+                text: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
+                question: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
                 field: "bankruptcyHistory",
-                type: "choice",
+                validation: "choice",
                 options: ["Yes","No","Prefer not to say"]
             },
             { 
                 id: "loanPurpose", 
-                question: "Tess: Are you looking to purchase a home or refinance an existing one?", 
+                type: "message",
+                text: "Tess: Are you looking to purchase a home or refinance an existing one?",
+                question: "Tess: Are you looking to purchase a home or refinance an existing one?",
                 field: "loanPurpose",
-                type: "choice",
+                validation: "choice",
                 options: ["Purchase a home","Refinance current home","Cash-out refinance"]
             },
             { 
                 id: "propertyType", 
-                question: "Tess: What type of property are you buying or refinancing?", 
+                type: "message",
+                text: "Tess: What type of property are you buying or refinancing?",
+                question: "Tess: What type of property are you buying or refinancing?",
                 field: "propertyType",
-                type: "choice",
+                validation: "choice",
                 options: ["Single family home","Condominium","Townhouse","Multi-family (2-4 units)","Manufactured home"]
             },
             { 
                 id: "firstTimeBuyer", 
-                question: "Tess: Are you a first-time homebuyer?", 
+                type: "message",
+                text: "Tess: Are you a first-time homebuyer?",
+                question: "Tess: Are you a first-time homebuyer?",
                 field: "firstTimeBuyer",
-                type: "choice",
+                validation: "choice",
                 options: ["Yes","No"]
             },
             { 
                 id: "militaryService", 
-                question: "Tess: Have you or your spouse served in the military?", 
+                type: "message",
+                text: "Tess: Have you or your spouse served in the military?",
+                question: "Tess: Have you or your spouse served in the military?",
                 field: "militaryService",
-                type: "choice",
+                validation: "choice",
                 options: ["Yes - Active duty","Yes - Veteran","No"]
             },
             { 
                 id: "timeline", 
-                question: "Tess: Last question—what's your timeline for purchasing or refinancing?", 
+                type: "message",
+                text: "Tess: Last question—what's your timeline for purchasing or refinancing?",
+                question: "Tess: Last question—what's your timeline for purchasing or refinancing?",
                 field: "timeline",
-                type: "choice",
+                validation: "choice",
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
                 id: "step_41", 
-                question: "Tess: That's it! You're all done. ✅", 
+                type: "message",
+                text: "Tess: That's it! You're all done. ✅",
+                question: "Tess: That's it! You're all done. ✅",
                 field: "",
-                type: "text",
+                validation: "text",
                 options: null
             },
         ],
         responses: {},
-        isActive: false
+        currentStepIndex: 0,
+        active: false,
+        
+        start: function() {
+            console.log("📋 Starting pre-qual script");
+            this.active = true;
+            this.currentStepIndex = 0;
+            this.responses = {};
+            return this.getCurrentQuestion();
+        },
+        
+        processResponse: function(userInput) {
+            if (!this.active) return null;
+            const currentStep = this.steps[this.currentStepIndex];
+            if (!currentStep) {
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
+            // If it's a message step, just move to next
+            if (currentStep.type === "message") {
+                this.currentStepIndex++;
+                return this.getCurrentQuestion();
+            }
+            
+            // Store the response
+            if (currentStep.field) {
+                this.responses[currentStep.field] = userInput;
+                console.log(`✅ Stored ${currentStep.field}: `, userInput);
+            }
+            
+            // Move to next step
+            this.currentStepIndex++;
+            return this.getCurrentQuestion();
+        },
+        
+        getCurrentQuestion: function() {
+            const step = this.steps[this.currentStepIndex];
+            if (!step) {
+                this.active = false;
+                return null;
+            }
+            return step.question || step.text;
+        },
+        
+        getResults: function() {
+            return this.responses;
+        }
     };
     setupUniversalListener();
 
