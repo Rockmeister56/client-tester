@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/24/2026, 10:37:19 PM
+// Generated: 3/24/2026, 10:48:43 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "mobilewise.ai@gmail.com",
+            "loanOfficerEmail": "loans@clientcompany.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-25T05:37:19.678Z"
+    "updatedAt": "2026-03-25T05:48:43.560Z"
 };
 
     const style = document.createElement('style');
@@ -395,10 +395,171 @@
     }
 
 
+    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         currentStep: 0,
         steps: [
-            { id: "fallback_name", question: "Hello! What is your name?", field: "name", type: "text" }
+            { 
+                id: "step_0", 
+                question: "Tess: You've definitely come to the right place. ✅", 
+                field: "",
+                type: "text",
+                options: null
+            },
+            { 
+                id: "firstName", 
+                question: "Tess: Great! Let's get you pre-qualified. First, what's your full name?", 
+                field: "firstName",
+                type: "text",
+                options: null
+            },
+            { 
+                id: "lastName", 
+                question: "Tess: And what's your last name?", 
+                field: "lastName",
+                type: "text",
+                options: null
+            },
+            { 
+                id: "email", 
+                question: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.", 
+                field: "email",
+                type: "email",
+                options: null
+            },
+            { 
+                id: "phone", 
+                question: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.", 
+                field: "phone",
+                type: "phone",
+                options: null
+            },
+            { 
+                id: "step_10", 
+                question: "Tess: Got it. You're doing great—we're about a quarter of the way through.", 
+                field: "",
+                type: "text",
+                options: null
+            },
+            { 
+                id: "employmentStatus", 
+                question: "Tess: Are you employed, self-employed, retired, or other?", 
+                field: "employmentStatus",
+                type: "choice",
+                options: ["Employed","Self-Employed","Retired","Other"]
+            },
+            { 
+                id: "selfEmployedDocumentation", 
+                question: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?", 
+                field: "selfEmployedDocumentation",
+                type: "choice",
+                options: ["Tax Returns","Bank Statements","Both"]
+            },
+            { 
+                id: "employedDocumentation", 
+                question: "Tess: And are you W-2 or 1099?", 
+                field: "employedDocumentation",
+                type: "choice",
+                options: ["W-2","1099"]
+            },
+            { 
+                id: "annualIncome", 
+                question: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.", 
+                field: "annualIncome",
+                type: "currency",
+                options: null
+            },
+            { 
+                id: "step_19", 
+                question: "Tess: Thank you. That gives me a clear picture.", 
+                field: "",
+                type: "text",
+                options: null
+            },
+            { 
+                id: "incomeDocumentation", 
+                question: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?", 
+                field: "incomeDocumentation",
+                type: "choice",
+                options: ["W-2s","Tax Returns","Bank Statements"]
+            },
+            { 
+                id: "creditScore", 
+                question: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?", 
+                field: "creditScore",
+                type: "choice",
+                options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
+            },
+            { 
+                id: "downPayment", 
+                question: "Tess: How much are you planning to put down? Just a range is fine.", 
+                field: "downPayment",
+                type: "choice",
+                options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
+            },
+            { 
+                id: "step_26", 
+                question: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.", 
+                field: "",
+                type: "text",
+                options: null
+            },
+            { 
+                id: "downPaymentSource", 
+                question: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?", 
+                field: "downPaymentSource",
+                type: "choice",
+                options: ["Savings","Gift from family","Sale of current home","Investment/401k","Other"]
+            },
+            { 
+                id: "bankruptcyHistory", 
+                question: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?", 
+                field: "bankruptcyHistory",
+                type: "choice",
+                options: ["Yes","No","Prefer not to say"]
+            },
+            { 
+                id: "loanPurpose", 
+                question: "Tess: Are you looking to purchase a home or refinance an existing one?", 
+                field: "loanPurpose",
+                type: "choice",
+                options: ["Purchase a home","Refinance current home","Cash-out refinance"]
+            },
+            { 
+                id: "propertyType", 
+                question: "Tess: What type of property are you buying or refinancing?", 
+                field: "propertyType",
+                type: "choice",
+                options: ["Single family home","Condominium","Townhouse","Multi-family (2-4 units)","Manufactured home"]
+            },
+            { 
+                id: "firstTimeBuyer", 
+                question: "Tess: Are you a first-time homebuyer?", 
+                field: "firstTimeBuyer",
+                type: "choice",
+                options: ["Yes","No"]
+            },
+            { 
+                id: "militaryService", 
+                question: "Tess: Have you or your spouse served in the military?", 
+                field: "militaryService",
+                type: "choice",
+                options: ["Yes - Active duty","Yes - Veteran","No"]
+            },
+            { 
+                id: "timeline", 
+                question: "Tess: Last question—what's your timeline for purchasing or refinancing?", 
+                field: "timeline",
+                type: "choice",
+                options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
+            },
+            { 
+                id: "step_41", 
+                question: "Tess: That's it! You're all done. ✅", 
+                field: "",
+                type: "text",
+                options: null
+            },
         ],
         responses: {},
         isActive: false
