@@ -6,6 +6,12 @@
 (function() {
     "use strict";
 
+    // ===== NUCLEAR FIX: FORCE BRAIN CREATION =====
+    if (typeof PreQualificationController !== 'undefined') {
+        window.preQualController = new PreQualificationController();
+        console.log("✅ Pre-Qual Controller FORCED to load at startup.");
+    }
+
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
