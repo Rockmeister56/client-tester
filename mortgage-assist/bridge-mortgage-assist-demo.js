@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/26/2026, 10:37:26 AM
+// Generated: 3/26/2026, 11:40:58 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "mobilewise.ai@gmail.com",
+            "loanOfficerEmail": "loans@clientcompany.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-26T17:37:25.736Z"
+    "updatedAt": "2026-03-26T18:40:58.364Z"
 };
 
     const style = document.createElement('style');
@@ -361,7 +361,7 @@
         steps: [
             { 
                 id: "step_0", 
-                type: "message",
+                type: "text",
                 text: "Tess: Before we begin, I want to put your mind at ease about something important. ✅",
                 question: "Tess: Before we begin, I want to put your mind at ease about something important. ✅",
                 field: "",
@@ -370,7 +370,7 @@
             },
             { 
                 id: "fullName", 
-                type: "message",
+                type: "text",
                 text: "Tess: Great! Let's get you pre-qualified. What is your full name?",
                 question: "Tess: Great! Let's get you pre-qualified. What is your full name?",
                 field: "fullName",
@@ -379,7 +379,7 @@
             },
             { 
                 id: "email", 
-                type: "message",
+                type: "text",
                 text: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
                 question: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
                 field: "email",
@@ -388,7 +388,7 @@
             },
             { 
                 id: "phone", 
-                type: "message",
+                type: "text",
                 text: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
                 question: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
                 field: "phone",
@@ -397,7 +397,7 @@
             },
             { 
                 id: "step_7", 
-                type: "message",
+                type: "text",
                 text: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
                 question: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
                 field: "",
@@ -406,7 +406,7 @@
             },
             { 
                 id: "employmentStatus", 
-                type: "message",
+                type: "text",
                 text: "Tess: Are you employed, self-employed, retired, or other?",
                 question: "Tess: Are you employed, self-employed, retired, or other?",
                 field: "employmentStatus",
@@ -415,7 +415,7 @@
             },
             { 
                 id: "selfEmployedDocumentation", 
-                type: "message",
+                type: "text",
                 text: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
                 question: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
                 field: "selfEmployedDocumentation",
@@ -424,7 +424,7 @@
             },
             { 
                 id: "employedDocumentation", 
-                type: "message",
+                type: "text",
                 text: "Tess: And are you W-2 or 1099?",
                 question: "Tess: And are you W-2 or 1099?",
                 field: "employedDocumentation",
@@ -433,7 +433,7 @@
             },
             { 
                 id: "annualIncome", 
-                type: "message",
+                type: "text",
                 text: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
                 question: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
                 field: "annualIncome",
@@ -442,7 +442,7 @@
             },
             { 
                 id: "step_16", 
-                type: "message",
+                type: "text",
                 text: "Tess: Thank you. That gives me a clear picture.",
                 question: "Tess: Thank you. That gives me a clear picture.",
                 field: "",
@@ -451,7 +451,7 @@
             },
             { 
                 id: "incomeDocumentation", 
-                type: "message",
+                type: "text",
                 text: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
                 question: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
                 field: "incomeDocumentation",
@@ -460,7 +460,7 @@
             },
             { 
                 id: "creditScore", 
-                type: "message",
+                type: "text",
                 text: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
                 question: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
                 field: "creditScore",
@@ -469,7 +469,7 @@
             },
             { 
                 id: "downPayment", 
-                type: "message",
+                type: "text",
                 text: "Tess: How much are you planning to put down? Just a range is fine.",
                 question: "Tess: How much are you planning to put down? Just a range is fine.",
                 field: "downPayment",
@@ -478,7 +478,7 @@
             },
             { 
                 id: "step_23", 
-                type: "message",
+                type: "text",
                 text: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
                 question: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
                 field: "",
@@ -487,7 +487,7 @@
             },
             { 
                 id: "downPaymentSource", 
-                type: "message",
+                type: "text",
                 text: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
                 question: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
                 field: "downPaymentSource",
@@ -496,7 +496,7 @@
             },
             { 
                 id: "bankruptcyHistory", 
-                type: "message",
+                type: "text",
                 text: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
                 question: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
                 field: "bankruptcyHistory",
@@ -505,7 +505,7 @@
             },
             { 
                 id: "loanPurpose", 
-                type: "message",
+                type: "text",
                 text: "Tess: Are you looking to purchase a home or refinance an existing one?",
                 question: "Tess: Are you looking to purchase a home or refinance an existing one?",
                 field: "loanPurpose",
@@ -514,7 +514,7 @@
             },
             { 
                 id: "propertyType", 
-                type: "message",
+                type: "text",
                 text: "Tess: What type of property are you buying or refinancing?",
                 question: "Tess: What type of property are you buying or refinancing?",
                 field: "propertyType",
@@ -523,7 +523,7 @@
             },
             { 
                 id: "firstTimeBuyer", 
-                type: "message",
+                type: "text",
                 text: "Tess: Are you a first-time homebuyer?",
                 question: "Tess: Are you a first-time homebuyer?",
                 field: "firstTimeBuyer",
@@ -532,7 +532,7 @@
             },
             { 
                 id: "militaryService", 
-                type: "message",
+                type: "text",
                 text: "Tess: Have you or your spouse served in the military?",
                 question: "Tess: Have you or your spouse served in the military?",
                 field: "militaryService",
@@ -541,7 +541,7 @@
             },
             { 
                 id: "timeline", 
-                type: "message",
+                type: "text",
                 text: "Tess: Last question—what's your timeline for purchasing or refinancing?",
                 question: "Tess: Last question—what's your timeline for purchasing or refinancing?",
                 field: "timeline",
@@ -550,7 +550,7 @@
             },
             { 
                 id: "step_38", 
-                type: "message",
+                type: "text",
                 text: "Tess: That's it! You're all done. ✅",
                 question: "Tess: That's it! You're all done. ✅",
                 field: "",
