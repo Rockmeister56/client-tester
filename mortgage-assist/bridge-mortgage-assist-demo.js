@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/26/2026, 10:23:02 AM
+// Generated: 3/26/2026, 10:37:26 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-26T17:23:02.042Z"
+    "updatedAt": "2026-03-26T17:37:25.736Z"
 };
 
     const style = document.createElement('style');
@@ -371,8 +371,8 @@
             { 
                 id: "fullName", 
                 type: "message",
-                text: "Tess: Great! Let's get you pre-qualified. Could I please get your full name?",
-                question: "Tess: Great! Let's get you pre-qualified. Could I please get your full name?",
+                text: "Tess: Great! Let's get you pre-qualified. What is your full name?",
+                question: "Tess: Great! Let's get you pre-qualified. What is your full name?",
                 field: "fullName",
                 validation: "text",
                 options: null
@@ -396,7 +396,7 @@
                 options: null
             },
             { 
-                id: "step_8", 
+                id: "step_7", 
                 type: "message",
                 text: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
                 question: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
@@ -441,7 +441,7 @@
                 options: null
             },
             { 
-                id: "step_17", 
+                id: "step_16", 
                 type: "message",
                 text: "Tess: Thank you. That gives me a clear picture.",
                 question: "Tess: Thank you. That gives me a clear picture.",
@@ -477,7 +477,7 @@
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
-                id: "step_24", 
+                id: "step_23", 
                 type: "message",
                 text: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
                 question: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
@@ -549,7 +549,7 @@
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
-                id: "step_39", 
+                id: "step_38", 
                 type: "message",
                 text: "Tess: That's it! You're all done. ✅",
                 question: "Tess: That's it! You're all done. ✅",
