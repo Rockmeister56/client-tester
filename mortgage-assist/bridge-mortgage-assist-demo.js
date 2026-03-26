@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/26/2026, 9:56:01 AM
+// Generated: 3/26/2026, 10:23:02 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "loans@clientcompany.com",
+            "loanOfficerEmail": "mobilewise.ai@gmail.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-26T16:56:01.273Z"
+    "updatedAt": "2026-03-26T17:23:02.042Z"
 };
 
     const style = document.createElement('style');
@@ -362,27 +362,18 @@
             { 
                 id: "step_0", 
                 type: "message",
-                text: "Tess: You've definitely come to the right place. ✅",
-                question: "Tess: You've definitely come to the right place. ✅",
+                text: "Tess: Before we begin, I want to put your mind at ease about something important. ✅",
+                question: "Tess: Before we begin, I want to put your mind at ease about something important. ✅",
                 field: "",
                 validation: "text",
                 options: null
             },
             { 
-                id: "firstName", 
+                id: "fullName", 
                 type: "message",
-                text: "Tess: Great! Let's get you pre-qualified. First, what's your full name?",
-                question: "Tess: Great! Let's get you pre-qualified. First, what's your full name?",
-                field: "firstName",
-                validation: "text",
-                options: null
-            },
-            { 
-                id: "lastName", 
-                type: "message",
-                text: "Tess: And what's your last name?",
-                question: "Tess: And what's your last name?",
-                field: "lastName",
+                text: "Tess: Great! Let's get you pre-qualified. Could I please get your full name?",
+                question: "Tess: Great! Let's get you pre-qualified. Could I please get your full name?",
+                field: "fullName",
                 validation: "text",
                 options: null
             },
@@ -405,7 +396,7 @@
                 options: null
             },
             { 
-                id: "step_10", 
+                id: "step_8", 
                 type: "message",
                 text: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
                 question: "Tess: Got it. You're doing great—we're about a quarter of the way through.",
@@ -450,7 +441,7 @@
                 options: null
             },
             { 
-                id: "step_19", 
+                id: "step_17", 
                 type: "message",
                 text: "Tess: Thank you. That gives me a clear picture.",
                 question: "Tess: Thank you. That gives me a clear picture.",
@@ -486,7 +477,7 @@
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
-                id: "step_26", 
+                id: "step_24", 
                 type: "message",
                 text: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
                 question: "Tess: Got it. And just so you know—that range is totally workable. We have programs specifically for that.",
@@ -558,7 +549,7 @@
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
-                id: "step_41", 
+                id: "step_39", 
                 type: "message",
                 text: "Tess: That's it! You're all done. ✅",
                 question: "Tess: That's it! You're all done. ✅",
