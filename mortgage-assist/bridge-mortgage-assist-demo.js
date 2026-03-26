@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/25/2026, 10:21:12 PM
+// Generated: 3/26/2026, 12:47:58 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-26T05:21:11.785Z"
+    "updatedAt": "2026-03-26T07:47:58.281Z"
 };
 
     const style = document.createElement('style');
@@ -196,6 +196,11 @@
 
         handleUserInput(userText) {
             if (!this.isActive || !this.script) return;
+            // Ignore her own voice
+            if (userText.includes("I'm Tess") || userText.includes("pre-qualified")) {
+                console.log("🛑 Ignoring self-speech.");
+                return;
+            }
             console.log(`👤 User said: ${userText}`);
             const nextResponse = this.script.processResponse(userText);
             if (nextResponse) { this.speak(nextResponse); }
@@ -210,63 +215,12 @@
         speak(text) {
             if (!text) return;
             console.log(`🤖 Tess says: ${text}`);
-            const widget = document.querySelector('lemon-slice-widget');
-            if (widget && typeof widget.sendMessage === "function") {
-                widget.sendMessage(text);
+            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+                window.mainWidget.sendMessage(text);
             }
         }
 
-        async sendEmail() {
-            console.log("📧 Sending pre-qualification emails...");
-            console.log("✅ Collected data:", this.answers);
-            // Add your email logic here
-        }
-    }
-
-    window.preQualController = new PreQualificationController();
-    console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
-
-    function setupUniversalListener() {
-        console.log("👂 Universal Listener Activated.");
-        
-        window.addEventListener("message", (event) => {
-            if (!event.data || !event.data.type) return;
-            
-            const msgType = event.data.type;
-            const msgText = (event.data.text || event.data.content || "").toLowerCase();
-            
-            // Check for user transcript (speech)
-            if (msgType === "transcript") {
-                console.log(`📨 Heard: "${msgText}"`);
-                
-                // Check for pre-qual intent
-                const preQualIntents = [
-                    "get pre-qualified",
-                    "pre qualify",
-                    "let\'s get pre-qualified",
-                    "start the pre-qualification"
-                ];
-                
-                for (const intent of preQualIntents) {
-                    if (msgText.includes(intent)) {
-                        console.log("🎯 PRE-QUAL TRIGGER DETECTED!");
-                        if (window.preQualController && !window.preQualController.isActive) {
-                            window.preQualController.startInterview();
-                        }
-                        return;
-                    }
-                }
-                
-                // Feed to active interview
-                if (window.preQualController && window.preQualController.isActive) {
-                    window.preQualController.handleUserInput(event.data.text);
-                }
-            }
-        });
-    }
-
-    setupUniversalListener();
-
+        // ===== SEND EMAIL FUNCTION (FIXED & INSIDE CLASS) =====
         async sendEmail() {
             console.log("📧 Sending pre-qualification emails...");
             
@@ -306,6 +260,9 @@
             }
         }
     }
+
+    window.preQualController = new PreQualificationController();
+    console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
 
     let lastTriggerTime = 0;
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
@@ -386,6 +343,8 @@
             
         });
     }
+
+    setupUniversalListener();
 
 
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
@@ -619,19 +578,16 @@
                 return "Thank you! Your pre-qualification is complete.";
             }
             
-            // If it's a message step, just move to next
             if (currentStep.type === "message") {
                 this.currentStepIndex++;
                 return this.getCurrentQuestion();
             }
             
-            // Store the response
             if (currentStep.field) {
                 this.responses[currentStep.field] = userInput;
                 console.log(`✅ Stored ${currentStep.field}: `, userInput);
             }
             
-            // Move to next step
             this.currentStepIndex++;
             return this.getCurrentQuestion();
         },
@@ -852,11 +808,8 @@
                         // Force unmute shadow DOM as backup
                         await forceUnmute();
                         
-                        // ===== INITIALIZE THE BRAIN =====
-                        if (typeof PreQualificationController !== 'undefined') {
-                            window.preQualController = new PreQualificationController();
-                            console.log("✅ Pre-Qual Controller Initialized and Ready.");
-                        }
+                        // 🔥 REMOVED: Controller already created earlier in the bridge
+                        // No need to create another instance here
                         
                     }
                 } catch (e) {
