@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/26/2026, 12:12:57 PM
+// Generated: 3/26/2026, 8:53:22 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "loans@clientcompany.com",
+            "loanOfficerEmail": "mobilewise.ai@gmail.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-26T19:12:57.611Z"
+    "updatedAt": "2026-03-27T03:53:21.957Z"
 };
 
     const style = document.createElement('style');
@@ -206,16 +206,29 @@
         handleUserInput(userText) {
             if (!this.isActive || !this.script) return;
             
-            // 🔥 UPDATED SAFETY CHECK: Only ignore exact phrases to prevent blocking real names
+            // 🔥 FIX: Only ignore her NAME, ignore her COMMANDS.
+            // "Pre-qualified" is a COMMAND to start the system, so we must NOT block it.
             const lowerText = userText.toLowerCase();
-            const selfSpeechPhrases = ["i'm tess", "i am tess", "my name is tess"];
             
-            if (selfSpeechPhrases.some(phrase => lowerText === phrase)) {
-                console.log("🛑 Ignoring exact self-speech match.");
+            // Only block strictly self-identifying phrases
+            if (lowerText === "i'm tess" || lowerText === "i am tess" || lowerText === "my name is tess") {
+                console.log("🛑 Ignoring self-identification speech.");
                 return;
             }
             
-            console.log(`👤 User said: ${userText}`);
+            console.log(`👤 Input received: ${userText}`);
+            
+            // If the interview is NOT active yet, check if TESS triggered it
+            if (!this.isActive) {
+                // If Tess says the trigger phrase, START the interview
+                if (lowerText.includes("let's get you pre-qualified") || lowerText.includes("let's get pre-qualified")) {
+                    console.log("🎯 TESS TRIGGER DETECTED: Starting Pre-Qual Interview");
+                    this.startInterview(); 
+                    return;
+                }
+            }
+
+            // If interview IS active, process the User's answer
             const nextResponse = this.script.processResponse(userText);
             if (nextResponse) { this.speak(nextResponse); }
             if (!this.script.active) {
@@ -302,45 +315,36 @@
             // MODULE TRIGGERS (Triggered by Tess)
             // ========================================
             
-            // Check for cooldown
             const now = Date.now();
-            if (now - lastTriggerTime < TRIGGER_COOLDOWN) return;
             
             // 1. TESTIMONIAL TRIGGER
             if (msgText.includes("testimonial") || msgText.includes("success story")) {
                 console.log("🎯 Trigger: TESTIMONIAL");
-                lastTriggerTime = now;
+                lastTriggerTime = now; 
                 // window.showModule("testimonial", "Testimonial"); // Uncomment when ready
             }
             
-            // 2. SMART SCREEN TRIGGER
+            // 2. SMART SCREEN TRIGGER (DISABLED - Was conflicting with "get you")
+            /*
             if (msgText.includes("show you") || msgText.includes("example")) {
                 console.log("🎯 Trigger: SMART SCREEN");
                 lastTriggerTime = now;
                 // window.showModule("smartScreen", "Example"); // Uncomment when ready
             }
+            */
             
             // ========================================
-            // PRE-QUAL TRIGGER (Triggered by User)
+            // PRE-QUAL TRIGGER (Triggered by TESS)
             // ========================================
             
-            // Only run if Controller is NOT already active
+            // We REMOVED the Cooldown check here so Tess can always trigger the switch
             if (window.preQualController && !window.preQualController.isActive) {
                 
-                const preQualIntents = [
-                    "get pre-qualified",
-                    "pre qualify",
-                    "let\'s get pre-qualified",
-                    "start the pre-qualification"
-                ];
-                
-                for (const intent of preQualIntents) {
-                    if (msgText.includes(intent)) {
-                        console.log("🎯 Trigger: START PRE-QUAL (User Intent)");
-                        lastTriggerTime = now;
-                        window.preQualController.startInterview();
-                        return; // Stop listening once triggered
-                    }
+                // TESS triggers this, so we look for the phrase she speaks
+                if (msgText.includes("let's get you pre-qualified")) {
+                    console.log("🎯 Trigger: START PRE-QUAL (Tess Command)");
+                    window.preQualController.handleUserInput(event.data.text);
+                    return; // Stop listening once triggered
                 }
             }
             
