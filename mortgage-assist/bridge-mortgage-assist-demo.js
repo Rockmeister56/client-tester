@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/26/2026, 8:53:22 PM
+// Generated: 3/26/2026, 9:17:19 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "mobilewise.ai@gmail.com",
+            "loanOfficerEmail": "loans@clientcompany.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-27T03:53:21.957Z"
+    "updatedAt": "2026-03-27T04:17:19.007Z"
 };
 
     const style = document.createElement('style');
@@ -299,10 +299,25 @@
         
         window.addEventListener("message", (event) => {
             
-            // SAFETY: Ignore garbage messages
+            // ========================================
+            // 1. COMMAND LISTENER (Highest Priority)
+            // ========================================
+            
+            // This handles the direct command from the Knowledge Base Script
+            // We check this FIRST before looking for text content
+            if (event.data && event.data.type === "START_PRE_QUAL") {
+                console.log("🎯 COMMAND RECEIVED: START_PRE_QUAL");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
+                return; // Stop processing
+            }
+
+            // SAFETY: Ignore garbage messages for speech processing
             if (!event.data || !event.data.type) return;
             
             const msgType = event.data.type;
+            // Safely get text, default to empty string if missing
             const msgText = (event.data.text || event.data.content || "").toLowerCase();
             
             // Only process Transcripts (User Speech) and AI Responses (Tess Speech)
@@ -312,47 +327,36 @@
             console.log(`📨 Heard: "${msgText}"`);
             
             // ========================================
-            // MODULE TRIGGERS (Triggered by Tess)
+            // 2. MODULE TRIGGERS (Triggered by Tess)
             // ========================================
             
             const now = Date.now();
             
-            // 1. TESTIMONIAL TRIGGER
+            // TESTIMONIAL TRIGGER
             if (msgText.includes("testimonial") || msgText.includes("success story")) {
                 console.log("🎯 Trigger: TESTIMONIAL");
                 lastTriggerTime = now; 
-                // window.showModule("testimonial", "Testimonial"); // Uncomment when ready
+                // window.showModule("testimonial", "Testimonial"); 
             }
             
-            // 2. SMART SCREEN TRIGGER (DISABLED - Was conflicting with "get you")
-            /*
-            if (msgText.includes("show you") || msgText.includes("example")) {
-                console.log("🎯 Trigger: SMART SCREEN");
-                lastTriggerTime = now;
-                // window.showModule("smartScreen", "Example"); // Uncomment when ready
-            }
-            */
-            
             // ========================================
-            // PRE-QUAL TRIGGER (Triggered by TESS)
+            // 3. PRE-QUAL TRIGGER (FALLBACK - Triggered by TESS Speech)
             // ========================================
             
-            // We REMOVED the Cooldown check here so Tess can always trigger the switch
+            // This is a fallback if the script command fails, listening for the phrase
             if (window.preQualController && !window.preQualController.isActive) {
-                
-                // TESS triggers this, so we look for the phrase she speaks
-                if (msgText.includes("let's get you pre-qualified")) {
-                    console.log("🎯 Trigger: START PRE-QUAL (Tess Command)");
-                    window.preQualController.handleUserInput(event.data.text);
-                    return; // Stop listening once triggered
+                // Looking for the unique phrase: "in the next 5 minutes"
+                if (msgText.includes("in the next 5 minutes")) {
+                    console.log("🎯 Trigger: START PRE-QUAL (Speech Fallback)");
+                    window.preQualController.startInterview();
+                    return; 
                 }
             }
             
             // ========================================
-            // INTERVIEW EARS (Feeding answers)
+            // 4. INTERVIEW EARS (Feeding answers)
             // ========================================
             
-            // If Interview is active, feed user speech to Controller
             if (window.preQualController && window.preQualController.isActive) {
                 if (msgType === "transcript") {
                     window.preQualController.handleUserInput(event.data.text);
