@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/26/2026, 9:17:19 PM
+// Generated: 3/27/2026, 9:34:29 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-27T04:17:19.007Z"
+    "updatedAt": "2026-03-27T16:34:29.362Z"
 };
 
     const style = document.createElement('style');
@@ -369,6 +369,7 @@
     setupUniversalListener();
 
 
+    
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         steps: [
@@ -396,7 +397,7 @@
                 text: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
                 question: "Tess: What's the best email address to send your pre-qualification letter to? I'll make sure our loan team copies you on everything.",
                 field: "email",
-                validation: "email",
+                validation: "text",
                 options: null
             },
             { 
@@ -405,7 +406,7 @@
                 text: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
                 question: "Tess: And your phone number? In case our loan team needs to reach you quickly with your approval options.",
                 field: "phone",
-                validation: "phone",
+                validation: "text",
                 options: null
             },
             { 
@@ -423,7 +424,7 @@
                 text: "Tess: Are you employed, self-employed, retired, or other?",
                 question: "Tess: Are you employed, self-employed, retired, or other?",
                 field: "employmentStatus",
-                validation: "choice",
+                validation: "text",
                 options: ["Employed","Self-Employed","Retired","Other"]
             },
             { 
@@ -432,7 +433,7 @@
                 text: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
                 question: "Tess: Got it. Self-employed is very common—we have specialized programs for business owners. Do you typically document your income with tax returns or bank statements?",
                 field: "selfEmployedDocumentation",
-                validation: "choice",
+                validation: "text",
                 options: ["Tax Returns","Bank Statements","Both"]
             },
             { 
@@ -441,7 +442,7 @@
                 text: "Tess: And are you W-2 or 1099?",
                 question: "Tess: And are you W-2 or 1099?",
                 field: "employedDocumentation",
-                validation: "choice",
+                validation: "text",
                 options: ["W-2","1099"]
             },
             { 
@@ -450,7 +451,7 @@
                 text: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
                 question: "Tess: Approximately what's your annual household income? Just a ballpark is fine—this helps me match you with the right loan programs.",
                 field: "annualIncome",
-                validation: "currency",
+                validation: "text",
                 options: null
             },
             { 
@@ -468,7 +469,7 @@
                 text: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
                 question: "Tess: And do you typically document your income with W-2s, tax returns, or bank statements?",
                 field: "incomeDocumentation",
-                validation: "choice",
+                validation: "text",
                 options: ["W-2s","Tax Returns","Bank Statements"]
             },
             { 
@@ -477,7 +478,7 @@
                 text: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
                 question: "Tess: Now let's talk about credit—and I promise I'm not here to judge. How would you describe your credit?",
                 field: "creditScore",
-                validation: "choice",
+                validation: "text",
                 options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
             },
             { 
@@ -486,7 +487,7 @@
                 text: "Tess: How much are you planning to put down? Just a range is fine.",
                 question: "Tess: How much are you planning to put down? Just a range is fine.",
                 field: "downPayment",
-                validation: "choice",
+                validation: "text",
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
@@ -504,7 +505,7 @@
                 text: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
                 question: "Tess: Where will your down payment come from? Savings, gift from family, sale of a current home, or something else?",
                 field: "downPaymentSource",
-                validation: "choice",
+                validation: "text",
                 options: ["Savings","Gift from family","Sale of current home","Investment/401k","Other"]
             },
             { 
@@ -513,7 +514,7 @@
                 text: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
                 question: "Tess: Have you had any bankruptcies or foreclosures in the last 7 years?",
                 field: "bankruptcyHistory",
-                validation: "choice",
+                validation: "text",
                 options: ["Yes","No","Prefer not to say"]
             },
             { 
@@ -522,7 +523,7 @@
                 text: "Tess: Are you looking to purchase a home or refinance an existing one?",
                 question: "Tess: Are you looking to purchase a home or refinance an existing one?",
                 field: "loanPurpose",
-                validation: "choice",
+                validation: "text",
                 options: ["Purchase a home","Refinance current home","Cash-out refinance"]
             },
             { 
@@ -531,7 +532,7 @@
                 text: "Tess: What type of property are you buying or refinancing?",
                 question: "Tess: What type of property are you buying or refinancing?",
                 field: "propertyType",
-                validation: "choice",
+                validation: "text",
                 options: ["Single family home","Condominium","Townhouse","Multi-family (2-4 units)","Manufactured home"]
             },
             { 
@@ -540,7 +541,7 @@
                 text: "Tess: Are you a first-time homebuyer?",
                 question: "Tess: Are you a first-time homebuyer?",
                 field: "firstTimeBuyer",
-                validation: "choice",
+                validation: "text",
                 options: ["Yes","No"]
             },
             { 
@@ -549,7 +550,7 @@
                 text: "Tess: Have you or your spouse served in the military?",
                 question: "Tess: Have you or your spouse served in the military?",
                 field: "militaryService",
-                validation: "choice",
+                validation: "text",
                 options: ["Yes - Active duty","Yes - Veteran","No"]
             },
             { 
@@ -558,7 +559,7 @@
                 text: "Tess: Last question—what's your timeline for purchasing or refinancing?",
                 question: "Tess: Last question—what's your timeline for purchasing or refinancing?",
                 field: "timeline",
-                validation: "choice",
+                validation: "text",
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
