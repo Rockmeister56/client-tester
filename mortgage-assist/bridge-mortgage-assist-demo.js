@@ -377,9 +377,17 @@ document.head.appendChild(js);
             
             // This is a fallback if the script command fails, listening for the phrase
             if (window.preQualController && !window.preQualController.isActive) {
-                // Looking for the unique phrase: "in the next 5 minutes"
-                if (msgText.includes("in the next 5 minutes")) {
-                    console.log("🎯 Trigger: START PRE-QUAL (Speech Fallback)");
+                
+                // TRIGGER 1: The "Time" Phrase (Catches "in the next" OR "less than")
+                if (msgText.includes("5 minutes")) {
+                    console.log("🎯 Trigger: START PRE-QUAL (Time Phrase Detected)");
+                    window.preQualController.startInterview();
+                    return; 
+                }
+
+                // TRIGGER 2: The "Action" Phrase (If she says "Let's go ahead")
+                if (msgText.includes("let's go ahead") || msgText.includes("let's get you pre qualified")) {
+                    console.log("🎯 Trigger: START PRE-QUAL (Action Phrase Detected)");
                     window.preQualController.startInterview();
                     return; 
                 }
