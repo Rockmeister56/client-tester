@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 1:59:15 PM
+// Generated: 3/28/2026, 2:33:23 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T20:59:15.060Z"
+    "updatedAt": "2026-03-28T21:33:23.586Z"
 };
 
     // =========================================
@@ -229,34 +229,44 @@
             const lowerText = userText.toLowerCase();
 
             // ===== EXIT LOGIC (For Confirmation Gate) =====
-            // If we are on Step 0 (Confirmation) and user says NO
             const currentStep = this.script.steps[this.currentStepIndex];
-            if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
-                console.log("🚪 User declined. Returning to Lemon Slice.");
-                this.isActive = false;
-                this.speak("No problem. What else can I help you with?");
-                return;
+            if (currentStep.id === "confirmation") {
+                if (lowerText === "no" || lowerText === "no thank you") {
+                    console.log("🚪 User declined. Returning to Lemon Slice.");
+                    this.isActive = false;
+                    this.speak("No problem. What else can I help you with?");
+                    return;
+                }
+                
+                // ✅ FIREWALL: User said YES to Pre-Qual
+                if (lowerText === "yes") {
+                    console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
+                    
+                    // 1. Save Answer
+                    this.answers[currentStep.field] = userText;
+                    
+                    // 2. Force Move Next
+                    this.currentStepIndex++;
+                    
+                    // 3. FORCE SPEAK IMMEDIATELY (Don't wait for Lemon Slice)
+                    this.speakCurrentStep();
+                    
+                    return; // STOP PROCESSING ANYTHING ELSE
+                }
             }
 
-            // ===== SAVE ANSWER =====
+            // ===== NORMAL FLOW =====
             if (currentStep.field) {
                 this.answers[currentStep.field] = userText;
-                console.log(`💾 Saved ${currentStep.field}: ${userText}`);
+                console.log("💾 Saved " + currentStep.field + ": " + userText);
             }
-
-            // ===== MOVE TO NEXT STEP =====
             this.currentStepIndex++;
-
-            // ===== CHECK IF FINISHED =====
             if (this.currentStepIndex >= this.script.steps.length) {
                 this.finishInterview();
                 return;
             }
-
-            // ===== SPEAK NEXT QUESTION =====
             this.speakCurrentStep();
         }
-
         speakCurrentStep() {
             const step = this.script.steps[this.currentStepIndex];
             if (step) {
@@ -275,7 +285,7 @@
 
         speak(text) {
             if (!text) return;
-            console.log(`🤖 Tess says: ${text}`);
+            console.log("🤖 Tess says: " + text);
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                 window.mainWidget.sendMessage(text);
             }
