@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 12:58:53 PM
+// Generated: 3/28/2026, 1:35:48 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,21 +83,23 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T19:58:53.044Z"
+    "updatedAt": "2026-03-28T20:35:48.214Z"
 };
 
-// =========================================
-// 🍋 AUTO-LOADER: EMAILJS LIBRARY
-// =========================================
-var js = document.createElement("script");
-js.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
-js.onload = function() {
-if (window.emailjs) {
-window.emailjs.init('7-9oxa3UC3uKxtqGM');
-console.log("✅ EmailJS Ready");
-}
-};
-document.head.appendChild(js);
+    // =========================================
+    // 🍋 AUTO-LOADER: EMAILJS LIBRARY
+    // =========================================
+    (function() {
+        var js = document.createElement("script");
+        js.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        js.onload = function() {
+            if (window.emailjs) {
+                window.emailjs.init('7-9oxa3UC3uKxtqGM');
+                console.log("✅ EmailJS Ready");
+            }
+        };
+        document.head.appendChild(js);
+    })();
 
     const style = document.createElement('style');
     style.textContent = `
@@ -377,17 +379,9 @@ document.head.appendChild(js);
             
             // This is a fallback if the script command fails, listening for the phrase
             if (window.preQualController && !window.preQualController.isActive) {
-                
                 // TRIGGER 1: The "Time" Phrase (Catches "in the next" OR "less than")
                 if (msgText.includes("5 minutes")) {
                     console.log("🎯 Trigger: START PRE-QUAL (Time Phrase Detected)");
-                    window.preQualController.startInterview();
-                    return; 
-                }
-
-                // TRIGGER 2: The "Action" Phrase (If she says "Let's go ahead")
-                if (msgText.includes("let's go ahead") || msgText.includes("let's get you pre qualified")) {
-                    console.log("🎯 Trigger: START PRE-QUAL (Action Phrase Detected)");
                     window.preQualController.startInterview();
                     return; 
                 }
