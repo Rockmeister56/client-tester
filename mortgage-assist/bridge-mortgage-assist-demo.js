@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 12:49:28 AM
+// Generated: 3/28/2026, 1:08:00 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T07:49:27.648Z"
+    "updatedAt": "2026-03-28T08:07:59.880Z"
 };
 
     const style = document.createElement('style');
@@ -393,15 +393,6 @@
     window.preQualScript = {
         steps: [
             { 
-                id: "step_0", 
-                type: "text",
-                text: "Tess: Before we begin, I want to put your mind at ease. Everything you share is confidential and secured with 128-bit bank-grade encryption.",
-                question: "Tess: Before we begin, I want to put your mind at ease. Everything you share is confidential and secured with 128-bit bank-grade encryption.",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "confirmation", 
                 type: "choice",
                 text: "Tess: I can certainly help with that. Does that work for you?",
@@ -411,7 +402,7 @@
                 options: ["Yes","No"]
             },
             { 
-                id: "step_2", 
+                id: "step_1", 
                 type: "text",
                 text: "User: [Selects Yes or No]",
                 question: "User: [Selects Yes or No]",
@@ -429,7 +420,7 @@
                 options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
             },
             { 
-                id: "step_4", 
+                id: "step_3", 
                 type: "text",
                 text: "User: [Selects loan type]",
                 question: "User: [Selects loan type]",
@@ -447,7 +438,7 @@
                 options: ["Purchase a home","Refinance current home","Cash-out refinance"]
             },
             { 
-                id: "step_6", 
+                id: "step_5", 
                 type: "text",
                 text: "User: [Selects option]",
                 question: "User: [Selects option]",
@@ -465,7 +456,7 @@
                 options: ["Single family home","Condominium","Townhouse","Multi-family (2-4 units)","Manufactured home"]
             },
             { 
-                id: "step_8", 
+                id: "step_7", 
                 type: "text",
                 text: "User: [Selects type]",
                 question: "User: [Selects type]",
@@ -483,7 +474,7 @@
                 options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
             },
             { 
-                id: "step_10", 
+                id: "step_9", 
                 type: "text",
                 text: "User: [Selects range]",
                 question: "User: [Selects range]",
@@ -501,7 +492,7 @@
                 options: null
             },
             { 
-                id: "step_12", 
+                id: "step_11", 
                 type: "text",
                 text: "User: [Provides amount]",
                 question: "User: [Provides amount]",
@@ -519,7 +510,7 @@
                 options: ["Employed","Self-Employed","Retired","Other"]
             },
             { 
-                id: "step_14", 
+                id: "step_13", 
                 type: "text",
                 text: "User: [Selects status]",
                 question: "User: [Selects status]",
@@ -555,7 +546,7 @@
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
-                id: "step_18", 
+                id: "step_17", 
                 type: "text",
                 text: "User: [Selects range]",
                 question: "User: [Selects range]",
@@ -573,7 +564,7 @@
                 options: ["Savings","Gift from family","Sale of current home","Investment/401k","Other"]
             },
             { 
-                id: "step_20", 
+                id: "step_19", 
                 type: "text",
                 text: "User: [Selects source]",
                 question: "User: [Selects source]",
@@ -591,7 +582,7 @@
                 options: ["Yes","No","Prefer not to say"]
             },
             { 
-                id: "step_22", 
+                id: "step_21", 
                 type: "text",
                 text: "User: [Selects option]",
                 question: "User: [Selects option]",
@@ -609,7 +600,7 @@
                 options: ["Yes - Active duty","Yes - Veteran","No"]
             },
             { 
-                id: "step_24", 
+                id: "step_23", 
                 type: "text",
                 text: "User: [Selects option]",
                 question: "User: [Selects option]",
@@ -627,7 +618,7 @@
                 options: ["Yes","No"]
             },
             { 
-                id: "step_26", 
+                id: "step_25", 
                 type: "text",
                 text: "User: [Selects yes/no]",
                 question: "User: [Selects yes/no]",
@@ -645,7 +636,7 @@
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
-                id: "step_28", 
+                id: "step_27", 
                 type: "text",
                 text: "User: [Selects timeline]",
                 question: "User: [Selects timeline]",
@@ -654,7 +645,7 @@
                 options: null
             },
             { 
-                id: "step_29", 
+                id: "step_28", 
                 type: "text",
                 text: "Tess: Excellent! Based on what you've told me, we have some great loan options that fit your situation. Now, to generate your official pre-qualification letter, I just need a few details.",
                 question: "Tess: Excellent! Based on what you've told me, we have some great loan options that fit your situation. Now, to generate your official pre-qualification letter, I just need a few details.",
@@ -672,7 +663,7 @@
                 options: null
             },
             { 
-                id: "step_31", 
+                id: "step_30", 
                 type: "text",
                 text: "User: [Responds with full name]",
                 question: "User: [Responds with full name]",
@@ -690,7 +681,7 @@
                 options: null
             },
             { 
-                id: "step_33", 
+                id: "step_32", 
                 type: "text",
                 text: "User: [Responds with email]",
                 question: "User: [Responds with email]",
@@ -708,7 +699,7 @@
                 options: null
             },
             { 
-                id: "step_35", 
+                id: "step_34", 
                 type: "text",
                 text: "User: [Responds with phone]",
                 question: "User: [Responds with phone]",
@@ -717,7 +708,7 @@
                 options: null
             },
             { 
-                id: "step_36", 
+                id: "step_35", 
                 type: "text",
                 text: "Tess: That's everything! I'm generating your pre-qualification file now. ✅",
                 question: "Tess: That's everything! I'm generating your pre-qualification file now. ✅",
