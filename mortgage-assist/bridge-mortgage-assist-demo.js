@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 1:08:00 AM
+// Generated: 3/28/2026, 1:34:17 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T08:07:59.880Z"
+    "updatedAt": "2026-03-28T08:34:17.403Z"
 };
 
     const style = document.createElement('style');
@@ -216,7 +216,7 @@
             // ===== EXIT LOGIC (For Confirmation Gate) =====
             // If we are on Step 0 (Confirmation) and user says NO
             const currentStep = this.script.steps[this.currentStepIndex];
-            if (currentStep.id === "start_confirm" && (lowerText === "no" || lowerText === "no thank you")) {
+            if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
                 console.log("🚪 User declined. Returning to Lemon Slice.");
                 this.isActive = false;
                 this.speak("No problem. What else can I help you with?");
@@ -402,15 +402,6 @@
                 options: ["Yes","No"]
             },
             { 
-                id: "step_1", 
-                type: "text",
-                text: "User: [Selects Yes or No]",
-                question: "User: [Selects Yes or No]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "loanType", 
                 type: "choice",
                 text: "Tess: Let's get started. What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
@@ -420,7 +411,7 @@
                 options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
             },
             { 
-                id: "step_3", 
+                id: "step_2", 
                 type: "text",
                 text: "User: [Selects loan type]",
                 question: "User: [Selects loan type]",
@@ -438,7 +429,7 @@
                 options: ["Purchase a home","Refinance current home","Cash-out refinance"]
             },
             { 
-                id: "step_5", 
+                id: "step_4", 
                 type: "text",
                 text: "User: [Selects option]",
                 question: "User: [Selects option]",
@@ -456,7 +447,7 @@
                 options: ["Single family home","Condominium","Townhouse","Multi-family (2-4 units)","Manufactured home"]
             },
             { 
-                id: "step_7", 
+                id: "step_6", 
                 type: "text",
                 text: "User: [Selects type]",
                 question: "User: [Selects type]",
@@ -474,7 +465,7 @@
                 options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
             },
             { 
-                id: "step_9", 
+                id: "step_8", 
                 type: "text",
                 text: "User: [Selects range]",
                 question: "User: [Selects range]",
@@ -492,7 +483,7 @@
                 options: null
             },
             { 
-                id: "step_11", 
+                id: "step_10", 
                 type: "text",
                 text: "User: [Provides amount]",
                 question: "User: [Provides amount]",
@@ -510,7 +501,7 @@
                 options: ["Employed","Self-Employed","Retired","Other"]
             },
             { 
-                id: "step_13", 
+                id: "step_12", 
                 type: "text",
                 text: "User: [Selects status]",
                 question: "User: [Selects status]",
@@ -546,7 +537,7 @@
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
-                id: "step_17", 
+                id: "step_16", 
                 type: "text",
                 text: "User: [Selects range]",
                 question: "User: [Selects range]",
@@ -564,7 +555,7 @@
                 options: ["Savings","Gift from family","Sale of current home","Investment/401k","Other"]
             },
             { 
-                id: "step_19", 
+                id: "step_18", 
                 type: "text",
                 text: "User: [Selects source]",
                 question: "User: [Selects source]",
@@ -582,7 +573,7 @@
                 options: ["Yes","No","Prefer not to say"]
             },
             { 
-                id: "step_21", 
+                id: "step_20", 
                 type: "text",
                 text: "User: [Selects option]",
                 question: "User: [Selects option]",
@@ -600,7 +591,7 @@
                 options: ["Yes - Active duty","Yes - Veteran","No"]
             },
             { 
-                id: "step_23", 
+                id: "step_22", 
                 type: "text",
                 text: "User: [Selects option]",
                 question: "User: [Selects option]",
@@ -618,7 +609,7 @@
                 options: ["Yes","No"]
             },
             { 
-                id: "step_25", 
+                id: "step_24", 
                 type: "text",
                 text: "User: [Selects yes/no]",
                 question: "User: [Selects yes/no]",
@@ -636,7 +627,7 @@
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
-                id: "step_27", 
+                id: "step_26", 
                 type: "text",
                 text: "User: [Selects timeline]",
                 question: "User: [Selects timeline]",
@@ -645,7 +636,7 @@
                 options: null
             },
             { 
-                id: "step_28", 
+                id: "step_27", 
                 type: "text",
                 text: "Tess: Excellent! Based on what you've told me, we have some great loan options that fit your situation. Now, to generate your official pre-qualification letter, I just need a few details.",
                 question: "Tess: Excellent! Based on what you've told me, we have some great loan options that fit your situation. Now, to generate your official pre-qualification letter, I just need a few details.",
@@ -663,7 +654,7 @@
                 options: null
             },
             { 
-                id: "step_30", 
+                id: "step_29", 
                 type: "text",
                 text: "User: [Responds with full name]",
                 question: "User: [Responds with full name]",
@@ -681,7 +672,7 @@
                 options: null
             },
             { 
-                id: "step_32", 
+                id: "step_31", 
                 type: "text",
                 text: "User: [Responds with email]",
                 question: "User: [Responds with email]",
@@ -699,7 +690,7 @@
                 options: null
             },
             { 
-                id: "step_34", 
+                id: "step_33", 
                 type: "text",
                 text: "User: [Responds with phone]",
                 question: "User: [Responds with phone]",
@@ -708,7 +699,7 @@
                 options: null
             },
             { 
-                id: "step_35", 
+                id: "step_34", 
                 type: "text",
                 text: "Tess: That's everything! I'm generating your pre-qualification file now. ✅",
                 question: "Tess: That's everything! I'm generating your pre-qualification file now. ✅",
