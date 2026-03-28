@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 2:33:23 PM
+// Generated: 3/28/2026, 3:00:14 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -78,12 +78,12 @@
         "preQualification": {
             "enabled": true,
             "knowledgeBaseScript": "mortgage",
-            "triggerPhrase": "in the next 5 minutes",
+            "triggerPhrase": "pre qualification",
             "emailSubject": "New Lead: {{name}}",
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T21:33:23.586Z"
+    "updatedAt": "2026-03-28T22:00:13.724Z"
 };
 
     // =========================================
@@ -228,45 +228,43 @@
 
             const lowerText = userText.toLowerCase();
 
-            // ===== EXIT LOGIC (For Confirmation Gate) =====
+            // ===== FIREWALL LOGIC =====
             const currentStep = this.script.steps[this.currentStepIndex];
-            if (currentStep.id === "confirmation") {
-                if (lowerText === "no" || lowerText === "no thank you") {
-                    console.log("🚪 User declined. Returning to Lemon Slice.");
-                    this.isActive = false;
-                    this.speak("No problem. What else can I help you with?");
-                    return;
-                }
-                
-                // ✅ FIREWALL: User said YES to Pre-Qual
-                if (lowerText === "yes") {
-                    console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
-                    
-                    // 1. Save Answer
-                    this.answers[currentStep.field] = userText;
-                    
-                    // 2. Force Move Next
-                    this.currentStepIndex++;
-                    
-                    // 3. FORCE SPEAK IMMEDIATELY (Don't wait for Lemon Slice)
-                    this.speakCurrentStep();
-                    
-                    return; // STOP PROCESSING ANYTHING ELSE
-                }
+            
+            // 1. CHECK FOR EXIT (NO)
+            if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
+                console.log("🚪 User declined. Returning to Lemon Slice.");
+                this.isActive = false;
+                this.speak("No problem. What else can I help you with?");
+                return;
             }
-
-            // ===== NORMAL FLOW =====
+            
+            // 2. CHECK FOR FIREWALL TRIGGER (YES)
+            if (currentStep.id === "confirmation" && lowerText === "yes") {
+                console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
+                this.answers[currentStep.field] = userText;
+                this.currentStepIndex++;
+                this.speakCurrentStep();
+                return; 
+            }
+            
+            // 3. NORMAL FLOW
             if (currentStep.field) {
                 this.answers[currentStep.field] = userText;
                 console.log("💾 Saved " + currentStep.field + ": " + userText);
             }
             this.currentStepIndex++;
+
+            // ===== CHECK IF FINISHED =====
             if (this.currentStepIndex >= this.script.steps.length) {
                 this.finishInterview();
                 return;
             }
+
+            // ===== SPEAK NEXT QUESTION =====
             this.speakCurrentStep();
         }
+
         speakCurrentStep() {
             const step = this.script.steps[this.currentStepIndex];
             if (step) {
