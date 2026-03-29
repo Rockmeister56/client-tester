@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 3:23:55 PM
+// Generated: 3/28/2026, 4:44:42 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -78,12 +78,12 @@
         "preQualification": {
             "enabled": true,
             "knowledgeBaseScript": "mortgage",
-            "triggerPhrase": "pre qualified in the next 5 minutes",
+            "triggerPhrase": "pre qualification interview",
             "emailSubject": "New Lead: {{name}}",
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T22:23:54.879Z"
+    "updatedAt": "2026-03-28T23:44:41.705Z"
 };
 
     // =========================================
@@ -1214,38 +1214,33 @@
         }
     });
     console.log('✅ TCS message listener installed');
-
     // =========================================
-    // 🍋 LEMON SLICE EVENT SPY (THE EAR)
+    // 🍋 SHADOW BREAKER (SAFE VERSION)
     // =========================================
     setTimeout(function() {
         const widget = document.querySelector("lemon-slice-widget");
-        if (!widget) {
-            console.warn("⚠️ Widget not found.");
-            return;
+        if (!widget) return;
+
+        // Safely access Shadow Root
+        try {
+            const shadow = widget.shadowRoot;
+            if (!shadow) return;
+
+            console.log("🕵️‍♂️ SPY: Infiltrating Shadow DOM...");
+
+            // Listen for the NEW TRIGGER PHRASE
+            shadow.addEventListener("transcript", function(e) {
+                const text = (e.detail || "").toLowerCase();
+                console.log("👂 Shadow Ear:", text);
+                
+                if (text.includes("pre qualification interview")) {
+                    console.log("🔥 TRIGGER: Pre-Qual Interview Phrase Detected!");
+                    if (window.preQualController) {
+                        window.preQualController.startInterview();
+                    }
+                }
+            });
+        } catch (err) {            console.warn("⚠️ Could not access Shadow DOM:", err);
         }
-
-        console.log("👂 SPY ACTIVATED: Watching Widget Events...");
-
-        // Listen for Transcript Events
-        widget.addEventListener("transcript", function(e) {
-            const text = (e.detail || "").toLowerCase();
-            console.log("👂 SPY HEARD:", text);
-            
-            if (text.includes("5 minutes")) {
-                console.log("🔥 TRIGGER FOUND BY SPY!");
-                window.preQualController.startInterview();
-            }
-        });
-
-        // Listen for Generic Messages (Fallback)
-        widget.addEventListener("message", function(e) {
-             const text = JSON.stringify(e.detail).toLowerCase();
-             if (text.includes("5 minutes")) {
-                console.log("🔥 TRIGGER FOUND IN MESSAGE!");
-                window.preQualController.startInterview();
-             }
-        });
-    }, 3000); // Wait 3s for widget to load
-
+    }, 3000);
 })();
