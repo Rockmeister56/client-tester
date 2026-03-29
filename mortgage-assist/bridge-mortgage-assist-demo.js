@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/29/2026, 2:56:24 PM
+// Generated: 3/29/2026, 4:30:40 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-29T21:56:24.211Z"
+    "updatedAt": "2026-03-29T23:30:40.117Z"
 };
 
     // =========================================
@@ -1129,7 +1129,7 @@
     console.log('✅ TCS message listener installed');
 
     // Configuration: UPDATE THIS TO YOUR ACTUAL DOMAIN
-    const TCS_SERVER_URL = 'https://your-dashboard.com/tcs-control.html'; 
+    const TCS_SERVER_URL = 'https://mobilewise.netlify.app/trigger-control-system'; 
 
     function openTCS_ControlPanel() {
         // 1. Check if TCS is already open (prevents duplicates)
