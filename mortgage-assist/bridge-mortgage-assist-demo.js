@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/29/2026, 1:20:27 PM
+// Generated: 3/29/2026, 2:56:24 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-29T20:20:27.399Z"
+    "updatedAt": "2026-03-29T21:56:24.211Z"
 };
 
     // =========================================
@@ -328,33 +328,6 @@
 
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
-        
-        // ========================================
-        // PART 1: LISTEN TO SHADOW DOM (The Fix)
-        // ========================================
-        const widget = document.querySelector("lemon-slice-widget");
-        if (widget && widget.shadowRoot) {
-            widget.shadowRoot.addEventListener("transcript", (e) => {
-                const text = (e.detail || "").toLowerCase();
-                console.log(`👂 Shadow Ear heard: "${text}"`);
-                
-                // Check for the PRE-QUAL TRIGGER
-                if (text.includes("pre qualification interview")) {
-                    console.log("🔥 SHADOW TRIGGER: Pre-Qual Phrase Detected!");
-                    if (window.preQualController && !window.preQualController.isActive) {
-                        window.preQualController.startInterview();
-                    }
-                }
-                
-                // Check for TESTIMONIAL TRIGGER (Mirrored from Window logic)
-                if (text.includes("testimonial") || text.includes("success story")) {
-                    console.log("🎯 Shadow Trigger: TESTIMONIAL");
-                    // window.showModule("testimonial", "Testimonial"); 
-                }
-            });
-        } else {
-            console.warn("⚠️ Widget or ShadowRoot not found during setup.");
-        }
         
         // ========================================
         // PART 2: LISTEN FOR WINDOW MESSAGES (TCS/External)
@@ -1043,12 +1016,24 @@
 
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
+        
+        // 1. Load the Script
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
-        script.onload = () => { console.log('✅ Widget script loaded'); };
+        script.onload = () => { 
+            console.log('✅ Widget script loaded'); 
+            
+            // === NEW: AUTO-LAUNCH TCS REMOTE CONTROL ===
+            // Delay to ensure page is stable before popping up the window
+            setTimeout(() => {
+                openTCS_ControlPanel();
+            }, 2500);
+        }; 
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
+        
+        // 2. Create Splash Widget (This is now our ONLY widget)
         setTimeout(() => { showSplash(); }, 100);
     }
 
@@ -1143,35 +1128,34 @@
     });
     console.log('✅ TCS message listener installed');
 
-    // =========================================
-    // 🍋 SHADOW BREAKER (IMMEDIATE)
-    // =========================================
-    (function() {
-        const widget = document.querySelector("lemon-slice-widget");
-        if (!widget) return;
+    // Configuration: UPDATE THIS TO YOUR ACTUAL DOMAIN
+    const TCS_SERVER_URL = 'https://your-dashboard.com/tcs-control.html'; 
 
-        // Safely access Shadow Root
-        try {
-            const shadow = widget.shadowRoot;
-            if (!shadow) return;
-
-            console.log("🕵️‍♂️ SPY: Infiltrating Shadow DOM...");
-
-            // Listen for the NEW TRIGGER PHRASE
-            shadow.addEventListener("transcript", function(e) {
-                const text = (e.detail || "").toLowerCase();
-                console.log("👂 Shadow Ear:", text);
-                
-                if (text.includes("pre qualification interview")) {
-                    console.log("🔥 TRIGGER: Pre-Qual Interview Phrase Detected!");
-                    if (window.preQualController) {
-                        window.preQualController.startInterview();
-                    }
-                }
-            });
-        } catch (err) {
-            console.warn("⚠️ Could not access Shadow DOM:", err);
+    function openTCS_ControlPanel() {
+        // 1. Check if TCS is already open (prevents duplicates)
+        if (window.tcsWindow && !window.tcsWindow.closed) {
+            console.log("🔗 TCS is already open. Focusing...");
+            window.tcsWindow.focus();
+            return;
         }
-    })();
-    console.log('✅ Shadow Spy Active.');
+
+        // 2. Get Client ID from Config
+        const clientId = window.BotemiaConfig.id;
+        
+        // 3. Construct URL with Client ID so TCS knows who it's controlling
+        const tcsUrl = `${TCS_SERVER_URL}?clientId=${clientId}&websiteUrl=${encodeURIComponent(window.location.href)}`;
+        
+        // 4. Open the Popup
+        console.log("🔗 Opening TCS Control Panel from:", TCS_SERVER_URL);
+        try {
+            window.tcsWindow = window.open(
+                tcsUrl, 
+                'Botemia_TCS_Control', 
+                'width=1200,height=800,scrollbars=yes,resizable=yes'
+            );
+        } catch (e) {
+            console.error("❌ Failed to open TCS (Popup blocked?):", e);
+        }
+    }
+
 })();
