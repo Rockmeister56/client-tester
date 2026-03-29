@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/28/2026, 4:44:42 PM
+// Generated: 3/29/2026, 1:00:09 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
     "industry": "mortgage",
     "modules": {
         "emailConfig": {
-            "loanOfficerEmail": "loans@clientcompany.com",
+            "loanOfficerEmail": "mobilewise.ai@gmail.com",
             "ccEmail": "",
             "emailSubject": "New Lead: {{name}}"
         },
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-28T23:44:41.705Z"
+    "updatedAt": "2026-03-29T08:00:08.898Z"
 };
 
     // =========================================
@@ -1215,9 +1215,9 @@
     });
     console.log('✅ TCS message listener installed');
     // =========================================
-    // 🍋 SHADOW BREAKER (SAFE VERSION)
+    // 🍋 SHADOW BREAKER (IMMEDIATE)
     // =========================================
-    setTimeout(function() {
+    (function() {
         const widget = document.querySelector("lemon-slice-widget");
         if (!widget) return;
 
@@ -1240,7 +1240,9 @@
                     }
                 }
             });
-        } catch (err) {            console.warn("⚠️ Could not access Shadow DOM:", err);
+        } catch (err) {
+            console.warn("⚠️ Could not access Shadow DOM:", err);
         }
-    }, 3000);
+    })();
+    console.log('✅ Shadow Spy Active.');
 })();
