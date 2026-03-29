@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/29/2026, 2:22:03 AM
+// Generated: 3/29/2026, 7:26:14 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-29T09:22:03.342Z"
+    "updatedAt": "2026-03-29T14:26:14.202Z"
 };
 
     // =========================================
@@ -399,7 +399,6 @@
     }
 
 
-    
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         steps: [
@@ -422,15 +421,6 @@
                 options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
             },
             { 
-                id: "step_2", 
-                type: "text",
-                text: "User: [Selects loan type]",
-                question: "User: [Selects loan type]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "loanPurpose", 
                 type: "choice",
                 text: "Tess: Great. And are you looking to purchase a new home or refinance an existing one?",
@@ -438,15 +428,6 @@
                 field: "loanPurpose",
                 validation: "text",
                 options: ["Purchase a home","Refinance current home","Cash-out refinance"]
-            },
-            { 
-                id: "step_4", 
-                type: "text",
-                text: "User: [Selects option]",
-                question: "User: [Selects option]",
-                field: "",
-                validation: "text",
-                options: null
             },
             { 
                 id: "propertyType", 
@@ -458,15 +439,6 @@
                 options: ["Single family home","Condominium","Townhouse","Multi-family (2-4 units)","Manufactured home"]
             },
             { 
-                id: "step_6", 
-                type: "text",
-                text: "User: [Selects type]",
-                question: "User: [Selects type]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "estimatedCreditScore", 
                 type: "choice",
                 text: "Tess: Now let's look at qualifications. How would you estimate your credit score?",
@@ -474,15 +446,6 @@
                 field: "estimatedCreditScore",
                 validation: "text",
                 options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
-            },
-            { 
-                id: "step_8", 
-                type: "text",
-                text: "User: [Selects range]",
-                question: "User: [Selects range]",
-                field: "",
-                validation: "text",
-                options: null
             },
             { 
                 id: "annualIncome", 
@@ -494,15 +457,6 @@
                 options: null
             },
             { 
-                id: "step_10", 
-                type: "text",
-                text: "User: [Provides amount]",
-                question: "User: [Provides amount]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "employmentStatus", 
                 type: "choice",
                 text: "Tess: What is your current employment status?",
@@ -510,15 +464,6 @@
                 field: "employmentStatus",
                 validation: "text",
                 options: ["Employed","Self-Employed","Retired","Other"]
-            },
-            { 
-                id: "step_12", 
-                type: "text",
-                text: "User: [Selects status]",
-                question: "User: [Selects status]",
-                field: "",
-                validation: "text",
-                options: null
             },
             { 
                 id: "selfEmployedDocs", 
@@ -548,15 +493,6 @@
                 options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
-                id: "step_16", 
-                type: "text",
-                text: "User: [Selects range]",
-                question: "User: [Selects range]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "downPaymentSource", 
                 type: "choice",
                 text: "Tess: Where are those funds coming from?",
@@ -564,15 +500,6 @@
                 field: "downPaymentSource",
                 validation: "text",
                 options: ["Savings","Gift from family","Sale of current home","Investment/401k","Other"]
-            },
-            { 
-                id: "step_18", 
-                type: "text",
-                text: "User: [Selects source]",
-                question: "User: [Selects source]",
-                field: "",
-                validation: "text",
-                options: null
             },
             { 
                 id: "bankruptcyHistory", 
@@ -584,15 +511,6 @@
                 options: ["Yes","No","Prefer not to say"]
             },
             { 
-                id: "step_20", 
-                type: "text",
-                text: "User: [Selects option]",
-                question: "User: [Selects option]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "militaryService", 
                 type: "choice",
                 text: "Tess: Have you or your spouse served in the military? (This helps us check for VA benefits).",
@@ -600,15 +518,6 @@
                 field: "militaryService",
                 validation: "text",
                 options: ["Yes - Active duty","Yes - Veteran","No"]
-            },
-            { 
-                id: "step_22", 
-                type: "text",
-                text: "User: [Selects option]",
-                question: "User: [Selects option]",
-                field: "",
-                validation: "text",
-                options: null
             },
             { 
                 id: "firstTimeBuyer", 
@@ -620,15 +529,6 @@
                 options: ["Yes","No"]
             },
             { 
-                id: "step_24", 
-                type: "text",
-                text: "User: [Selects yes/no]",
-                question: "User: [Selects yes/no]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "timeline", 
                 type: "choice",
                 text: "Tess: What is your timeline for moving forward?",
@@ -638,16 +538,7 @@
                 options: ["Already have an offer","Looking now - next 30 days","1-3 months","3-6 months","Just exploring"]
             },
             { 
-                id: "step_26", 
-                type: "text",
-                text: "User: [Selects timeline]",
-                question: "User: [Selects timeline]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
-                id: "step_27", 
+                id: "step_15", 
                 type: "text",
                 text: "Tess: Excellent! Based on what you've told me, we have some great loan options that fit your situation. Now, to generate your official pre-qualification letter, I just need a few details.",
                 question: "Tess: Excellent! Based on what you've told me, we have some great loan options that fit your situation. Now, to generate your official pre-qualification letter, I just need a few details.",
@@ -665,29 +556,11 @@
                 options: null
             },
             { 
-                id: "step_29", 
-                type: "text",
-                text: "User: [Responds with full name]",
-                question: "User: [Responds with full name]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "email", 
                 type: "email",
                 text: "Tess: And what is the best email address to send your pre-qualification letter to?",
                 question: "Tess: And what is the best email address to send your pre-qualification letter to?",
                 field: "email",
-                validation: "text",
-                options: null
-            },
-            { 
-                id: "step_31", 
-                type: "text",
-                text: "User: [Responds with email]",
-                question: "User: [Responds with email]",
-                field: "",
                 validation: "text",
                 options: null
             },
@@ -701,16 +574,7 @@
                 options: null
             },
             { 
-                id: "step_33", 
-                type: "text",
-                text: "User: [Responds with phone]",
-                question: "User: [Responds with phone]",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
-                id: "step_34", 
+                id: "step_19", 
                 type: "text",
                 text: "Tess: That's everything! I'm generating your pre-qualification file now. ✅",
                 question: "Tess: That's everything! I'm generating your pre-qualification file now. ✅",
@@ -718,7 +582,63 @@
                 validation: "text",
                 options: null
             },
-        ]
+        ],
+        responses: {},
+        currentStepIndex: 0,
+        active: false,
+        
+        start: function() {
+            console.log("📋 Starting pre-qual script");
+            this.active = true;
+            this.currentStepIndex = 0;
+            this.responses = {};
+            return this.getCurrentQuestion();
+        },
+        
+        processResponse: function(userInput) {
+            if (!this.active) return null;
+            const currentStep = this.steps[this.currentStepIndex];
+            if (!currentStep) {
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
+            // If it's a message step, just move to next
+            if (currentStep.type === "message") {
+                this.currentStepIndex++;
+                return this.getCurrentQuestion();
+            }
+            
+            // Store the response if it has a field
+            if (currentStep.field) {
+                this.responses[currentStep.field] = userInput;
+                console.log("✅ Stored " + currentStep.field + ": " + userInput);
+            }
+            
+            // Move to next step
+            this.currentStepIndex++;
+            
+            // Check if interview is complete
+            if (this.currentStepIndex >= this.steps.length) {
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
+            return this.getCurrentQuestion();
+        },
+        
+        getCurrentQuestion: function() {
+            const step = this.steps[this.currentStepIndex];
+            if (!step) {
+                this.active = false;
+                return null;
+            }
+            return step.question || step.text;
+        },
+        
+        getResults: function() {
+            return this.responses;
+        }
     };
     setupUniversalListener();
 
