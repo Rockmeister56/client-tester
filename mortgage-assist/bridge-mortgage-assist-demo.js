@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/29/2026, 12:24:57 PM
+// Generated: 3/29/2026, 12:56:39 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-29T19:24:56.685Z"
+    "updatedAt": "2026-03-29T19:56:38.802Z"
 };
 
     // =========================================
@@ -329,6 +329,36 @@
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
         
+        // ========================================
+        // PART 1: LISTEN TO SHADOW DOM (The Fix)
+        // ========================================
+        const widget = document.querySelector("lemon-slice-widget");
+        if (widget && widget.shadowRoot) {
+            widget.shadowRoot.addEventListener("transcript", (e) => {
+                const text = (e.detail || "").toLowerCase();
+                console.log(`👂 Shadow Ear heard: "${text}"`);
+                
+                // Check for the PRE-QUAL TRIGGER
+                if (text.includes("pre qualification interview")) {
+                    console.log("🔥 SHADOW TRIGGER: Pre-Qual Phrase Detected!");
+                    if (window.preQualController && !window.preQualController.isActive) {
+                        window.preQualController.startInterview();
+                    }
+                }
+                
+                // Check for TESTIMONIAL TRIGGER (Mirrored from Window logic)
+                if (text.includes("testimonial") || text.includes("success story")) {
+                    console.log("🎯 Shadow Trigger: TESTIMONIAL");
+                    // window.showModule("testimonial", "Testimonial"); 
+                }
+            });
+        } else {
+            console.warn("⚠️ Widget or ShadowRoot not found during setup.");
+        }
+        
+        // ========================================
+        // PART 2: LISTEN FOR WINDOW MESSAGES (TCS/External)
+        // ========================================
         window.addEventListener("message", (event) => {
             
             // ========================================
@@ -367,7 +397,7 @@
             // TESTIMONIAL TRIGGER
             if (msgText.includes("testimonial") || msgText.includes("success story")) {
                 console.log("🎯 Trigger: TESTIMONIAL");
-                lastTriggerTime = now; 
+                // lastTriggerTime = now; 
                 // window.showModule("testimonial", "Testimonial"); 
             }
             
@@ -397,7 +427,6 @@
             
         });
     }
-
 
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
@@ -644,12 +673,31 @@
 
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        
+        // 1. CHECK URL PARAMETER (Priority: TCS Command)
+        // This overrides config if the Dashboard sends a specific client ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlClientId = urlParams.get('clientId');
+        
+        // 2. DETERMINE ID SOURCE (Priority: URL > Config)
+        // We use client-id if available in URL, otherwise we fall back to agent-id from config
+        if (urlClientId) {
+            console.log("🎯 URL Override detected. Using Client ID:", urlClientId);
+            widget.setAttribute('client-id', urlClientId);
+            // We explicitly DO NOT set agent-id here to prevent conflict/404
+        } else {
+            // Fallback to original config logic if no URL param exists
+            console.log("📂 Using Config Agent ID:", (splashScreen.agentId || config.agentId));
+            widget.setAttribute('agent-id', (splashScreen.agentId || config.agentId));
+        }
+        
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
         widget.id = 'main-widget';
         widget.style.display = 'none';
+        
+        // 3. PRESERVE READY LISTENER (Critical for Intro)
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Main Widget Ready.');
             forceMortgageIntro(widget);
