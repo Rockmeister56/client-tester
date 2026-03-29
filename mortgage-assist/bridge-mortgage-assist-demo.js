@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/29/2026, 1:28:45 AM
+// Generated: 3/29/2026, 1:48:36 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,8 +83,23 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-29T08:28:44.755Z"
+    "updatedAt": "2026-03-29T08:48:36.146Z"
 };
+
+    // =========================================
+    // 🍋 AUTO-LOADER: EMAILJS LIBRARY
+    // =========================================
+    (function() {
+        var js = document.createElement("script");
+        js.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        js.onload = function() {
+            if (window.emailjs) {
+                window.emailjs.init('7-9oxa3UC3uKxtqGM');
+                console.log("✅ EmailJS Ready");
+            }
+        };
+        document.head.appendChild(js);
+    })();
 
     const style = document.createElement('style');
     style.textContent = `
@@ -190,21 +205,17 @@
         startInterview() {
             if (this.isActive) return;
             
-            // 1. Grab the script from Supabase/Window
             if (!window.preQualScript) {
                 console.error("❌ CRITICAL: preQualScript not found!");
                 return;
             }
             this.script = window.preQualScript;
             
-            // 2. Initialize State
             this.isActive = true;
-            this.currentStepIndex = 0; // Start at the Confirmation Gate (Step 0)
+            this.currentStepIndex = 0;
             this.answers = {};
             
             console.log("🎯 Starting Pre-Qual Interview (New Format)");
-            
-            // 3. Speak the first message (Confirmation Gate)
             this.speakCurrentStep();
         }
 
@@ -212,11 +223,8 @@
             if (!this.isActive || !this.script) return;
 
             const lowerText = userText.toLowerCase();
-
-            // ===== FIREWALL LOGIC =====
             const currentStep = this.script.steps[this.currentStepIndex];
             
-            // 1. CHECK FOR EXIT (NO)
             if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
                 console.log("🚪 User declined. Returning to Lemon Slice.");
                 this.isActive = false;
@@ -224,7 +232,6 @@
                 return;
             }
             
-            // 2. CHECK FOR FIREWALL TRIGGER (YES)
             if (currentStep.id === "confirmation" && lowerText === "yes") {
                 console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
                 this.answers[currentStep.field] = userText;
@@ -233,27 +240,25 @@
                 return; 
             }
             
-            // 3. NORMAL FLOW
             if (currentStep.field) {
                 this.answers[currentStep.field] = userText;
                 console.log("💾 Saved " + currentStep.field + ": " + userText);
             }
             this.currentStepIndex++;
 
-            // ===== CHECK IF FINISHED =====
             if (this.currentStepIndex >= this.script.steps.length) {
                 this.finishInterview();
                 return;
             }
 
-            // ===== SPEAK NEXT QUESTION =====
             this.speakCurrentStep();
         }
 
         speakCurrentStep() {
             const step = this.script.steps[this.currentStepIndex];
             if (step) {
-                this.speak(step.question);
+                const message = step.question || step.text;
+                this.speak(message);
             } else {
                 console.error("❌ Step not found at index:", this.currentStepIndex);
             }
