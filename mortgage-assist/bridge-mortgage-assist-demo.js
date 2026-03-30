@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/29/2026, 4:30:40 PM
+// Generated: 3/30/2026, 3:07:09 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -57,7 +57,7 @@
             },
             "branding": {
                 "name": "",
-                "logo": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVYAAAAnCAYAAABUpmBTAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAPYQAAD2EBqD+naQAADpNJREFUeF7tnQmQVMUZx40mWmrUsioxpsrEijGmKpVUtFKKisoRNSYVjIAiCsYDOZabcAu4nItyyyXgigRQOSUKqCjgAi6HXMUlLPfpwgossLvsNbv/9DdvGr5tuvu9uXbZtX9VXznv+/+7Z3yO/+p5r2f2CjgcVUhxcXHkkcNRc3DB6qhSysvLI48cjppDlQUr/Q8ly+FwOGoSVRKsB47kYPz0z5E6Zg6OZp9CmQtXh8NRg0h4sBYVl6DvyA/RLW06ug2dgT7i8dZdh8JacUkpVn7zLboM+S8atHwDf31hIDoPmoaFyze6lavD4agxJDRYKRvPFxbh8RcHofYzffFQk354/KXByFi3A9/lnMashZlo0ett1H2+P2o36YsHheeRpql4oes4jJm2GDmnziJUVhaZzeFwOKonSQnWx0SwUmhSPfHyEIx45xMMF9Wkw+gLgcqrtghgGtN/7Fxs2nEAhUUlkRkdDoej+pH0YK3XbACeajNMrGIHVwjTOmLV+sTLaRV6VF2HzsDsxatx/Pszib32SnOFRGAX5UcaDofDkRySHqxUfJX6cNPX8VzntzAifSHefv8LtHxtMh54+qJO1TBlOCbM/By79h8LX7ONm1ApcO4EkL0TKDwXaTocDkdySHCwlqNAE6yy/vbSYLRLTcdHS9YhL78Q+QWFyFi7A13TpqPu86nhSwLko3/SddgBY+di1YadOHUmL/IMMVAkxh7PAvasAg5t8NLf4XA4kkjCgrWsrBxnzhVg+ZrtqN98QIVAfeDpPniqzXAMnjAf67fuDXsldLPqeE4u+o76UKxUR4RXtHxsi96TMGtRJg5/dzIc3IEhb+5RIGsFsHkBsDfTharD4agUEhKsJSWlOHg0J7wSvb9xnwrBWOe5VDzdfhSmL1iBEyfPREZcCoXmtPkZeLnnRNRt1v/CeFq9PvrvQRg6aQH2HT6B84UBvgIZEp6cfcDyCcDioWKlutEaqvz1yrIRrT+ZVOVzVxfU/1aX0zlL1mtKxHz8tanlsBNXsFIYUtBt2XkQ/UbPQq3Gr1U4+Y+JQKRrqOu27EUo5L+NiubbvvswOg6cGt6m9dCzF1evtHUrpV86MjfuCq+MjdA11APrgeltgdndgWPbfFeq/DXLshGtP1lU5XNXJ/h/p8vtnCXjNcU7H39NfuXQE3Ow0sf5s3nn8dmKzfjnq29UONl0M4ouB4yaugiHs6P7CC/Dmva10m6Ch1m4UjVo+SYmzlyCc/mFl+4aKDwLrHwHGFwLmCNCNWevb6gSfH5eOnQ+qsqmKp+7usHP1eV2zhL9muKdj48PWo5LiSlYKfxoO9QEEXD3Nepd4STTR/e7G/TA5m8PoLi4NEiuaaHnoBtb9IUCukZ7cX5vZ0HzruOQf74o4hbQE41vCLS9HvhiJJB/kpqe5gN//bx06HxUlU1VPnd1Qj1P6nFNI55/Pz7WNkdQ3w+ZqIO1NBTCstXb0LrvlPBeVH5yH2qailZ9JuNI9imUlIYqhiodUNid2CNqN3D6MHA+13tMPTour3i5gK7d0m8JDJvycfhaLX8uCtemHUcjP78A5Qc3AP3vEaF6I5AxCcjLuWQuG3xefqxD5zN5JdwXrV89tpUOk0fXU+EeXjZMXl1PhXv8vEFR51KPbXAvLxs6P5UJPw/XeanoPLKCEu0Ym1edSz1W4brNJ/Hz2XRV48e8Hw+Bg5VWkKdy8zDlwy/RuN3ICqH6wDP9UO/ZPpjdvTmOn8ytcNf/ArQ5/7PhQI87gO53AuOaAF+/B3QTx71+J46fBIov3bxP12a/O3EaI9MXolYj7xpu/eYD0XHQe8jamYWyeb3E+N+KUL0J+Opt4OzxCqFKr5vKhvz3oNIdS9S+eqzCdVPp0PmClIrOoysVnUctHTqfrnTofLJiRTePrqdD9elKRedRSyWoZiqJTpMVhFjG2FDn48XR6WrpiEfnmq3iIXCwbtq+H/1Gz8Y/WgwN30iST16/SU90atYMW1vdgVOvP4Iy00qRgnVBH6DVVcCrPwaGPAIsGyseXwm0uRpIuw8o0m/ep72xU2Ytxb0Ne6NRygjMmL8MhzasQujNR4GutwAtrgHWfACcEyvVMlopl4d3KWTn5KJUrJz9UE+meixR++oxh2t+paLzBCmOTjeViknjfT/NVio6j1qxYBpv6ktsukkz9YlYNFOf0Gm8p1YQovX7wedTS6LTTKVi0wibzjW/ihXfYKXF3qcZm9H/rbnhH0uhYGvUVlTKcLRv2QlzX7wXWS1uRVnKNShJrWUP1kVDgc63AZ1+BYx6CljxDtBRHP/ndnH8hLeZXwMF69S5y9Gm3xSszMjE90vEuLTaQMq1YqV6M7B+PnD+rPdiBaFQCMfEKpd+TSsIuhOpO7Emj+ojuKbqNo3w04l4dK6puqkvMemmPsE1VQ+qxYJpvKkviUXX9TgmPdq+xKSb+n7EOs4En880p81j0wibRth0rvnpsRJoxbr7QDbWbt6NrzfsErXTq7VbsGXaEOS2uF6sQq9AuVh12oNVhNxXk4HBYqU6qA4wtS3wzRzxWByn1QPebQEU67dR0bXWXXsOYeOnH6FoZheUD7xHPKdY9dIlgNUzgVK6ieWFKmVrfkERiqL4IRfdiVR76jGh6xG8r2oSm8fU59g8Nk0SxKNDN07XUzF5TH2Jn27Cb5xN55rJoxLLGMLk532dbiJavyTIOO5RS8WmEVyPxWPqS2y6TZME8diI+ubVBSgEl00QH+V/FDBYRdB9PhzoeQfQQwTiuGe8a6x0zbW3+RorJWV5YR5Cmz5BaFxD8dH/VqDNT4DXfg9kzvDmZXf/KVij/XUs3UlUe+oxoesRpr6KyWfqc2wemyYJ4pFwLy+Jrqdi8vC+X0WD3zibzjVd6dD5eJkweXhfVyaCeHQEGcc9aqnYNMJPl5h8pr7Epts0SRCPjfiClb7ZFE2w0jXW1mKl2VIEY1rkGmtLcZxyDTC01qXXWCkls7PE80wEhtcVY8U4CtV+fwBWiVAOh2pFymL4PVfdSVR76jGh6xGmvorJZ+pzbB6bJvHzcN1UEl1PxeThfb8Kim6sX6noPGqp6DxqqQTVTKVi02wEGcc9aqnYNMJPl5h8pr7Epts0SRCPjSiCVYQcXQMtKfQONcFanHq/OVjLQsDa94GJjYEJouaJkN26yHs8Saxe5/UQc5+PmMVz0cf7rAxgVmexOhUr2pbiedpdBwy5D/hqUsRXEVq3xvJD2aaTyHs2PWhfxeQz9Tk2j02T2DxcUz1Beyomj6kfD3zOoGVD55dlQueVxTH1VbhPLY6p7wcfF3SszW/TCD9dYvKZ+hKbbtMkQTw2ogtW+lGTPZkXfn4vtPJdlLS5eI3VGqw0nrZC0VdMj271vhWVd9J7fGx75FtSkbHU3/gRMObvQIcbxfwiVDv8FBhWB1gz05tLQ6y/32o6ibzvp3N4X9UkNo+pz7F5bJrE5DH1JTpd11MxeUz9eOBzBq2gxDLONsbUt8HHqONM/SBEO9bmt2kE12PxmPoSm27TJEE8NqIL1vxTQOa08H7U8k0foygjHXnjm6BkwN0oTbnOJ1glFH6iZAiG/8l6R0TQZoiP/vRxv9WV4dBGexHeI+sD6+d4K18NQfarmjCdRN7301W4puo2jbBpEj+PTeeaqpv6EpNu6hNc89NVbJqORPh1PY5O1/U4Jj3avsSkm/pB4GNtcwTx2TQJ96g+m0bYdJtGxKsHIbprrBRcdClgqQi+/vcCU19CydYlOLssHefTHkbh2OcCBKsOmrcAOLgRGP8voOMNXqBSdRCPR9QDNszzfAZiDVXCdBJ5309X4Zpfqdg0CffovDrdVJxEabZS0XnUCkq0Y0x+U58waaY+YdJMfSIWjfd1uh+68UFKxaZJuMevVHQeU6noPKaKleiCVUI3jWibU6+7gC6/BNJfROjbpTi3ZRnKaVtVNNAK9NxxYNunQI/feDenLoSq+Pg/tgEg5vYjGcFKxKoRXDeVDj+d4B6TV+fRlYrOoysVnUdXOnQ+XkGJdozJz/umUtF51FIJqplKJYjHD90cpjIRxENwn6lM6Ly6UtF5dBUPsQUrQb95unG+93XU1lcB7SgExWqTfq2/IFckXYCVa5kIYbq2OqeLd3NKBioVbf6f3BTYv45SMzJATzyhSthOZqwah/ui9dvgPpPX5NH1OFxXfbqehGtc1/VUuMfPqyMZ47hm8qhEMyZaj5+XiMZrQ52Hlx/ReAnuj2ecRNeT6DTe4/1YiT1YJTu+BNr/TISrCEaqV0QNqeXd6AqHqyH0KAwPbIisUkUw81Cl4/RmwJEtZPT8FuIN1h8iiXwTBaGyn8/hMFEZ78X4g5UuC+xaCXS73QvW8GrzavEx/mZgQiPvT6NU+EaVCEH6Tj9t1er0c2+1y0O15ZXAB+29nQe0og2Ay9WK+L1xuG7yRIPfXFw3eRyOyqIy3ovxBytBN7R2fw0MoK+aRu7kU9Hd/O63AeOfBLYu9vap0h/1m9QE6CJClbZR8VClH2T5X6r3M4Kazf+OYPA3jl8lAt28pnI4qprKeD+KNEsQJUXeH+wb+BexYmU3oKgoYPvcBaQ9CKT+CehIe1OZHi6xcl2cBpw8GHil6jDD3zy2ShS6uXXlcFQ1lfF+FImWQOiG1t7VwLC6QNtrleCk1alYkbZmK1pZ7W4APnsDOH3EuE/VET38DaRWMtA9jyyH43KhMt6XItUSDF3wzFopPu4/K1amN10aomp1uQVYMhw4ky3GxrIH1uFwOC4vRLIlAxGu+9aEv0CgvZYaLtHr+Wvv71PRzSyHw+GoISQpWAXh7VTfANNeAbr+wgvSC6F6pXfN9csxQMHpyACHw+GoGSQvWMOIcN2/Fni/LdDjNi9caXvV638Elo41/sUAh8PhqM4kOVgjHN0GzOkG9L4TSP2zt4f1wk8EOhwOR82icoKVVq7f7wOWjAZWvOvtew3wjSqHw+GofgD/B1+Wdgblkt9tAAAAAElFTkSuQmCC"
+                "logo": ""
             }
         },
         "testimonial": {
@@ -78,12 +78,12 @@
         "preQualification": {
             "enabled": true,
             "knowledgeBaseScript": "mortgage",
-            "triggerPhrase": "pre qualification interview",
+            "triggerPhrase": "secured pre qualification interview",
             "emailSubject": "New Lead: {{name}}",
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-29T23:30:40.117Z"
+    "updatedAt": "2026-03-30T10:07:09.454Z"
 };
 
     // =========================================
@@ -329,64 +329,34 @@
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
         
-        // ========================================
-        // PART 2: LISTEN FOR WINDOW MESSAGES (TCS/External)
-        // ========================================
         window.addEventListener("message", (event) => {
+            
+            // 🔍 DIAGNOSTIC: LOG EVERYTHING
+            console.log("📩 [RAW MESSAGE] Type:", event.data?.type, "Data:", event.data);
             
             // ========================================
             // 1. COMMAND LISTENER (Highest Priority)
             // ========================================
             
-            // This handles the direct command from the Knowledge Base Script
-            // We check this FIRST before looking for text content
             if (event.data && event.data.type === "START_PRE_QUAL") {
-                console.log("🎯 COMMAND RECEIVED: START_PRE_QUAL");
+                console.log("🎯🎯🎯 MATCH FOUND! START_PRE_QUAL RECEIVED! 🎯🎯🎯");
+                console.log("🎯🎯🎯 STARTING INTERVIEW NOW! 🎯🎯🎯");
                 if (window.preQualController && !window.preQualController.isActive) {
                     window.preQualController.startInterview();
                 }
-                return; // Stop processing
+                return;
             }
 
-            // SAFETY: Ignore garbage messages for speech processing
+            // SAFETY: Ignore garbage
             if (!event.data || !event.data.type) return;
             
             const msgType = event.data.type;
-            // Safely get text, default to empty string if missing
             const msgText = (event.data.text || event.data.content || "").toLowerCase();
             
-            // Only process Transcripts (User Speech) and AI Responses (Tess Speech)
             const isValidTrigger = (msgType === "transcript" || msgType === "ai_response");
             if (!isValidTrigger) return;
             
             console.log(`📨 Heard: "${msgText}"`);
-            
-            // ========================================
-            // 2. MODULE TRIGGERS (Triggered by Tess)
-            // ========================================
-            
-            const now = Date.now();
-            
-            // TESTIMONIAL TRIGGER
-            if (msgText.includes("testimonial") || msgText.includes("success story")) {
-                console.log("🎯 Trigger: TESTIMONIAL");
-                // lastTriggerTime = now; 
-                // window.showModule("testimonial", "Testimonial"); 
-            }
-            
-            // ========================================
-            // 3. PRE-QUAL TRIGGER (FALLBACK - Triggered by TESS Speech)
-            // ========================================
-            
-            // This is a fallback if the script command fails, listening for the phrase
-            if (window.preQualController && !window.preQualController.isActive) {
-                // TRIGGER 1: The "Time" Phrase (Catches "in the next" OR "less than")
-                if (msgText.includes("5 minutes")) {
-                    console.log("🎯 Trigger: START PRE-QUAL (Time Phrase Detected)");
-                    window.preQualController.startInterview();
-                    return; 
-                }
-            }
             
             // ========================================
             // 4. INTERVIEW EARS (Feeding answers)
@@ -650,6 +620,7 @@
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
+        widget.setAttribute('suppress-config-fetch', 'true');
         widget.id = 'main-widget';
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
