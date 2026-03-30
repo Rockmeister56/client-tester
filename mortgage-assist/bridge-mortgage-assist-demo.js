@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/30/2026, 3:58:25 AM
+// Generated: 3/30/2026, 5:05:55 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-30T10:58:24.846Z"
+    "updatedAt": "2026-03-30T12:05:55.010Z"
 };
 
     // =========================================
@@ -332,15 +332,25 @@
         window.addEventListener("message", (event) => {
             
             // 🔍 DIAGNOSTIC: LOG EVERYTHING
-            console.log("📩 [RAW MESSAGE] Type:", event.data?.type, "Data:", event.data);
+            console.log("📩 [RAW MESSAGE] Type:", event.data?.type, "Command:", event.data?.command, "Data:", event.data);
             
             // ========================================
             // 1. COMMAND LISTENER (Highest Priority)
             // ========================================
             
-            if (event.data && event.data.type === "START_PRE_QUAL") {
+            // Check for START_PRE_QUAL in either format
+            if (event.data && (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL")) {
                 console.log("🎯🎯🎯 MATCH FOUND! START_PRE_QUAL RECEIVED! 🎯🎯🎯");
                 console.log("🎯🎯🎯 STARTING INTERVIEW NOW! 🎯🎯🎯");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
+                return;
+            }
+
+            // Also handle TCS_COMMAND format
+            if (event.data && event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL") {
+                console.log("🎯🎯🎯 TCS COMMAND FORMAT DETECTED! 🎯🎯🎯");
                 if (window.preQualController && !window.preQualController.isActive) {
                     window.preQualController.startInterview();
                 }
@@ -370,6 +380,7 @@
             
         });
     }
+
 
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
@@ -616,17 +627,7 @@
 
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        
-        // 🆕 ROOT CAUSE FIX: ID MAPPING
-        // If we dont provide a valid ID, the widget defaults to "0", causing a 404.
-        const clientId = window.BotemiaConfig.id || 'mortgage-assist-demo';
-        
-        // 1. Set CLIENT ID (Primary)
-        widget.setAttribute('client-id', clientId);
-        
-        // 2. Set AGENT ID (Secondary - Keep for compatibility)
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
-        
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
