@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/31/2026, 1:03:12 PM
+// Generated: 3/31/2026, 2:10:59 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-31T20:03:11.796Z"
+    "updatedAt": "2026-03-31T21:10:59.196Z"
 };
 
     // =========================================
@@ -570,22 +570,27 @@
 
     // Listen for commands from TCS across different domains
     try {
-        const channel = new BroadcastChannel("tess-discovery");
+        const channel = new BroadcastChannel("botemia-discovery");
+        console.log("📡 Broadcast Channel Listener Active.");
+        
         channel.onmessage = (event) => {
             const data = event.data;
+            console.log("📡 [BROADCAST] Received:", data);
             
             // TEST BUTTON: Auto-respond to pings
             if (data.type === "TEST_PING") {
                 console.log("📡 [PING] Received, sending PONG back...");
-                channel.postMessage({ type: "TEST_PONG", message: "Connection Active!" });
+                channel.postMessage({ type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() });
                 return;
             }
+            
             // Check for Pre-Qual Command
             if (data.command === "START_PRE_QUAL" || data.type === "START_PRE_QUAL") {
-                console.log("📡 [BROADCAST] Received START_PRE_QUAL from TCS");
+                console.log("🎯 [BROADCAST] START_PRE_QUAL received from TCS");
                 if (window.preQualController && !window.preQualController.isActive) {
                     window.preQualController.startInterview();
                 }
+                return;
             }
             
             // Check for other triggers if needed
@@ -594,7 +599,6 @@
                 // Handle other modules here if necessary
             }
         };
-        console.log("📡 Broadcast Channel Listener Active.");
     } catch (e) {
         console.warn("BroadcastChannel not supported:", e);
     }
