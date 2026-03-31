@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/30/2026, 11:26:45 PM
+// Generated: 3/31/2026, 3:20:42 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -120,7 +120,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-31T06:26:44.543Z"
+    "updatedAt": "2026-03-31T10:20:42.122Z"
 };
 
     // =========================================
@@ -599,6 +599,9 @@
         }
     }
 
+    // Expose class to global scope for testing/debugging
+    window.PreQualificationController = PreQualificationController;
+
     window.preQualController = new PreQualificationController();
     console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
 
@@ -660,6 +663,9 @@
         });
     }
 
+    // Expose function to global scope for testing/debugging
+    window.setupUniversalListener = setupUniversalListener;
+
     // Catch ALL messages for TCS commands
     window.addEventListener("message", (event) => {
         console.log("🔍 ALL MESSAGE RECEIVED:", event.data);
@@ -676,7 +682,17 @@
 
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
+        
+        // 🆕 ROOT CAUSE FIX: ID MAPPING
+        // If we dont provide a valid ID, the widget defaults to "0", causing a 404.
+        const clientId = window.BotemiaConfig.id || 'mortgage-assist-demo';
+        
+        // 1. Set CLIENT ID (Primary)
+        widget.setAttribute('client-id', clientId);
+        
+        // 2. Set AGENT ID (Secondary - Keep for compatibility)
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
