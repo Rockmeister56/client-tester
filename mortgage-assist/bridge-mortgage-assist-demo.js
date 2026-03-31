@@ -1,47 +1,10 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/31/2026, 3:20:42 AM
+// Generated: 3/31/2026, 10:12:09 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
-
-    // Suppress widget debugging noise
-    const originalLog = console.log;
-    console.log = function() {
-        const msg = arguments[0];
-        if (typeof msg === "string" && (
-            msg.includes("iframe-call-message") ||
-            msg.includes("network-quality") ||
-            msg.includes("participant-") ||
-            msg.includes("sfu") ||
-            msg.includes("signaling") ||
-            msg.includes("app-msg") ||
-            msg.includes("app-message") ||
-            msg.includes("get-network-topology") ||
-            msg.includes("local-audio") ||
-            msg.includes("join-meeting") ||
-            msg.includes("call-machine") ||
-            msg.includes("daily-main") ||
-            msg.includes("transmit-log") ||
-            msg.includes("access-state") ||
-            msg.includes("receive-settings") ||
-            msg.includes("send-settings") ||
-            msg.includes("input-settings") ||
-            msg.includes("lib-room-info") ||
-            msg.includes("selected-devices") ||
-            msg.includes("get-input-devices") ||
-            msg.includes("started-camera") ||
-            msg.includes("meeting-session") ||
-            msg.includes("participant-counts") ||
-            msg.includes("joined-meeting") ||
-            msg.includes("active-speaker") ||
-            msg.includes("cpu-load")
-        )) {
-            return;
-        }
-        originalLog.apply(console, arguments);
-    };
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -120,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-31T10:20:42.122Z"
+    "updatedAt": "2026-03-31T17:12:09.328Z"
 };
 
     // =========================================
@@ -609,12 +572,23 @@
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
 
     function setupUniversalListener() {
-        console.log("👂 Universal Listener Activated.");
+        console.log("👂 Universal Listener Activated (Silent Mode).");
         
         window.addEventListener("message", (event) => {
             
-            // 🔍 DIAGNOSTIC: LOG EVERYTHING
-            console.log("📩 [RAW MESSAGE] Type:", event.data?.type, "Command:", event.data?.command, "Data:", event.data);
+            // ========================================
+            // 🔇 NOISE FILTER (Must be first!)
+            // ========================================
+            // This stops the 3400+ lines of video widget logs
+            if (event.data && event.data.what === "iframe-call-message") {
+                return; 
+            }
+
+            // ========================================
+            // 🔍 DIAGNOSTIC: LOG ONLY CLEAN MESSAGES
+            // ========================================
+            // We only log here if the message passed the filter above
+            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
             
             // ========================================
             // 1. COMMAND LISTENER (Highest Priority)
@@ -668,7 +642,13 @@
 
     // Catch ALL messages for TCS commands
     window.addEventListener("message", (event) => {
-        console.log("🔍 ALL MESSAGE RECEIVED:", event.data);
+        
+        // 🔇 NOISE FILTER: Ignore video widget noise here too
+        if (event.data && event.data.what === "iframe-call-message") {
+            return;
+        }
+
+        console.log("🔍 CHECKING MESSAGE:", event.data);
         if (event.data && (event.data.command === "START_PRE_QUAL" || 
             (event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL"))) {
             console.log("🎯🎯🎯 TCS COMMAND CAUGHT! 🎯🎯🎯");
