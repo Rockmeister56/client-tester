@@ -1,12 +1,12 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/30/2026, 10:48:16 PM
+// Generated: 3/30/2026, 11:26:45 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
 
-    // Suppress Daily/iframe debugging messages
+    // Suppress widget debugging noise
     const originalLog = console.log;
     console.log = function() {
         const msg = arguments[0];
@@ -17,7 +17,26 @@
             msg.includes("sfu") ||
             msg.includes("signaling") ||
             msg.includes("app-msg") ||
-            msg.includes("app-message")
+            msg.includes("app-message") ||
+            msg.includes("get-network-topology") ||
+            msg.includes("local-audio") ||
+            msg.includes("join-meeting") ||
+            msg.includes("call-machine") ||
+            msg.includes("daily-main") ||
+            msg.includes("transmit-log") ||
+            msg.includes("access-state") ||
+            msg.includes("receive-settings") ||
+            msg.includes("send-settings") ||
+            msg.includes("input-settings") ||
+            msg.includes("lib-room-info") ||
+            msg.includes("selected-devices") ||
+            msg.includes("get-input-devices") ||
+            msg.includes("started-camera") ||
+            msg.includes("meeting-session") ||
+            msg.includes("participant-counts") ||
+            msg.includes("joined-meeting") ||
+            msg.includes("active-speaker") ||
+            msg.includes("cpu-load")
         )) {
             return;
         }
@@ -101,7 +120,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-31T05:48:16.595Z"
+    "updatedAt": "2026-03-31T06:26:44.543Z"
 };
 
     // =========================================
@@ -211,205 +230,6 @@
         widget.id = 'splash-widget';
         return widget;
     }
-
-    class PreQualificationController {
-        constructor() {
-            this.isActive = false;
-            this.script = null;
-            this.answers = {};
-            this.currentStepIndex = 0;
-        }
-
-        startInterview() {
-            if (this.isActive) return;
-            
-            if (!window.preQualScript) {
-                console.error("❌ CRITICAL: preQualScript not found!");
-                return;
-            }
-            this.script = window.preQualScript;
-            
-            this.isActive = true;
-            this.currentStepIndex = 0;
-            this.answers = {};
-            
-            console.log("🎯 Starting Pre-Qual Interview (New Format)");
-            this.speakCurrentStep();
-        }
-
-        handleUserInput(userText) {
-            if (!this.isActive || !this.script) return;
-
-            const lowerText = userText.toLowerCase();
-            const currentStep = this.script.steps[this.currentStepIndex];
-            
-            if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
-                console.log("🚪 User declined. Returning to Lemon Slice.");
-                this.isActive = false;
-                this.speak("No problem. What else can I help you with?");
-                return;
-            }
-            
-            if (currentStep.id === "confirmation" && lowerText === "yes") {
-                console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
-                this.answers[currentStep.field] = userText;
-                this.currentStepIndex++;
-                this.speakCurrentStep();
-                return; 
-            }
-            
-            if (currentStep.field) {
-                this.answers[currentStep.field] = userText;
-                console.log("💾 Saved " + currentStep.field + ": " + userText);
-            }
-            this.currentStepIndex++;
-
-            if (this.currentStepIndex >= this.script.steps.length) {
-                this.finishInterview();
-                return;
-            }
-
-            this.speakCurrentStep();
-        }
-
-        speakCurrentStep() {
-            const step = this.script.steps[this.currentStepIndex];
-            if (step) {
-                const message = step.question || step.text;
-                this.speak(message);
-            } else {
-                console.error("❌ Step not found at index:", this.currentStepIndex);
-            }
-        }
-
-        finishInterview() {
-            this.isActive = false;
-            console.log("✅ Interview Complete.");
-            this.speak("That is everything! I am generating your pre-qualification letter now.");
-            this.sendEmail();
-        }
-
-        speak(text) {
-            if (!text) return;
-            console.log("🤖 Tess says: " + text);
-            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
-                window.mainWidget.sendMessage(text);
-            }
-        }
-
-        // ===== SEND EMAIL FUNCTION (FIXED & INSIDE CLASS) =====
-        async sendEmail() {
-            console.log("📧 Sending pre-qualification emails...");
-            
-            try {
-                // ===== EMAIL 1: TO LOAN OFFICER =====
-                await emailjs.send(
-                    "service_b9bppgb",
-                    "template_uix9cyx",
-                    {
-                        to_email: "loans@clientcompany.com",
-                        cc_email: "",
-                        subject: "New Pre-Qual Lead: {{firstName}} {{lastName}}".replace("{{firstName}}", this.answers.firstName || "Client").replace("{{lastName}}", this.answers.lastName || ""),
-                        first_name: this.answers.firstName || "",
-                        last_name: this.answers.lastName || "",
-                        email: this.answers.email || "",
-                        phone: this.answers.phone || "",
-                        full_answers: JSON.stringify(this.answers, null, 2)
-                    }
-                );
-                console.log("✅ Loan officer email sent");
-
-                // ===== EMAIL 2: TO CLIENT =====
-                if (this.answers.email) {
-                    await emailjs.send(
-                        "service_b9bppgb",
-                        "template_8kx812d",
-                        {
-                            to_email: this.answers.email,
-                            first_name: this.answers.firstName || "Valued Client",
-                            message: "Thank you for completing your pre-qualification! A loan officer will contact you within 15 minutes."
-                        }
-                    );
-                    console.log("✅ Client confirmation email sent");
-                }
-            } catch (error) {
-                console.error("❌ Failed to send emails:", error);
-            }
-        }
-    }
-
-    window.preQualController = new PreQualificationController();
-    console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
-
-    let lastTriggerTime = 0;
-    const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
-
-    function setupUniversalListener() {
-        console.log("👂 Universal Listener Activated.");
-        
-        window.addEventListener("message", (event) => {
-            
-            // 🔍 DIAGNOSTIC: LOG EVERYTHING
-            console.log("📩 [RAW MESSAGE] Type:", event.data?.type, "Command:", event.data?.command, "Data:", event.data);
-            
-            // ========================================
-            // 1. COMMAND LISTENER (Highest Priority)
-            // ========================================
-            
-            // Check for START_PRE_QUAL in either format
-            if (event.data && (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL")) {
-                console.log("🎯🎯🎯 MATCH FOUND! START_PRE_QUAL RECEIVED! 🎯🎯🎯");
-                console.log("🎯🎯🎯 STARTING INTERVIEW NOW! 🎯🎯🎯");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-
-            // Also handle TCS_COMMAND format
-            if (event.data && event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL") {
-                console.log("🎯🎯🎯 TCS COMMAND FORMAT DETECTED! 🎯🎯🎯");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-
-            // SAFETY: Ignore garbage
-            if (!event.data || !event.data.type) return;
-            
-            const msgType = event.data.type;
-            const msgText = (event.data.text || event.data.content || "").toLowerCase();
-            
-            const isValidTrigger = (msgType === "transcript" || msgType === "ai_response");
-            if (!isValidTrigger) return;
-            
-            console.log(`📨 Heard: "${msgText}"`);
-            
-            // ========================================
-            // 4. INTERVIEW EARS (Feeding answers)
-            // ========================================
-            
-            if (window.preQualController && window.preQualController.isActive) {
-                if (msgType === "transcript") {
-                    window.preQualController.handleUserInput(event.data.text);
-                }
-            }
-            
-        });
-    }
-
-    // Catch ALL messages for TCS commands
-    window.addEventListener("message", (event) => {
-        console.log("🔍 ALL MESSAGE RECEIVED:", event.data);
-        if (event.data && (event.data.command === "START_PRE_QUAL" || 
-            (event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL"))) {
-            console.log("🎯🎯🎯 TCS COMMAND CAUGHT! 🎯🎯🎯");
-            if (window.preQualController && !window.preQualController.isActive) {
-                window.preQualController.startInterview();
-            }
-        }
-    });
 
 
     // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
@@ -653,6 +473,205 @@
             return this.responses;
         }
     };
+    class PreQualificationController {
+        constructor() {
+            this.isActive = false;
+            this.script = null;
+            this.answers = {};
+            this.currentStepIndex = 0;
+        }
+
+        startInterview() {
+            if (this.isActive) return;
+            
+            if (!window.preQualScript) {
+                console.error("❌ CRITICAL: preQualScript not found!");
+                return;
+            }
+            this.script = window.preQualScript;
+            
+            this.isActive = true;
+            this.currentStepIndex = 0;
+            this.answers = {};
+            
+            console.log("🎯 Starting Pre-Qual Interview (New Format)");
+            this.speakCurrentStep();
+        }
+
+        handleUserInput(userText) {
+            if (!this.isActive || !this.script) return;
+
+            const lowerText = userText.toLowerCase();
+            const currentStep = this.script.steps[this.currentStepIndex];
+            
+            if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
+                console.log("🚪 User declined. Returning to Lemon Slice.");
+                this.isActive = false;
+                this.speak("No problem. What else can I help you with?");
+                return;
+            }
+            
+            if (currentStep.id === "confirmation" && lowerText === "yes") {
+                console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
+                this.answers[currentStep.field] = userText;
+                this.currentStepIndex++;
+                this.speakCurrentStep();
+                return; 
+            }
+            
+            if (currentStep.field) {
+                this.answers[currentStep.field] = userText;
+                console.log("💾 Saved " + currentStep.field + ": " + userText);
+            }
+            this.currentStepIndex++;
+
+            if (this.currentStepIndex >= this.script.steps.length) {
+                this.finishInterview();
+                return;
+            }
+
+            this.speakCurrentStep();
+        }
+
+        speakCurrentStep() {
+            const step = this.script.steps[this.currentStepIndex];
+            if (step) {
+                const message = step.question || step.text;
+                this.speak(message);
+            } else {
+                console.error("❌ Step not found at index:", this.currentStepIndex);
+            }
+        }
+
+        finishInterview() {
+            this.isActive = false;
+            console.log("✅ Interview Complete.");
+            this.speak("That is everything! I am generating your pre-qualification letter now.");
+            this.sendEmail();
+        }
+
+        speak(text) {
+            if (!text) return;
+            console.log("🤖 Tess says: " + text);
+            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+                window.mainWidget.sendMessage(text);
+            }
+        }
+
+        // ===== SEND EMAIL FUNCTION (FIXED & INSIDE CLASS) =====
+        async sendEmail() {
+            console.log("📧 Sending pre-qualification emails...");
+            
+            try {
+                // ===== EMAIL 1: TO LOAN OFFICER =====
+                await emailjs.send(
+                    "service_b9bppgb",
+                    "template_uix9cyx",
+                    {
+                        to_email: "loans@clientcompany.com",
+                        cc_email: "",
+                        subject: "New Pre-Qual Lead: {{firstName}} {{lastName}}".replace("{{firstName}}", this.answers.firstName || "Client").replace("{{lastName}}", this.answers.lastName || ""),
+                        first_name: this.answers.firstName || "",
+                        last_name: this.answers.lastName || "",
+                        email: this.answers.email || "",
+                        phone: this.answers.phone || "",
+                        full_answers: JSON.stringify(this.answers, null, 2)
+                    }
+                );
+                console.log("✅ Loan officer email sent");
+
+                // ===== EMAIL 2: TO CLIENT =====
+                if (this.answers.email) {
+                    await emailjs.send(
+                        "service_b9bppgb",
+                        "template_8kx812d",
+                        {
+                            to_email: this.answers.email,
+                            first_name: this.answers.firstName || "Valued Client",
+                            message: "Thank you for completing your pre-qualification! A loan officer will contact you within 15 minutes."
+                        }
+                    );
+                    console.log("✅ Client confirmation email sent");
+                }
+            } catch (error) {
+                console.error("❌ Failed to send emails:", error);
+            }
+        }
+    }
+
+    window.preQualController = new PreQualificationController();
+    console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
+
+    let lastTriggerTime = 0;
+    const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
+
+    function setupUniversalListener() {
+        console.log("👂 Universal Listener Activated.");
+        
+        window.addEventListener("message", (event) => {
+            
+            // 🔍 DIAGNOSTIC: LOG EVERYTHING
+            console.log("📩 [RAW MESSAGE] Type:", event.data?.type, "Command:", event.data?.command, "Data:", event.data);
+            
+            // ========================================
+            // 1. COMMAND LISTENER (Highest Priority)
+            // ========================================
+            
+            // Check for START_PRE_QUAL in either format
+            if (event.data && (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL")) {
+                console.log("🎯🎯🎯 MATCH FOUND! START_PRE_QUAL RECEIVED! 🎯🎯🎯");
+                console.log("🎯🎯🎯 STARTING INTERVIEW NOW! 🎯🎯🎯");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
+                return;
+            }
+
+            // Also handle TCS_COMMAND format
+            if (event.data && event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL") {
+                console.log("🎯🎯🎯 TCS COMMAND FORMAT DETECTED! 🎯🎯🎯");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
+                return;
+            }
+
+            // SAFETY: Ignore garbage
+            if (!event.data || !event.data.type) return;
+            
+            const msgType = event.data.type;
+            const msgText = (event.data.text || event.data.content || "").toLowerCase();
+            
+            const isValidTrigger = (msgType === "transcript" || msgType === "ai_response");
+            if (!isValidTrigger) return;
+            
+            console.log(`📨 Heard: "${msgText}"`);
+            
+            // ========================================
+            // 4. INTERVIEW EARS (Feeding answers)
+            // ========================================
+            
+            if (window.preQualController && window.preQualController.isActive) {
+                if (msgType === "transcript") {
+                    window.preQualController.handleUserInput(event.data.text);
+                }
+            }
+            
+        });
+    }
+
+    // Catch ALL messages for TCS commands
+    window.addEventListener("message", (event) => {
+        console.log("🔍 ALL MESSAGE RECEIVED:", event.data);
+        if (event.data && (event.data.command === "START_PRE_QUAL" || 
+            (event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL"))) {
+            console.log("🎯🎯🎯 TCS COMMAND CAUGHT! 🎯🎯🎯");
+            if (window.preQualController && !window.preQualController.isActive) {
+                window.preQualController.startInterview();
+            }
+        }
+    });
+
     setupUniversalListener();
 
     function createMainWidget() {
