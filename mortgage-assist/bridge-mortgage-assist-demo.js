@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/31/2026, 10:12:09 AM
+// Generated: 3/31/2026, 11:51:43 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-31T17:12:09.328Z"
+    "updatedAt": "2026-03-31T18:51:42.850Z"
 };
 
     // =========================================
@@ -567,6 +567,31 @@
 
     window.preQualController = new PreQualificationController();
     console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
+
+    // Listen for commands from TCS across different domains
+    try {
+        const channel = new BroadcastChannel("botemia-discovery");
+        channel.onmessage = (event) => {
+            const data = event.data;
+            
+            // Check for Pre-Qual Command
+            if (data.command === "START_PRE_QUAL" || data.type === "START_PRE_QUAL") {
+                console.log("📡 [BROADCAST] Received START_PRE_QUAL from TCS");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
+            }
+            
+            // Check for other triggers if needed
+            if (data.type === "MODULE_TRIGGERED") {
+                console.log("📡 [BROADCAST] Module Triggered:", data.module);
+                // Handle other modules here if necessary
+            }
+        };
+        console.log("📡 Broadcast Channel Listener Active.");
+    } catch (e) {
+        console.warn("BroadcastChannel not supported:", e);
+    }
 
     let lastTriggerTime = 0;
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
