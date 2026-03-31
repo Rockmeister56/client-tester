@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/31/2026, 2:36:37 PM
+// Generated: 3/31/2026, 4:55:57 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-03-31T21:36:36.896Z"
+    "updatedAt": "2026-03-31T23:55:57.144Z"
 };
 
     // =========================================
@@ -603,6 +603,19 @@
         console.warn("BroadcastChannel not supported:", e);
     }
 
+    // Function to broadcast Tess's speech to TCS
+    function broadcastTessTranscript(text) {
+        try {
+            const channel = new BroadcastChannel("tess-discovery");
+            channel.postMessage({
+                type: "TESS_TRANSCRIPT",
+                text: text,
+                timestamp: Date.now()
+            });
+            console.log("📡 [BROADCAST] Sent Tess transcript:", text.substring(0, 50));
+        } catch(e) {}
+    }
+
     let lastTriggerTime = 0;
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
 
@@ -658,6 +671,20 @@
             if (!isValidTrigger) return;
             
             console.log(`📨 Heard: "${msgText}"`);
+            
+            // ===== BROADCAST TESS TRANSCRIPT TO TCS =====
+            // Send Tess's speech to TCS via BroadcastChannel (no screen sharing needed!)
+            if (msgType === "ai_response" && msgText) {
+                try {
+                    const broadcastChannel = new BroadcastChannel("tess-discovery");
+                    broadcastChannel.postMessage({
+                        type: "TESS_TRANSCRIPT",
+                        text: msgText,
+                        timestamp: Date.now()
+                    });
+                    console.log("📡 [BROADCAST] Sent Tess transcript to TCS");
+                } catch(e) {}
+            }
             
             // ========================================
             // 4. INTERVIEW EARS (Feeding answers)
