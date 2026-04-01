@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 10:35:19 AM
+// Generated: 4/1/2026, 1:49:30 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T17:35:19.280Z"
+    "updatedAt": "2026-04-01T20:49:30.588Z"
 };
 
     // =========================================
@@ -889,11 +889,6 @@
     function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
-        // 🔥 CRITICAL: REMOVE ANY GHOST WIDGETS FIRST
-        const existingWidgets = document.querySelectorAll("lemon-slice-widget");
-        console.log(`🗑️ Removing ${existingWidgets.length} existing widget(s)`);
-        existingWidgets.forEach(w => w.remove());
-        
         // 1. Try to pre-warm audio
         try {
             if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
@@ -933,7 +928,13 @@
                         await window.mainWidget.micOn();
                         await window.mainWidget.unmute?.();
                         console.log("✅ Microphone activated");
+                        
+                        // Force unmute shadow DOM as backup
                         await forceUnmute();
+                        
+                        // 🔥 REMOVED: Controller already created earlier in the bridge
+                        // No need to create another instance here
+                        
                     }
                 } catch (e) {
                     console.error("❌ Mic activation failed:", e);
