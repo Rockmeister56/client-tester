@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 2:02:43 AM
+// Generated: 4/1/2026, 3:03:10 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T09:02:42.803Z"
+    "updatedAt": "2026-04-01T10:03:10.147Z"
 };
 
     // =========================================
@@ -757,27 +757,51 @@
     }
 
     function forceMortgageIntro(widget) {
-        diagLog("Intro Function Triggered");
+        console.log("🎤 Intro Function Triggered - Nuclear Mode");
         
         widget.setAttribute('controlled-widget-state', 'active');
-        diagLog("Widget state set to active");
+        console.log("✅ Widget state set to active");
         
+        // Original mic/unmute attempt
         try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
-        diagLog("Mic/Unmute attempted");
+        console.log("🎤 Mic/Unmute attempted");
+        
+        // 🔥 ADDED: Shadow DOM Nuclear Unmute
+        try {
+            const shadow = widget.shadowRoot;
+            if (shadow) {
+                const v = shadow.querySelector('video');
+                const a = shadow.querySelector('audio');
+                if (v) { v.muted = false; v.volume = 1.0; v.play(); }
+                if (a) { a.muted = false; a.volume = 1.0; a.play(); }
+                console.log("🔇 Nuclear Unmute executed on video/audio");
+            }
+        } catch(e) {
+            console.log("⚠️ Shadow DOM not accessible yet");
+        }
         
         const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
         setTimeout(() => {
-            diagLog("Timeout finished. Sending message...");
+            console.log("📨 Timeout finished. Sending message...");
             try {
                 if (typeof widget.sendMessage === 'function') {
                     widget.sendMessage(message);
-                    diagLog("Message sent successfully");
+                    console.log("📤 Message sent successfully");
                 } else {
-                    diagLog("ERROR: sendMessage missing");
+                    console.log("⚠️ sendMessage missing, trying Shadow DOM fallback...");
+                    // 🔥 ADDED: Shadow DOM fallback for message
+                    const shadow = widget.shadowRoot;
+                    if (shadow) {
+                        const chatBox = shadow.querySelector('div[class*="message-in"]');
+                        if (chatBox) {
+                            chatBox.innerHTML = message;
+                            console.log("✅ Message injected via Shadow DOM");
+                        }
+                    }
                 }
             } catch (e) {
-                diagLog("CRASH: " + e.message);
+                console.error("❌ CRASH: " + e.message);
             }
         }, 3000);
     }
