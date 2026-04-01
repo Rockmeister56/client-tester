@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 3/31/2026, 8:16:56 PM
+// Generated: 4/1/2026, 2:02:43 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T03:16:56.405Z"
+    "updatedAt": "2026-04-01T09:02:42.803Z"
 };
 
     // =========================================
@@ -183,7 +183,11 @@
 
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
+        const clientId = window.BotemiaConfig.id || 'mortgage-assist-demo';
+        widget.setAttribute('client-id', clientId);
+        widget.clientId = clientId;
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        widget.agentId = 'agent_7b0776ef6b855de5';
         widget.setAttribute('inline', '');
         widget.setAttribute('custom-minimized-width', '280');
         widget.setAttribute('custom-minimized-height', '400');
@@ -731,9 +735,13 @@
         
         // 1. Set CLIENT ID (Primary)
         widget.setAttribute('client-id', clientId);
+        // 🔥 FIX: Set JavaScript property as well (what LemonSlice actually reads)
+        widget.clientId = clientId;
         
         // 2. Set AGENT ID (Secondary - Keep for compatibility)
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
+        // 🔥 FIX: Set JavaScript property as well
+        widget.agentId = 'agent_7b0776ef6b855de5';
         
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
