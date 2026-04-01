@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 2:36:21 PM
+// Generated: 4/1/2026, 2:53:46 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T21:36:20.843Z"
+    "updatedAt": "2026-04-01T21:53:46.411Z"
 };
 
     // =========================================
@@ -1117,30 +1117,38 @@
         const siteWidget = document.querySelector('lemon-slice-widget');
         if (siteWidget) {
             console.log("⚠️ Standard Tess found on page. Removing to prevent conflict.");
-            console.log("🗑️ Killing off the Standard Tess so we can load our Custom Tess.");
             siteWidget.remove();
             if (siteWidget.parentNode) siteWidget.parentNode.removeChild(siteWidget);
             console.log("✅ Standard Tess removed.");
-            // Continue loading - do not return!
         }
         
-        // 2. Check if our bridge widget already exists (skip if already loaded)
-        if (document.getElementById('main-widget') || document.getElementById('splash-widget')) {
-            console.log('✅ Bridge widget already exists, skipping initialization');
+        // 2. Check if our bridge widget already exists
+        if (document.getElementById('splash-widget') || document.getElementById('main-widget')) {
+            console.log('✅ Bridge widget already exists');
             return;
         }
         
-        // 3. Load the LemonSlice widget script
+        // 3. Load the Script
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
-        script.onload = () => { console.log('✅ Widget script loaded'); };
+        script.onload = () => { 
+            console.log('✅ Widget script loaded'); 
+            
+            // Auto-launch TCS Remote Control
+            setTimeout(() => {
+                openTCS_ControlPanel();
+            }, 2500);
+        }; 
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
         
-        // 4. Show the splash screen
+        // 4. Create Splash Widget
         setTimeout(() => { showSplash(); }, 100);
     }
+
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
+    else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
