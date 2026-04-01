@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 3:03:10 AM
+// Generated: 4/1/2026, 10:35:19 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T10:03:10.147Z"
+    "updatedAt": "2026-04-01T17:35:19.280Z"
 };
 
     // =========================================
@@ -757,51 +757,27 @@
     }
 
     function forceMortgageIntro(widget) {
-        console.log("🎤 Intro Function Triggered - Nuclear Mode");
+        diagLog("Intro Function Triggered");
         
         widget.setAttribute('controlled-widget-state', 'active');
-        console.log("✅ Widget state set to active");
+        diagLog("Widget state set to active");
         
-        // Original mic/unmute attempt
         try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
-        console.log("🎤 Mic/Unmute attempted");
-        
-        // 🔥 ADDED: Shadow DOM Nuclear Unmute
-        try {
-            const shadow = widget.shadowRoot;
-            if (shadow) {
-                const v = shadow.querySelector('video');
-                const a = shadow.querySelector('audio');
-                if (v) { v.muted = false; v.volume = 1.0; v.play(); }
-                if (a) { a.muted = false; a.volume = 1.0; a.play(); }
-                console.log("🔇 Nuclear Unmute executed on video/audio");
-            }
-        } catch(e) {
-            console.log("⚠️ Shadow DOM not accessible yet");
-        }
+        diagLog("Mic/Unmute attempted");
         
         const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
         
         setTimeout(() => {
-            console.log("📨 Timeout finished. Sending message...");
+            diagLog("Timeout finished. Sending message...");
             try {
                 if (typeof widget.sendMessage === 'function') {
                     widget.sendMessage(message);
-                    console.log("📤 Message sent successfully");
+                    diagLog("Message sent successfully");
                 } else {
-                    console.log("⚠️ sendMessage missing, trying Shadow DOM fallback...");
-                    // 🔥 ADDED: Shadow DOM fallback for message
-                    const shadow = widget.shadowRoot;
-                    if (shadow) {
-                        const chatBox = shadow.querySelector('div[class*="message-in"]');
-                        if (chatBox) {
-                            chatBox.innerHTML = message;
-                            console.log("✅ Message injected via Shadow DOM");
-                        }
-                    }
+                    diagLog("ERROR: sendMessage missing");
                 }
             } catch (e) {
-                console.error("❌ CRASH: " + e.message);
+                diagLog("CRASH: " + e.message);
             }
         }, 3000);
     }
@@ -913,6 +889,11 @@
     function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
+        // 🔥 CRITICAL: REMOVE ANY GHOST WIDGETS FIRST
+        const existingWidgets = document.querySelectorAll("lemon-slice-widget");
+        console.log(`🗑️ Removing ${existingWidgets.length} existing widget(s)`);
+        existingWidgets.forEach(w => w.remove());
+        
         // 1. Try to pre-warm audio
         try {
             if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
@@ -952,13 +933,7 @@
                         await window.mainWidget.micOn();
                         await window.mainWidget.unmute?.();
                         console.log("✅ Microphone activated");
-                        
-                        // Force unmute shadow DOM as backup
                         await forceUnmute();
-                        
-                        // 🔥 REMOVED: Controller already created earlier in the bridge
-                        // No need to create another instance here
-                        
                     }
                 } catch (e) {
                     console.error("❌ Mic activation failed:", e);
