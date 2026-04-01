@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 1:49:30 PM
+// Generated: 4/1/2026, 2:36:21 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T20:49:30.588Z"
+    "updatedAt": "2026-04-01T21:36:20.843Z"
 };
 
     // =========================================
@@ -1111,30 +1111,36 @@
     window.disableBridgeTriggers = false;
 
     function initWidget() {
-        if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
+        console.log("🎬 Initializing Tess Core System...");
         
-        // 1. Load the Script
+        // 1. CHECK FOR EMBEDDED WIDGETS (The "Standard Tess" on the Client Website)
+        const siteWidget = document.querySelector('lemon-slice-widget');
+        if (siteWidget) {
+            console.log("⚠️ Standard Tess found on page. Removing to prevent conflict.");
+            console.log("🗑️ Killing off the Standard Tess so we can load our Custom Tess.");
+            siteWidget.remove();
+            if (siteWidget.parentNode) siteWidget.parentNode.removeChild(siteWidget);
+            console.log("✅ Standard Tess removed.");
+            // Continue loading - do not return!
+        }
+        
+        // 2. Check if our bridge widget already exists (skip if already loaded)
+        if (document.getElementById('main-widget') || document.getElementById('splash-widget')) {
+            console.log('✅ Bridge widget already exists, skipping initialization');
+            return;
+        }
+        
+        // 3. Load the LemonSlice widget script
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
-        script.onload = () => { 
-            console.log('✅ Widget script loaded'); 
-            
-            // === NEW: AUTO-LAUNCH TCS REMOTE CONTROL ===
-            // Delay to ensure page is stable before popping up the window
-            setTimeout(() => {
-                openTCS_ControlPanel();
-            }, 2500);
-        }; 
+        script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
         
-        // 2. Create Splash Widget (This is now our ONLY widget)
+        // 4. Show the splash screen
         setTimeout(() => { showSplash(); }, 100);
     }
-
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
-    else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
