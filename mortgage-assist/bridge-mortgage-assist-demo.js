@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 9:52:09 PM
+// Generated: 4/1/2026, 9:56:45 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-02T04:52:09.587Z"
+    "updatedAt": "2026-04-02T04:56:45.572Z"
 };
 
     // =========================================
@@ -738,11 +738,7 @@
         // 🔥 FIX: Set JavaScript property as well (what LemonSlice actually reads)
         widget.clientId = clientId;
         
-        // 2. Set ROOM ID (Prevents default "0")
-        widget.setAttribute('room-id', clientId);
-        widget.roomId = clientId;
-        
-        // 3. Set AGENT ID (Secondary - Keep for compatibility)
+        // 2. Set AGENT ID (Secondary - Keep for compatibility)
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         // 🔥 FIX: Set JavaScript property as well
         widget.agentId = 'agent_7b0776ef6b855de5';
