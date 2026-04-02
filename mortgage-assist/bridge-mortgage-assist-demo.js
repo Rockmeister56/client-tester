@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 2:53:46 PM
+// Generated: 4/1/2026, 8:38:12 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-01T21:53:46.411Z"
+    "updatedAt": "2026-04-02T03:38:12.509Z"
 };
 
     // =========================================
@@ -186,6 +186,8 @@
         const clientId = window.BotemiaConfig.id || 'mortgage-assist-demo';
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
+        widget.setAttribute('room-id', clientId);
+        widget.roomId = clientId;
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         widget.setAttribute('inline', '');
@@ -738,7 +740,11 @@
         // 🔥 FIX: Set JavaScript property as well (what LemonSlice actually reads)
         widget.clientId = clientId;
         
-        // 2. Set AGENT ID (Secondary - Keep for compatibility)
+        // 2. Set ROOM ID (Prevents default "0")
+        widget.setAttribute('room-id', clientId);
+        widget.roomId = clientId;
+        
+        // 3. Set AGENT ID (Secondary - Keep for compatibility)
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         // 🔥 FIX: Set JavaScript property as well
         widget.agentId = 'agent_7b0776ef6b855de5';
@@ -1111,31 +1117,17 @@
     window.disableBridgeTriggers = false;
 
     function initWidget() {
-        console.log("🎬 Initializing Tess Core System...");
+        if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
         
-        // 1. CHECK FOR EMBEDDED WIDGETS (The "Standard Tess" on the Client Website)
-        const siteWidget = document.querySelector('lemon-slice-widget');
-        if (siteWidget) {
-            console.log("⚠️ Standard Tess found on page. Removing to prevent conflict.");
-            siteWidget.remove();
-            if (siteWidget.parentNode) siteWidget.parentNode.removeChild(siteWidget);
-            console.log("✅ Standard Tess removed.");
-        }
-        
-        // 2. Check if our bridge widget already exists
-        if (document.getElementById('splash-widget') || document.getElementById('main-widget')) {
-            console.log('✅ Bridge widget already exists');
-            return;
-        }
-        
-        // 3. Load the Script
+        // 1. Load the Script
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { 
             console.log('✅ Widget script loaded'); 
             
-            // Auto-launch TCS Remote Control
+            // === NEW: AUTO-LAUNCH TCS REMOTE CONTROL ===
+            // Delay to ensure page is stable before popping up the window
             setTimeout(() => {
                 openTCS_ControlPanel();
             }, 2500);
@@ -1143,7 +1135,7 @@
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
         
-        // 4. Create Splash Widget
+        // 2. Create Splash Widget (This is now our ONLY widget)
         setTimeout(() => { showSplash(); }, 100);
     }
 
