@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/2/2026, 11:28:33 AM
+// Generated: 4/2/2026, 11:48:37 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-02T18:28:32.857Z"
+    "updatedAt": "2026-04-02T18:48:37.112Z"
 };
 
     // =========================================
@@ -194,16 +194,18 @@
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
         
-        // Set ROOM ID (Critical for API calls)
-        widget.setAttribute('room-id', clientId);
-        widget.roomId = clientId;
-        widget.setAttribute('data-room-id', clientId);
+        // 🔥 CRITICAL FIX: Use a UNIQUE room ID for Splash Screen
+        // This prevents the Splash Widget from fighting with the Main Widget.
+        const splashRoomId = clientId + "_splash_preview";
+        widget.setAttribute('room-id', splashRoomId);
+        widget.roomId = splashRoomId;
+        widget.setAttribute('data-room-id', splashRoomId);
         
         // Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         
-        // 🔥 SUPPRESS AUDIO ON SPLASH SCREEN (Prevents autoplay blocking)
+        // 🔥 SUPPRESS AUDIO ON SPLASH SCREEN
         widget.setAttribute('muted', 'true');
         widget.muted = true;
         widget.setAttribute('suppress-audio', 'true');
@@ -762,7 +764,7 @@
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
         
-        // 2. Set ROOM ID (Critical for API calls)
+        // 2. Set ROOM ID
         widget.setAttribute('room-id', clientId);
         widget.roomId = clientId;
         widget.setAttribute('data-room-id', clientId);
@@ -771,16 +773,20 @@
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         
+        // 4. Set Dimensions (MATCHED TO SPLASH SCREEN)
         widget.setAttribute('initial-state', 'minimized');
-        widget.setAttribute('custom-minimized-width', '144');
-        widget.setAttribute('custom-minimized-height', '216');
+        widget.setAttribute('custom-minimized-width', '280');
+        widget.setAttribute('custom-minimized-height', '400');
         widget.id = 'main-widget';
         widget.style.display = 'none';
+        
+        // 5. Listener ONLY for logging. DO NOT START INTRO HERE.
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Main Widget Ready.');
             console.log('✅ Final clientId:', widget.clientId);
             console.log('✅ Final roomId:', widget.roomId);
-            forceMortgageIntro(widget);
+            // 🔥 REMOVED: forceMortgageIntro(widget);
+            // Let activateTess() handle the start sequence
         });
         
         return widget;
