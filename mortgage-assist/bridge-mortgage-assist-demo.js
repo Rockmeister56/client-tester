@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/1/2026, 9:56:45 PM
+// Generated: 4/2/2026, 11:03:49 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-02T04:56:45.572Z"
+    "updatedAt": "2026-04-02T18:03:49.114Z"
 };
 
     // =========================================
@@ -729,18 +729,29 @@
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
-        // 🆕 ROOT CAUSE FIX: ID MAPPING
-        // If we dont provide a valid ID, the widget defaults to "0", causing a 404.
-        const clientId = window.BotemiaConfig.id || 'mortgage-assist-demo';
+        // 🔥 NUCLEAR OPTION: Force valid ID
+        let clientId = window.BotemiaConfig?.id;
+        if (!clientId || clientId === "0" || clientId === 0 || clientId === "null" || clientId === null) {
+            console.warn("⚠️ Invalid Client ID detected:", clientId);
+            console.warn("⚠️ Defaulting to mortgage-assist-demo");
+            clientId = "mortgage-assist-demo";
+        }
+        console.log("✅ Using Client ID:", clientId);
         
         // 1. Set CLIENT ID (Primary)
         widget.setAttribute('client-id', clientId);
-        // 🔥 FIX: Set JavaScript property as well (what LemonSlice actually reads)
         widget.clientId = clientId;
         
-        // 2. Set AGENT ID (Secondary - Keep for compatibility)
+        // 2. Set ROOM ID (Critical for API calls)
+        widget.setAttribute('room-id', clientId);
+        widget.roomId = clientId;
+        
+        // 3. Set DATA-ROOM-ID (Alternative attribute)
+        widget.setAttribute('data-room-id', clientId);
+        widget.dataset.roomId = clientId;
+        
+        // 4. Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
-        // 🔥 FIX: Set JavaScript property as well
         widget.agentId = 'agent_7b0776ef6b855de5';
         
         widget.setAttribute('initial-state', 'minimized');
@@ -750,6 +761,12 @@
         widget.style.display = 'none';
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Main Widget Ready.');
+            console.log('✅ Final clientId:', widget.clientId);
+            console.log('✅ Final roomId:', widget.roomId);
+            // Post-ready fallback: try to set room ID again
+            if (widget.setRoomId) {
+                widget.setRoomId(clientId);
+            }
             forceMortgageIntro(widget);
         });
         
