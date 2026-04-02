@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/2/2026, 11:03:49 AM
+// Generated: 4/2/2026, 11:28:33 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-02T18:03:49.114Z"
+    "updatedAt": "2026-04-02T18:28:32.857Z"
 };
 
     // =========================================
@@ -183,15 +183,35 @@
 
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        const clientId = window.BotemiaConfig.id || 'mortgage-assist-demo';
+        // 🔥 NUCLEAR OPTION: Force valid ID
+        let clientId = window.BotemiaConfig?.id;
+        if (!clientId || clientId === "0" || clientId === 0 || clientId === "null" || clientId === null) {
+            console.warn("⚠️ Invalid Client ID detected, defaulting to mortgage-assist-demo");
+            clientId = "mortgage-assist-demo";
+        }
+        
+        // Set CLIENT ID
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
+        
+        // Set ROOM ID (Critical for API calls)
+        widget.setAttribute('room-id', clientId);
+        widget.roomId = clientId;
+        widget.setAttribute('data-room-id', clientId);
+        
+        // Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
+        
+        // 🔥 SUPPRESS AUDIO ON SPLASH SCREEN (Prevents autoplay blocking)
+        widget.setAttribute('muted', 'true');
+        widget.muted = true;
+        widget.setAttribute('suppress-audio', 'true');
+        widget.setAttribute('initial-state', 'active');
+        
         widget.setAttribute('inline', '');
         widget.setAttribute('custom-minimized-width', '280');
         widget.setAttribute('custom-minimized-height', '400');
-        widget.setAttribute('initial-state', 'active');
         widget.setAttribute('hide-ui', '');
         widget.setAttribute('suppress-initial-message', 'true');
         widget.id = 'splash-widget';
@@ -738,19 +758,16 @@
         }
         console.log("✅ Using Client ID:", clientId);
         
-        // 1. Set CLIENT ID (Primary)
+        // 1. Set CLIENT ID
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
         
         // 2. Set ROOM ID (Critical for API calls)
         widget.setAttribute('room-id', clientId);
         widget.roomId = clientId;
-        
-        // 3. Set DATA-ROOM-ID (Alternative attribute)
         widget.setAttribute('data-room-id', clientId);
-        widget.dataset.roomId = clientId;
         
-        // 4. Set AGENT ID
+        // 3. Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         
@@ -763,10 +780,6 @@
             console.log('[Bridge] Main Widget Ready.');
             console.log('✅ Final clientId:', widget.clientId);
             console.log('✅ Final roomId:', widget.roomId);
-            // Post-ready fallback: try to set room ID again
-            if (widget.setRoomId) {
-                widget.setRoomId(clientId);
-            }
             forceMortgageIntro(widget);
         });
         
