@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test: Mortgage Assist Demo</title>
     
-    <!-- 🔥 CLEAN STYLES (Garbage Code Removed) -->
+    <!-- 🔥 CLEAN STYLES -->
     <style>
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            /* Replaced 30k char image with this clean gradient */
-            background: radial-gradient(circle at center, #1e4a8a 0%, #0a1f3a 100%);
+            /* YOUR BACKGROUND IS BACK HERE */
+            background-image: url('mortgage-assist/web-template2.png'); 
+            background-size: cover;
+            background-position: center;
             font-family: sans-serif;
-            overflow-x: hidden; /* Prevents horizontal scroll */
+            overflow-x: hidden;
         }
         .test-banner {
             position: fixed;
@@ -44,13 +46,11 @@
     </style>
 
     <!-- 🔥 STEP 1: THE HTML HANDSHAKE (Global Config) -->
-    <!-- This runs FIRST, before the Bridge or Widget, setting the "Truth" -->
     <script>
         window.BotemiaConfig = {
             id: "mortgage-assist-demo",
             name: "Mortgage Assist Demo",
-            // Ensure we have a Session ID immediately
-            agentId: "agent_7b0776ef6b855de5" 
+            agentId: "agent_7b0776ef6b855de5"
         };
         
         if (!window.tessSessionId) {
@@ -68,7 +68,6 @@
     <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
     <!-- 🔥 STEP 3: LOAD BRIDGE -->
-    <!-- 'defer' ensures this waits for HTML to parse, but runs before DOMContentLoaded -->
     <script src="bridge-mortgage-assist-demo.js" defer></script>
 </body>
 </html>

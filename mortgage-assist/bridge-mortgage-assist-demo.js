@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/2/2026, 8:39:12 PM
+// Generated: 4/2/2026, 11:02:00 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-03T03:39:12.579Z"
+    "updatedAt": "2026-04-03T06:02:00.416Z"
 };
 
     // =========================================
@@ -183,38 +183,27 @@
 
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        let clientId = window.BotemiaConfig?.id;
-        if (!clientId || clientId === "0" || clientId === 0 || clientId === "null" || clientId === null) {
-            clientId = "mortgage-assist-demo";
-        }
         
-        // 🔥 FIX: Use a generated Session ID (UUID) for the Room
-        const sessionId = 'session-' + crypto.randomUUID();
-        window.tessSessionId = sessionId; // <--- SAVES TO MEMORY FOR MAIN WIDGET
-        
-        // 🔑 API KEY
-        const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
-        widget.setAttribute('api-key', apiKey);
-        widget.apiKey = apiKey;
-        
-        // Set CLIENT ID
+        // 1. Set CLIENT ID
+        let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
-        widget.config = {
-            clientId: clientId,
-            apiKey: apiKey
-        };
-        widget.setAttribute('config', JSON.stringify({ clientId: clientId, apiKey: apiKey }));
-        // Set ROOM ID (Use the generated Session ID)
+        
+        // 2. GENERATE & SAVE SESSION ID (Critical for Main Widget)
+        const sessionId = 'session-' + crypto.randomUUID();
+        window.tessSessionId = sessionId;
+        // 3. Set ROOM ID
         widget.setAttribute('room-id', sessionId);
         widget.roomId = sessionId;
-        widget.setAttribute('data-room-id', sessionId);
-        
-        // Set AGENT ID
+        // 4. Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         
-        // Mute settings
+        // 5. Set API KEY
+        const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
+        widget.setAttribute('api-key', apiKey);
+        widget.apiKey = apiKey;
+        // 6. Mute & State Settings
         widget.setAttribute('muted', 'true');
         widget.muted = true;
         widget.setAttribute('suppress-audio', 'true');
@@ -760,51 +749,32 @@
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
-        // 🔥 NUCLEAR OPTION: Force valid ID
-        let clientId = window.BotemiaConfig?.id;
-        if (!clientId || clientId === "0" || clientId === 0 || clientId === "null" || clientId === null) {
-            console.warn("⚠️ Invalid Client ID detected:", clientId);
-            clientId = "mortgage-assist-demo";
-        }
-        console.log("✅ Using Client ID:", clientId);
+        // 1. Set AGENT ID
+        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         
-        // 🔑 API KEY
+        // 2. Set CLIENT ID (Explicitly, to prevent 0)
+        let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
+        widget.setAttribute('client-id', clientId);
+        widget.clientId = clientId;
+        // 3. Set API KEY (Required for Auth)
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
         widget.setAttribute('api-key', apiKey);
         widget.apiKey = apiKey;
-        
-        // 1. Set CLIENT ID (Attributes)
-        widget.setAttribute('client-id', clientId);
-        widget.clientId = clientId;
-        // Explicitly define the config object to prevent internal defaults
-        widget.config = {
-            clientId: clientId,
-            apiKey: apiKey
-        };
-        widget.setAttribute('config', JSON.stringify({ clientId: clientId, apiKey: apiKey }));
-        // 2. Set ROOM ID
-        let sessionId = window.botemiaSessionId || 'session-' + crypto.randomUUID();
-        console.log("✅ Joining Room:", sessionId);
+        // 4. Set ROOM ID (Shared Session)
+        let sessionId = window.tessSessionId || 'session-' + crypto.randomUUID();
         widget.setAttribute('room-id', sessionId);
         widget.roomId = sessionId;
-        widget.setAttribute('data-room-id', sessionId);
-        
-        // 3. Set AGENT ID
-        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
-        widget.agentId = 'agent_7b0776ef6b855de5';
-        
+        // 5. Dimensions & State
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
         widget.id = 'main-widget';
         widget.style.display = 'none';
         
+        // 6. Listener
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Main Widget Ready.');
-            console.log('✅ Final clientId:', widget.clientId);
-            console.log('✅ Final roomId:', widget.roomId);
-            // Double check internal config
-            console.log('✅ Internal Config ID:', widget.config?.clientId);
+            forceMortgageIntro(widget);
         });
         
         return widget;
