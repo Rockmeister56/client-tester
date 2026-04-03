@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/2/2026, 1:51:38 PM
+// Generated: 4/2/2026, 8:39:12 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-02T20:51:38.478Z"
+    "updatedAt": "2026-04-03T03:39:12.579Z"
 };
 
     // =========================================
@@ -183,32 +183,38 @@
 
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        // 🔥 NUCLEAR OPTION: Force valid ID
         let clientId = window.BotemiaConfig?.id;
         if (!clientId || clientId === "0" || clientId === 0 || clientId === "null" || clientId === null) {
-            console.warn("⚠️ Invalid Client ID detected, defaulting to mortgage-assist-demo");
             clientId = "mortgage-assist-demo";
         }
         
-        // 🔑 API KEY (AUTHENTICATION)
+        // 🔥 FIX: Use a generated Session ID (UUID) for the Room
+        const sessionId = 'session-' + crypto.randomUUID();
+        window.tessSessionId = sessionId; // <--- SAVES TO MEMORY FOR MAIN WIDGET
+        
+        // 🔑 API KEY
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
         widget.setAttribute('api-key', apiKey);
         widget.apiKey = apiKey;
+        
         // Set CLIENT ID
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
-        
-        // 🔥 CRITICAL: Unique Splash Room ID (Prevents Jerking)
-        const splashRoomId = clientId + "_splash_preview";
-        widget.setAttribute('room-id', splashRoomId);
-        widget.roomId = splashRoomId;
-        widget.setAttribute('data-room-id', splashRoomId);
+        widget.config = {
+            clientId: clientId,
+            apiKey: apiKey
+        };
+        widget.setAttribute('config', JSON.stringify({ clientId: clientId, apiKey: apiKey }));
+        // Set ROOM ID (Use the generated Session ID)
+        widget.setAttribute('room-id', sessionId);
+        widget.roomId = sessionId;
+        widget.setAttribute('data-room-id', sessionId);
         
         // Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         
-        // 🔥 SUPPRESS AUDIO ON SPLASH SCREEN
+        // Mute settings
         widget.setAttribute('muted', 'true');
         widget.muted = true;
         widget.setAttribute('suppress-audio', 'true');
@@ -758,42 +764,47 @@
         let clientId = window.BotemiaConfig?.id;
         if (!clientId || clientId === "0" || clientId === 0 || clientId === "null" || clientId === null) {
             console.warn("⚠️ Invalid Client ID detected:", clientId);
-            console.warn("⚠️ Defaulting to mortgage-assist-demo");
             clientId = "mortgage-assist-demo";
         }
         console.log("✅ Using Client ID:", clientId);
         
-        // 🔑 API KEY (AUTHENTICATION)
+        // 🔑 API KEY
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
         widget.setAttribute('api-key', apiKey);
         widget.apiKey = apiKey;
         
-        // 1. Set CLIENT ID
+        // 1. Set CLIENT ID (Attributes)
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
-        
-        // 2. Set ROOM ID (Unique to Main Widget)
-        widget.setAttribute('room-id', clientId);
-        widget.roomId = clientId;
-        widget.setAttribute('data-room-id', clientId);
+        // Explicitly define the config object to prevent internal defaults
+        widget.config = {
+            clientId: clientId,
+            apiKey: apiKey
+        };
+        widget.setAttribute('config', JSON.stringify({ clientId: clientId, apiKey: apiKey }));
+        // 2. Set ROOM ID
+        let sessionId = window.botemiaSessionId || 'session-' + crypto.randomUUID();
+        console.log("✅ Joining Room:", sessionId);
+        widget.setAttribute('room-id', sessionId);
+        widget.roomId = sessionId;
+        widget.setAttribute('data-room-id', sessionId);
         
         // 3. Set AGENT ID
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         
-        // 4. Set Dimensions (REVERTED TO ORIGINAL FOR MINIMIZE LOGIC)
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
         widget.id = 'main-widget';
         widget.style.display = 'none';
         
-        // 5. Ready Listener
         widget.addEventListener('ready', () => {
             console.log('[Bridge] Main Widget Ready.');
             console.log('✅ Final clientId:', widget.clientId);
             console.log('✅ Final roomId:', widget.roomId);
-            console.log('✅ API Key Set:', !!widget.apiKey);
+            // Double check internal config
+            console.log('✅ Internal Config ID:', widget.config?.clientId);
         });
         
         return widget;
