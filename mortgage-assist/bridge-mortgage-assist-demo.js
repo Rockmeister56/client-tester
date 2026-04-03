@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/3/2026, 11:50:10 AM
+// Generated: 4/3/2026, 12:33:46 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-03T18:50:10.230Z"
+    "updatedAt": "2026-04-03T19:33:45.850Z"
 };
 
     // =========================================
@@ -652,7 +652,7 @@
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
 
     function setupUniversalListener() {
-        console.log("👂 Universal Listener Activated (Silent Mode).");
+        console.log("👂 Universal Listener Activated (Universal Mode).");
         
         window.addEventListener("message", (event) => {
             
@@ -663,8 +663,26 @@
                 return; 
             }
 
+            // SAFETY: Ignore empty/undefined messages
+            if (!event.data || !event.data.type) return;
+
+            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
+            
             // ========================================
-            // 1. COMMAND LISTENER (Highest Priority)
+            // 1. DIAGNOSTIC LISTENER (Highest Priority)
+            // ========================================
+            if (event.data.type === "TEST_PING") {
+                console.log("📡 [PING] RECEIVED! SENDING PONG NOW!");
+                
+                const channel = new BroadcastChannel("tess-discovery");
+                const pongData = { type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() };
+                channel.postMessage(pongData);
+                console.log("📤 PONG SENT! Data:", pongData);
+                return;
+            }
+            
+            // ========================================
+            // 2. COMMAND LISTENER (Pre-Qual)
             // ========================================
             
             // Check for START_PRE_QUAL in either format
@@ -685,9 +703,10 @@
                 }
                 return;
             }
-
-            // SAFETY: Ignore garbage
-            if (!event.data || !event.data.type) return;
+            
+            // ========================================
+            // 3. TRANSCRIPT LISTENER (Feeding answers)
+            // ========================================
             
             const msgType = event.data.type;
             const msgText = (event.data.text || event.data.content || "").toLowerCase();
