@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/3/2026, 2:36:22 AM
+// Generated: 4/3/2026, 3:03:38 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-03T09:36:22.203Z"
+    "updatedAt": "2026-04-03T10:03:38.069Z"
 };
 
     // =========================================
@@ -1152,18 +1152,13 @@
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
         script.onload = () => { 
-            console.log('✅ Widget script loaded'); 
-            
-            // === NEW: AUTO-LAUNCH TCS REMOTE CONTROL ===
-            // Delay to ensure page is stable before popping up the window
-            setTimeout(() => {
-                openTCS_ControlPanel();
-            }, 2500);
+            console.log('✅ Widget script loaded');
+            // TCS Auto-launch removed
         }; 
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
         
-        // 2. Create Splash Widget (This is now our ONLY widget)
+        // 2. Create Splash Widget
         setTimeout(() => { showSplash(); }, 100);
     }
 
@@ -1171,6 +1166,7 @@
     else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
+
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
         if (window.opener) {
