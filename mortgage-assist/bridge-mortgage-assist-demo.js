@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/2/2026, 11:02:00 PM
+// Generated: 4/2/2026, 11:19:22 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-03T06:02:00.416Z"
+    "updatedAt": "2026-04-03T06:19:22.385Z"
 };
 
     // =========================================
@@ -778,32 +778,6 @@
         });
         
         return widget;
-    }
-
-    function forceMortgageIntro(widget) {
-        diagLog("Intro Function Triggered");
-        
-        widget.setAttribute('controlled-widget-state', 'active');
-        diagLog("Widget state set to active");
-        
-        try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
-        diagLog("Mic/Unmute attempted");
-        
-        const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
-        
-        setTimeout(() => {
-            diagLog("Timeout finished. Sending message...");
-            try {
-                if (typeof widget.sendMessage === 'function') {
-                    widget.sendMessage(message);
-                    diagLog("Message sent successfully");
-                } else {
-                    diagLog("ERROR: sendMessage missing");
-                }
-            } catch (e) {
-                diagLog("CRASH: " + e.message);
-            }
-        }, 3000);
     }
 
     function showSplash() {
