@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/5/2026, 3:45:17 PM
+// Generated: 4/5/2026, 4:14:37 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-05T22:45:16.591Z"
+    "updatedAt": "2026-04-05T23:14:36.843Z"
 };
 
     // =========================================
@@ -610,6 +610,7 @@
             
             const channel = sbClient.channel("tess-commands");
             
+            // 🔥 LISTEN FOR COMMANDS FROM TCS
             channel.on("broadcast", { event: "command" }, (payload) => {
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload.command;
@@ -620,6 +621,21 @@
                         window.preQualController.startInterview();
                     }
                 }
+            });
+            
+            // 🔥 LISTEN FOR PING AND RESPOND WITH PONG (DIAGNOSTIC)
+            channel.on("broadcast", { event: "ping" }, (payload) => {
+                console.log("📡 PING received, sending PONG...");
+                channel.send({
+                    type: "broadcast",
+                    event: "pong",
+                    payload: {
+                        type: "TEST_PONG",
+                        message: "Connection Active!",
+                        timestamp: Date.now()
+                    }
+                });
+                console.log("📤 PONG sent to TCS");
             });
             
             channel.subscribe((status) => {
