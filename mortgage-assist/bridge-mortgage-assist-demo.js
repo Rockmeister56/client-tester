@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/3/2026, 12:33:46 PM
+// Generated: 4/5/2026, 3:45:17 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-03T19:33:45.850Z"
+    "updatedAt": "2026-04-05T22:45:16.591Z"
 };
 
     // =========================================
@@ -592,64 +592,46 @@
     window.preQualController = new PreQualificationController();
     console.log("✅ Controller created with", window.preQualScript?.steps?.length, "steps");
 
-    // Listen for commands from TCS across different domains
-    try {
-        const channel = new BroadcastChannel("tess-discovery");
-        console.log("📡 Broadcast Channel Listener Active.");
-        
-        channel.onmessage = (event) => {
-            const data = event.data;
-            console.log("📡 [BROADCAST] Received:", data);
-            
-            // TEST BUTTON: Auto-respond to pings
-            if (data.type === "TEST_PING") {
-                console.log("📡 [PING] RECEIVED! SENDING PONG NOW!");
-                
-                // Ensure we have a channel to send back on
-                if (channel) {
-                    const pongData = { type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() };
-                    channel.postMessage(pongData);
-                    console.log("📤 PONG SENT! Data:", pongData);
-                } else {
-                    console.error("❌ CRITICAL: BroadcastChannel variable 'channel' is undefined in listener!");
-                }
-                return;
-            }
-            
-            // Check for Pre-Qual Command
-            if (data.command === "START_PRE_QUAL" || data.type === "START_PRE_QUAL") {
-                console.log("🎯 [BROADCAST] START_PRE_QUAL received from TCS");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-            
-            // Check for other triggers if needed
-            if (data.type === "MODULE_TRIGGERED") {
-                console.log("📡 [BROADCAST] Module Triggered:", data.module);
-                // Handle other modules here if necessary
-            }
-        };
-    } catch (e) {
-        console.warn("BroadcastChannel not supported:", e);
-    }
-
-    // Function to broadcast Tess's speech to TCS
-    function broadcastTessTranscript(text) {
-        try {
-            const channel = new BroadcastChannel("tess-discovery");
-            channel.postMessage({
-                type: "TESS_TRANSCRIPT",
-                text: text,
-                timestamp: Date.now()
-            });
-            console.log("📡 [BROADCAST] Sent Tess transcript:", text.substring(0, 50));
-        } catch(e) {}
-    }
-
     let lastTriggerTime = 0;
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
+
+    // =========================================
+    // 🍋 SUPABASE REALTIME SETUP
+    // =========================================
+    (function() {
+        const SUPABASE_URL = "https://fcgbusobfdwnpoqyuzoe.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk";
+        
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+        script.onload = () => {
+            const { createClient } = supabase;
+            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            const channel = sbClient.channel("tess-commands");
+            
+            channel.on("broadcast", { event: "command" }, (payload) => {
+                console.log("📡 [REALTIME] Command received:", payload);
+                const command = payload.payload.command;
+                
+                if (command === "START_PRE_QUAL") {
+                    console.log("🎯 [REALTIME] START_PRE_QUAL received!");
+                    if (window.preQualController && !window.preQualController.isActive) {
+                        window.preQualController.startInterview();
+                    }
+                }
+            });
+            
+            channel.subscribe((status) => {
+                if (status === "SUBSCRIBED") {
+                    console.log("✅ [REALTIME] Connected to Supabase channel");
+                }
+            });
+            
+            window.supabaseChannel = channel;
+        };
+        document.head.appendChild(script);
+    })();
 
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated (Universal Mode).");
@@ -674,10 +656,20 @@
             if (event.data.type === "TEST_PING") {
                 console.log("📡 [PING] RECEIVED! SENDING PONG NOW!");
                 
-                const channel = new BroadcastChannel("tess-discovery");
-                const pongData = { type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() };
-                channel.postMessage(pongData);
-                console.log("📤 PONG SENT! Data:", pongData);
+                if (window.supabaseChannel) {
+                    window.supabaseChannel.send({
+                        type: "broadcast",
+                        event: "pong",
+                        payload: {
+                            type: "TEST_PONG",
+                            message: "Connection Active!",
+                            timestamp: Date.now()
+                        }
+                    });
+                    console.log("📤 PONG SENT via Supabase!");
+                } else {
+                    console.error("❌ Supabase channel not available");
+                }
                 return;
             }
             
@@ -716,17 +708,26 @@
             
             console.log(`📨 Heard: "${msgText}"`);
             
-            // ===== BROADCAST TESS TRANSCRIPT TO TCS =====
+            // ===== SEND TESS TRANSCRIPT TO TCS VIA SUPABASE =====
             if (msgType === "ai_response" && msgText) {
                 try {
-                    const broadcastChannel = new BroadcastChannel("tess-discovery");
-                    broadcastChannel.postMessage({
-                        type: "TESS_TRANSCRIPT",
-                        text: msgText,
-                        timestamp: Date.now()
-                    });
-                    console.log("📡 [BROADCAST] Sent Tess transcript to TCS");
-                } catch(e) {}
+                    if (window.supabaseChannel) {
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "tess_transcript",
+                            payload: {
+                                type: "TESS_TRANSCRIPT",
+                                text: msgText,
+                                timestamp: Date.now()
+                            }
+                        });
+                        console.log("📡 [SUPABASE] Sent Tess transcript to TCS");
+                    } else {
+                        console.log("⚠️ Supabase channel not ready yet");
+                    }
+                } catch(e) {
+                    console.error("❌ Failed to send via Supabase:", e);
+                }
             }
             
             // ========================================
@@ -1177,6 +1178,7 @@
 
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
+        // Send via opener (direct window communication)
         if (window.opener) {
             window.opener.postMessage({
                 type: 'BRIDGE_ACTIVE',
@@ -1184,13 +1186,23 @@
                 url: window.location.href
             }, '*');
         }
-        const channel = new BroadcastChannel('tess-discovery');
-        channel.postMessage({
-            type: 'CLIENT_INFO',
-            clientId: window.BotemiaConfig.id,
-            url: window.location.href
-        });
-        console.log('📢 Announced to TCS via broadcast');
+        
+        // Send via Supabase Realtime (cross-domain)
+        if (window.supabaseChannel) {
+            window.supabaseChannel.send({
+                type: 'broadcast',
+                event: 'client_info',
+                payload: {
+                    type: 'CLIENT_INFO',
+                    clientId: window.BotemiaConfig.id,
+                    url: window.location.href,
+                    timestamp: Date.now()
+                }
+            });
+            console.log('📢 Announced to TCS via Supabase Realtime');
+        } else {
+            console.log('⚠️ Supabase channel not ready yet');
+        }
     }
 
     setTimeout(announceToTCS, 2000);
