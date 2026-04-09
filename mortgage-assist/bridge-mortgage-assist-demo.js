@@ -1,21 +1,10 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/5/2026, 11:36:03 PM
+// Generated: 4/9/2026, 9:56:13 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
-
-    // Suppress the widget's internal 404 errors
-    const originalFetch = window.fetch;
-    window.fetch = function(...args) {
-        const url = args[0];
-        if (url && (url === 0 || url === "0" || (typeof url === "string" && (url.includes("/0") || url === "0")))) {
-            console.log("🔇 Suppressed widget 404 request");
-            return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) });
-        }
-        return originalFetch.apply(this, args);
-    };
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -94,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-06T06:36:03.308Z"
+    "updatedAt": "2026-04-09T16:56:12.419Z"
 };
 
     // =========================================
