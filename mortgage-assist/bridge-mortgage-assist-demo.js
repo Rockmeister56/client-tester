@@ -1,7 +1,7 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/9/2026, 9:56:13 AM
+// Generated: 4/9/2026, 9:51:51 PM
 // Client ID: mortgage-assist-demo
-// Version: 5.4 - BATON PASS FIX
+// Version: 6.0 - SUPABASE FIXED & EXPORT BUGFIX
 
 (function() {
     "use strict";
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-09T16:56:12.419Z"
+    "updatedAt": "2026-04-10T04:51:51.315Z"
 };
 
     // =========================================
@@ -542,6 +542,8 @@
             console.log("🤖 Tess says: " + text);
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                 window.mainWidget.sendMessage(text);
+                // 🔥 FIX: Also broadcast to TCS
+                window.broadcastTessTranscript(text);
             }
         }
 
@@ -596,62 +598,70 @@
     const TRIGGER_COOLDOWN = 3000; // 3 seconds brake
 
     // =========================================
-    // 🍋 SUPABASE REALTIME SETUP
+    // 🍋 SUPABASE REALTIME SETUP (FIXED)
     // =========================================
-    (function() {
+    (async function initSupabase() {
         const SUPABASE_URL = "https://fcgbusobfdwnpoqyuzoe.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk";
         
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-        script.onload = () => {
-            const { createClient } = supabase;
-            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // 1. Load Library Dynamically
+        if (!window.supabase) {
+            await new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        const { createClient } = window.supabase;
+        const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // 2. Create Channel
+        const channel = sbClient.channel("tess-commands");
+
+        // 3. Listen for COMMANDS (From TCS)
+        channel.on("broadcast", { event: "command" }, (payload) => {
+            console.log("📡 [REALTIME] Command received:", payload.payload);
+            const command = payload.payload.command;
             
-            const channel = sbClient.channel("tess-commands");
-            
-            // 🔥 LISTEN FOR COMMANDS FROM TCS
-            channel.on("broadcast", { event: "command" }, (payload) => {
-                console.log("📡 [REALTIME] Command received:", payload);
-                const command = payload.payload.command;
-                
-                if (command === "START_PRE_QUAL") {
-                    console.log("🎯 [REALTIME] START_PRE_QUAL received!");
-                    if (window.preQualController && !window.preQualController.isActive) {
-                        window.preQualController.startInterview();
-                    }
+            if (command === "START_PRE_QUAL") {
+                console.log("🎯 [REALTIME] START_PRE_QUAL received!");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
                 }
+            }
+        });
+
+        // 4. Listen for PING (Diagnostic)
+        channel.on("broadcast", { event: "ping" }, (payload) => {
+            console.log("📡 PING received, sending PONG...");
+            channel.send({
+                type: "broadcast",
+                event: "pong",
+                payload: { type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() }
             });
-            
-            // 🔥 LISTEN FOR PING AND RESPOND WITH PONG (DIAGNOSTIC)
-            channel.on("broadcast", { event: "ping" }, (payload) => {
-                console.log("📡 PING received, sending PONG...");
-                channel.send({
-                    type: "broadcast",
-                    event: "pong",
-                    payload: {
-                        type: "TEST_PONG",
-                        message: "Connection Active!",
-                        timestamp: Date.now()
-                    }
-                });
-                console.log("📤 PONG sent to TCS");
-            });
-            
-            channel.subscribe((status) => {
-                if (status === "SUBSCRIBED") {
-                    console.log("✅ [REALTIME] Connected to Supabase channel");
-                }
-            });
-            
-            window.supabaseChannel = channel;
-        };
-        document.head.appendChild(script);
+            console.log("📤 PONG sent to TCS");
+        });
+
+        // 5. Subscribe
+        channel.subscribe((status) => {
+            if (status === "SUBSCRIBED") {
+                console.log("✅ [REALTIME] Connected to Supabase channel");
+                // Announce presence to TCS
+                announceToTCS();
+            }
+        });
+
+        // Expose globally
+        window.supabaseChannel = channel;
     })();
 
     // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
+            // Check if channel is ready, with a small retry buffer
             if (window.supabaseChannel) {
                 window.supabaseChannel.send({
                     type: "broadcast",
@@ -664,10 +674,9 @@
                 });
                 console.log("📡 [SUPABASE] Sent Tess transcript:", text.substring(0, 50));
             } else {
-                console.log("⚠️ Supabase channel not ready");
+                console.log("⏳ Supabase channel not ready yet (will retry next speech)");
             }
-        } catch(e) {
-            console.error("❌ Failed to send via Supabase:", e);
+        } catch(e) {                    console.error("❌ Failed to send via Supabase:", e);
         }
     };
 
@@ -686,8 +695,6 @@
             // SAFETY: Ignore empty/undefined messages
             if (!event.data || !event.data.type) return;
 
-            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
-            
             // ========================================
             // 1. DIAGNOSTIC LISTENER (Highest Priority)
             // ========================================
@@ -705,8 +712,7 @@
                         }
                     });
                     console.log("📤 PONG SENT via Supabase!");
-                } else {
-                    console.error("❌ Supabase channel not available");
+                } else {                            console.error("❌ Supabase channel not available");
                 }
                 return;
             }
@@ -748,24 +754,7 @@
             
             // ===== SEND TESS TRANSCRIPT TO TCS VIA SUPABASE =====
             if (msgType === "ai_response" && msgText) {
-                try {
-                    if (window.supabaseChannel) {
-                        window.supabaseChannel.send({
-                            type: "broadcast",
-                            event: "tess_transcript",
-                            payload: {
-                                type: "TESS_TRANSCRIPT",
-                                text: msgText,
-                                timestamp: Date.now()
-                            }
-                        });
-                        console.log("📡 [SUPABASE] Sent Tess transcript to TCS");
-                    } else {
-                        console.log("⚠️ Supabase channel not ready yet");
-                    }
-                } catch(e) {
-                    console.error("❌ Failed to send via Supabase:", e);
-                }
+                window.broadcastTessTranscript(msgText);
             }
             
             // ========================================
@@ -783,7 +772,6 @@
 
     // Expose function to global scope for testing/debugging
     window.setupUniversalListener = setupUniversalListener;
-
     setupUniversalListener();
 
     function createMainWidget() {
@@ -864,8 +852,8 @@
     }
 
     function showSplash() {
-        const config = window.BotemiaConfig.modules?.splashScreen;
-        if (!config || !config.enabled) return;
+        const splashConfig = window.BotemiaConfig.modules?.splashScreen;
+        if (!splashConfig || !splashConfig.enabled) return;
 
         const overlay = document.createElement('div');
         overlay.className = 'splash-overlay';
@@ -878,15 +866,15 @@
 
         const card = document.createElement('div');
         card.className = 'splash-card';
-        card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
+        card.style.background = `radial-gradient(circle at center, ${splashConfig.gradientCenter || '#1e4a8a'} 0%, ${splashConfig.gradientOuter || '#0a1a2f'} 80%)`;
 
         let cardHTML = `
-            <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
-            <h2>${config.subtitle || 'Your Personal AI Web Guide'}</h2>
+            <h1>✨ ${splashConfig.title || 'Meet Tess!'} ✨</h1>
+            <h2>${splashConfig.subtitle || 'Your Personal AI Web Guide'}</h2>
             <div class="splash-avatar-container" id="splashAvatarContainer"></div>
             <div class="button-group">
-                <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
-                <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
+                <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${splashConfig.primaryButton?.gradientTop || '#f8c400'}, ${splashConfig.primaryButton?.gradientBottom || '#d4a000'}); color: ${splashConfig.primaryButton?.textColor || '#0a0f1e'};">${splashConfig.primaryButton?.text || 'Get AI help with Tess'}</button>
+                <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${splashConfig.secondaryButton?.gradientTop || '#3a4050'}, ${splashConfig.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${splashConfig.secondaryButton?.textColor || '#ffffff'};">${splashConfig.secondaryButton?.text || 'Just Browsing'}</button>
             </div>
         `;
 
@@ -894,8 +882,8 @@
         cardHTML += `
             <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
-                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
-                    ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
+                    ${splashConfig.branding?.logo ? '<img src="' + splashConfig.branding.logo + '" style="height: 36px; width: auto;">' : ''}
+                    ${splashConfig.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + splashConfig.branding.name + '</span>' : ''}
                 </div>
             </div>
         `;
@@ -909,7 +897,7 @@
         container.appendChild(splashWidget);
 
         // Add ticker tape if keywords exist
-        const tickerKeywords = config.tickerKeywords;
+        const tickerKeywords = splashConfig.tickerKeywords;
         if (tickerKeywords) {
             const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
             
@@ -938,11 +926,11 @@
         document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
 
         const primaryBtn = document.getElementById('activateTessBtn');
-        primaryBtn.onmouseover = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.hoverTop || '#ffd700'}, ${config.primaryButton?.hoverBottom || '#e0b000'})`; primaryBtn.style.transform = 'scale(1.02)'; };
-        primaryBtn.onmouseout = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'})`; primaryBtn.style.transform = 'scale(1)'; };
+        primaryBtn.onmouseover = () => { primaryBtn.style.background = `linear-gradient(145deg, ${splashConfig.primaryButton?.hoverTop || '#ffd700'}, ${splashConfig.primaryButton?.hoverBottom || '#e0b000'})`; primaryBtn.style.transform = 'scale(1.02)'; };
+        primaryBtn.onmouseout = () => { primaryBtn.style.background = `linear-gradient(145deg, ${splashConfig.primaryButton?.gradientTop || '#f8c400'}, ${splashConfig.primaryButton?.gradientBottom || '#d4a000'})`; primaryBtn.style.transform = 'scale(1)'; };
         const secondaryBtn = document.getElementById('justBrowsingBtn');
-        secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
-        secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
+        secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${splashConfig.secondaryButton?.hoverTop || '#4a5060'}, ${splashConfig.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
+        secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${splashConfig.secondaryButton?.hoverTop || '#3a4050'}, ${splashConfig.secondaryButton?.hoverBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
     }
 
     async function forceUnmute() {
@@ -1026,8 +1014,8 @@
     }
 
     function showPersistentAvatar() {
-        const config = window.BotemiaConfig.modules?.splashScreen;
-        const persistentConfig = config?.persistentButton || {};
+        const splashConfig = window.BotemiaConfig.modules?.splashScreen;
+        const persistentConfig = splashConfig?.persistentButton || {};
         
         // Get position from config
         const position = persistentConfig.position || 'bottom-left';
@@ -1089,7 +1077,7 @@
         });
         
         // Check for video URL first
-        const tessVideoUrl = config?.tessVideoUrl;
+        const tessVideoUrl = splashConfig?.tessVideoUrl;
         
         if (tessVideoUrl) {
             // Create video element for talking avatar
@@ -1100,7 +1088,7 @@
             video.muted = true;
             video.playsInline = true;
             // Get video fit setting from config
-            const videoFit = config?.tessVideoFit || 'cover';
+            const videoFit = splashConfig?.tessVideoFit || 'cover';
             video.style.cssText = `
                 width: 180px;
                 height: 180px;
@@ -1134,7 +1122,7 @@
             
         } else {
             // Fallback to image if no video
-            const tessImage = config?.tessImage;
+            const tessImage = splashConfig?.tessImage;
             if (tessImage) {
                 avatarBtn.innerHTML = `<img src="${tessImage}" style="width: 170px; height: 170px; border-radius: 50%; object-fit: cover; border: 3px solid white;">`;
             } else {
@@ -1175,8 +1163,8 @@
 
         
         // Get splash config for persistent button settings
-        const config = window.BotemiaConfig.modules?.splashScreen;
-        if (config?.persistentButton?.enabled) {
+        const splashConfig = window.BotemiaConfig.modules?.splashScreen;
+        if (splashConfig?.persistentButton?.enabled) {
             // Show persistent avatar button
             showPersistentAvatar();
         } else {
@@ -1212,7 +1200,7 @@
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
     else { initWidget(); }
 
-    console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
+    console.log('✅ Botemia Bridge v6.0 loaded for', window.BotemiaConfig.name);
 
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
@@ -1242,7 +1230,5 @@
             console.log('⚠️ Supabase channel not ready yet');
         }
     }
-
-    setTimeout(announceToTCS, 2000);
 
 })();
