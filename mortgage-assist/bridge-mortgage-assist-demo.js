@@ -539,11 +539,20 @@
 
         speak(text) {
             if (!text) return;
+            
             console.log("🤖 Tess says: " + text);
+
+            // 1. Try to speak via Widget (If available)
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                 window.mainWidget.sendMessage(text);
-                // 🔥 FIX: Also broadcast to TCS
+            }
+
+            // 2. 🔥 CRITICAL FIX: ALWAYS broadcast to TCS via Supabase
+            // We do this OUTSIDE the 'if' above so it happens even if the widget is slow.
+            if (window.broadcastTessTranscript) {
                 window.broadcastTessTranscript(text);
+            } else {
+                console.error("❌ broadcastTessTranscript function is missing!");
             }
         }
 
