@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/10/2026, 9:06:57 PM
+// Generated: 4/11/2026, 8:39:15 AM
 // Client ID: mortgage-assist-demo
 // Version: 6.0 - SUPABASE FIXED & EXPORT BUGFIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-11T04:06:57.278Z"
+    "updatedAt": "2026-04-11T15:39:14.834Z"
 };
 
     // =========================================
