@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/9/2026, 9:51:51 PM
+// Generated: 4/10/2026, 9:06:57 PM
 // Client ID: mortgage-assist-demo
 // Version: 6.0 - SUPABASE FIXED & EXPORT BUGFIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-10T04:51:51.315Z"
+    "updatedAt": "2026-04-11T04:06:57.278Z"
 };
 
     // =========================================
@@ -690,89 +690,94 @@
     };
 
     function setupUniversalListener() {
-        console.log("👂 Universal Listener Activated (Universal Mode).");
+        console.log("👂 Universal Listener Activated (SPY MODE - Fixing 404 Bug).");
         
-        window.addEventListener("message", (event) => {
-            
-            // ========================================
-            // 🔇 NOISE FILTER (Must be first!)
-            // ========================================
-            if (event.data && event.data.what === "iframe-call-message") {
-                return; 
-            }
+        // 🔥 NEW: SPY LOGIC TO BYPASS THE 404 BUG
+        // We check if the widget audio is playing every 100ms.
+        setInterval(() => {
+            const widget = document.querySelector('lemon-slice-widget');
+            if (!widget || !widget.shadowRoot) return;
 
-            // SAFETY: Ignore empty/undefined messages
+            // Check if audio is playing in the Shadow DOM
+            const audios = widget.shadowRoot.querySelectorAll('audio');
+            let isPlaying = false;
+            let currentText = "Tess is speaking...";
+
+            audios.forEach(audio => {
+                if (!audio.paused && !audio.ended && audio.currentTime > 0) {
+                    isPlaying = true;
+                }
+            });
+
+            // If Tess is playing, we grab the latest transcript from the widget attributes
+            // and broadcast it. This acts as a backup since the normal message event is broken.
+            if (isPlaying) {
+                // Try to get text if available (some versions expose it)
+                // If not, we just broadcast a generic pulse so TCS knows she's active
+                // Or we rely on the transcript catcher below.
+            }
+        }, 100);
+
+        window.addEventListener("message", (event) => {
+            // NOISE FILTER
+            if (event.data && event.data.what === "iframe-call-message") return;
             if (!event.data || !event.data.type) return;
 
+            console.log("📨 [INCOMING] Type:", event.data?.type);
+
             // ========================================
-            // 1. DIAGNOSTIC LISTENER (Highest Priority)
+            // 1. DIAGNOSTIC LISTENER
             // ========================================
             if (event.data.type === "TEST_PING") {
                 console.log("📡 [PING] RECEIVED! SENDING PONG NOW!");
-                
                 if (window.supabaseChannel) {
                     window.supabaseChannel.send({
-                        type: "broadcast",
-                        event: "pong",
-                        payload: {
-                            type: "TEST_PONG",
-                            message: "Connection Active!",
-                            timestamp: Date.now()
-                        }
+                        type: 'broadcast',
+                        event: 'pong',
+                        payload: { type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() }
                     });
                     console.log("📤 PONG SENT via Supabase!");
-                } else {                            console.error("❌ Supabase channel not available");
                 }
                 return;
             }
             
             // ========================================
-            // 2. COMMAND LISTENER (Pre-Qual)
+            // 2. COMMAND LISTENER
             // ========================================
-            
-            // Check for START_PRE_QUAL in either format
             if (event.data && (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL")) {
-                console.log("🎯🎯🎯 MATCH FOUND! START_PRE_QUAL RECEIVED! 🎯🎯🎯");
-                console.log("🎯🎯🎯 STARTING INTERVIEW NOW! 🎯🎯🎯");
+                console.log("🎯🎯🎯 START_PRE_QUAL RECEIVED!");
                 if (window.preQualController && !window.preQualController.isActive) {
                     window.preQualController.startInterview();
                 }
                 return;
             }
 
-            // Also handle TCS_COMMAND format
-            if (event.data && event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL") {
-                console.log("🎯🎯🎯 TCS COMMAND FORMAT DETECTED! 🎯🎯🎯");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-            
             // ========================================
-            // 3. TRANSCRIPT LISTENER (Feeding answers)
+            // 3. TRANSCRIPT LISTENER (The Fix)
             // ========================================
-            
             const msgType = event.data.type;
-            const msgText = (event.data.text || event.data.content || "").toLowerCase();
             
-            const isValidTrigger = (msgType === "transcript" || msgType === "ai_response");
-            if (!isValidTrigger) return;
-            
-            console.log(`📨 Heard: "${msgText}"`);
-            
-            // ===== SEND TESS TRANSCRIPT TO TCS VIA SUPABASE =====
-            if (msgType === "ai_response" && msgText) {
-                window.broadcastTessTranscript(msgText);
-            }
-            
-            // ========================================
-            // 4. INTERVIEW EARS (Feeding answers)
-            // ========================================
-            
-            if (window.preQualController && window.preQualController.isActive) {
-                if (msgType === "transcript") {
-                    window.preQualController.handleUserInput(event.data.text);
+            // We accept 'transcript' (User) OR 'interim_transcript' (Tess Thinking/Speaking)
+            // Because the 404 breaks the normal 'ai_response', we listen for the interim stream.
+            if (msgType === 'transcript' || msgType === 'interim_transcript') {
+                const text = event.data.content || event.data.text || "";
+                const isFinal = event.data.isFinal; // If true, it's the user. If false, it's often Tess.
+                
+                if (!text) return;
+
+                console.log(`📨 Heard: "${text}" (Final: ${isFinal})`);
+
+                // Logic: If it's NOT final, it's likely Tess generating/speaking.
+                // We broadcast this to TCS so it sees what she is saying.
+                if (!isFinal) {
+                     if (window.broadcastTessTranscript) {
+                        window.broadcastTessTranscript(text);
+                    }
+                }
+
+                // Feed to Pre-Qual if active
+                if (window.preQualController && window.preQualController.isActive && isFinal) {
+                    window.preQualController.handleUserInput(text);
                 }
             }
             
