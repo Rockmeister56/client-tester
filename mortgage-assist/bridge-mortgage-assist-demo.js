@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/11/2026, 10:25:57 PM
+// Generated: 4/11/2026, 10:55:32 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-12T05:25:57.360Z"
+    "updatedAt": "2026-04-12T05:55:32.425Z"
 };
 
     // =========================================
@@ -788,10 +788,10 @@
     setupUniversalListener();
 
     // ========================================
-    // DAILY INTEGRATION (Professional System)
+    // DAILY INTEGRATION (Proxy Mode - Fixes CORS)
     // ========================================
     async function initializeDailyIntegration() {
-        console.log("🎬 Initializing Daily Integration...");
+        console.log("🎬 Initializing Daily Integration (Proxy Mode)...");
         
         if (typeof DailyIframe === "undefined") {
             console.error("❌ Daily SDK not loaded.");
@@ -810,61 +810,50 @@
         });
 
         // ========================================
-        // STEP 1: FETCH ROOM VIA API KEY
+        // STEP 1: REQUEST ROOM VIA TCS PROXY
         // ========================================
-        const apiKey = "undefined";
-
-        if (!apiKey || apiKey === "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP") {
-            console.error("❌ Missing Lemon Slice API Key in Config.");
-            return;
-        }
-
         let roomUrl = "";
         let token = "";
 
         try {
-            console.log("🔑 Fetching Room from Lemon Slice API...");
-            const response = await fetch("https://lemonslice.com/api/liveai/rooms", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-API-Key": apiKey
-                },
-                body: JSON.stringify({
-                    agent_id: "agent_7b0776ef6b855de5"
-                })
-            });
+            console.log("🔑 Requesting Room via TCS Proxy...");
 
-            const data = await response.json();
-            
-            if (data.url && data.token) {
-                roomUrl = data.url;
-                token = data.token;
-                console.log("✅ Room obtained successfully!");
-            } else {
-                console.error("❌ API Error: Could not retrieve room details", data);
-                return;
-            }
+            // Send message to TCS (Dashboard) to fetch the room
+            window.opener.postMessage({
+                type: "GET_DAILY_ROOM",
+                agentId: "agent_7b0776ef6b855de5"
+            }, "*");
 
         } catch (e) {
-            console.error("❌ Failed to fetch room:", e);
+            console.error("❌ Failed to request room:", e);
             return;
         }
 
         // ========================================
-        // STEP 2: JOIN THE ROOM
+        // STEP 2: LISTEN FOR ROOM CREDENTIALS
         // ========================================
+        window.addEventListener("message", (event) => {
+            if (event.data && event.data.type === "DAILY_ROOM_CREDENTIALS") {
+                console.log("✅ Received Room Credentials from TCS");
+                roomUrl = event.data.url;
+                token = event.data.token;
+                
+                joinRoom(callObject, roomUrl, token);
+            }
+        });
+    }
+
+    async function joinRoom(callObject, url, token) {
         try {
-            await callObject.join({ url: roomUrl, token: token });
+            await callObject.join({ url: url, token: token });
             console.log("✅ Joined Daily Room Successfully");
 
-            // 3. LISTEN FOR AGENT TRANSCRIPTION (The Golden Ticket)
+            // LISTEN FOR TRANSCRIPTION
             callObject.on("app-message", (ev) => {
                 if (ev && ev.data && ev.data.type === "agent_transcription") {
                     const tessText = ev.data.transcription;
                     console.log("📡 AGENT TRANSCRIPTION:", tessText);
 
-                    // Send to TCS via Supabase
                     if (window.supabaseChannel) {
                         window.supabaseChannel.send({
                             type: "broadcast",
@@ -875,11 +864,9 @@
                                 timestamp: Date.now()
                             }
                         });
-                        console.log("✅ Sent transcript to TCS");
                     }
                 }
             });
-
         } catch (e) {
             console.error("❌ Failed to join Daily room:", e);
         }
