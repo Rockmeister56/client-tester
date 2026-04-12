@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/12/2026, 3:53:50 PM
+// Generated: 4/12/2026, 4:57:29 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-12T22:53:50.463Z"
+    "updatedAt": "2026-04-12T23:57:29.150Z"
 };
 
     // =========================================
@@ -692,13 +692,11 @@
                         await dailyCallObject.join({ url: data.room_url, token: data.token });
                         console.log("✅ Joined Daily room");
                         
-                        // SINGLE listener for Tess transcriptions
                         dailyCallObject.on("app-message", (ev) => {
                             if (ev?.data?.type === "agent_transcription") {
                                 const tessText = ev.data.transcription;
                                 console.log("🤖 Tess said:", tessText);
                                 
-                                // Send to TCS via Supabase
                                 if (window.supabaseChannel) {
                                     window.supabaseChannel.send({
                                         type: "broadcast",
@@ -707,7 +705,6 @@
                                     });
                                 }
                                 
-                                // Check for trigger phrase
                                 if (tessText.toLowerCase().includes("pre-qualified")) {
                                     console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
                                     if (window.preQualController && !window.preQualController.isActive) {
@@ -721,22 +718,29 @@
             } catch(e) { console.error("Daily init error:", e); }
         }
         
-        // Start Daily when ready
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", initDaily);
         } else { initDaily(); }
         
-        // ========== POSTMESSAGE LISTENER ==========
+        // ========== SINGLE POSTMESSAGE LISTENER ==========
         window.addEventListener("message", (event) => {
             if (event.data && event.data.what === "iframe-call-message") return;
             if (!event.data || !event.data.type) return;
             console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
             
-            // Handle TEST_PING
+            // Handle TEST_PING from Communication Monitor
             if (event.data.type === "TEST_PING") {
-                console.log("📡 PING received, sending PONG...");
+                console.log("📡 TEST_PING received, sending PONG...");
                 if (window.supabaseChannel) {
-                    window.supabaseChannel.send({ type: "broadcast", event: "pong", payload: { type: "TEST_PONG", timestamp: Date.now() } });
+                    window.supabaseChannel.send({
+                        type: "broadcast",
+                        event: "test_pong",
+                        payload: {
+                            clientId: window.BotemiaConfig?.id || "unknown",
+                            timestamp: Date.now(),
+                            echoTimestamp: event.data.timestamp
+                        }
+                    });
                 }
                 return;
             }
