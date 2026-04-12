@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/12/2026, 2:38:03 AM
+// Generated: 4/12/2026, 1:48:26 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-12T09:38:02.776Z"
+    "updatedAt": "2026-04-12T20:48:25.901Z"
 };
 
     // =========================================
@@ -787,93 +787,103 @@
 
     setupUniversalListener();
 
-    // ========================================
-    // DAILY INTEGRATION (Proxy Mode - Fixes CORS)
-    // ========================================
-    async function initializeDailyIntegration() {
-        console.log("🎬 Initializing Daily Integration (Proxy Mode)...");
-        
-        if (typeof DailyIframe === "undefined") {
-            console.error("❌ Daily SDK not loaded.");
-            return;
-        }
-
-        const callObject = DailyIframe.createCallObject({
-            iframeStyle: {
-                width: "100%",
-                height: "100%",
-                border: "0",
-                borderRadius: "8px"
-            },
-            showLeaveButton: false,
-            showFullscreenButton: true
-        });
-
-        // ========================================
-        // STEP 1: REQUEST ROOM VIA TCS PROXY
-        // ========================================
-        let roomUrl = "";
-        let token = "";
-
-        try {
-            console.log("🔑 Requesting Room via TCS Proxy...");
-
-            // Send message to TCS (Dashboard) to fetch the room
-            window.opener.postMessage({
-                type: "GET_DAILY_ROOM",
-                agentId: "agent_7b0776ef6b855de5"
-            }, "*");
-
-        } catch (e) {
-            console.error("❌ Failed to request room:", e);
-            return;
-        }
-
-        // ========================================
-        // STEP 2: LISTEN FOR ROOM CREDENTIALS
-        // ========================================
-        window.addEventListener("message", (event) => {
-            if (event.data && event.data.type === "DAILY_ROOM_CREDENTIALS") {
-                console.log("✅ Received Room Credentials from TCS");
-                roomUrl = event.data.url;
-                token = event.data.token;
-                
-                joinRoom(callObject, roomUrl, token);
+    // Load Daily SDK
+    function loadDailySDK() {
+        return new Promise((resolve, reject) => {
+            if (typeof DailyIframe !== "undefined") {
+                resolve();
+                return;
             }
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/@daily-co/daily-js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
         });
     }
 
-    async function joinRoom(callObject, url, token) {
+    // Start Tess session using Hosted Pipeline (Direct API)
+    async function startTessSession() {
+        console.log("🎬 Starting Tess session via Edge Function...");
+        
+        await loadDailySDK();
+        
         try {
-            await callObject.join({ url: url, token: token });
-            console.log("✅ Joined Daily Room Successfully");
-
-            // LISTEN FOR TRANSCRIPTION
-            callObject.on("app-message", (ev) => {
-                if (ev && ev.data && ev.data.type === "agent_transcription") {
+            // Call Supabase Edge Function (NOT LemonSlice directly)
+            const response = await fetch(
+                "https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                }
+            );
+            
+            if (!response.ok) {
+                throw new Error(`Edge Function error: ${response.status}`);
+            }
+            
+            const roomData = await response.json();
+            console.log("✅ Room created via Edge Function:", roomData.url);
+            
+            dailyCallObject = DailyIframe.createCallObject({
+                iframeStyle: {
+                    width: "100%",
+                    height: "100%",
+                    border: "0",
+                    borderRadius: "8px"
+                },
+                showLeaveButton: false,
+                showFullscreenButton: true
+            });
+            
+            await dailyCallObject.join({
+                url: roomData.url,
+                token: roomData.token
+            });
+            console.log("✅ Joined Daily room");
+            
+            // Listen for Tess transcriptions
+            dailyCallObject.on("app-message", (ev) => {
+                if (ev?.data?.type === "agent_transcription") {
                     const tessText = ev.data.transcription;
-                    console.log("📡 AGENT TRANSCRIPTION:", tessText);
-
+                    console.log("🤖 Tess said:", tessText);
+                    
                     if (window.supabaseChannel) {
                         window.supabaseChannel.send({
                             type: "broadcast",
                             event: "tess_transcript",
-                            payload: {
-                                type: "TESS_TRANSCRIPT",
-                                text: tessText,
-                                timestamp: Date.now()
-                            }
+                            payload: { text: tessText, timestamp: Date.now() }
                         });
+                    }
+                    
+                    if (tessText.toLowerCase().includes("pre-qualified") ||
+                        tessText.toLowerCase().includes("pre qualification")) {
+                        console.log("🎯 TRIGGER PHRASE DETECTED!");
+                        if (window.preQualController && !window.preQualController.isActive) {
+                            window.preQualController.startInterview();
+                        }
                     }
                 }
             });
-        } catch (e) {
-            console.error("❌ Failed to join Daily room:", e);
+            
+        } catch (error) {
+            console.error("❌ Failed to start Tess session:", error);
+        }
+    }
+    // Send message to Tess
+    async function sendToTess(message) {
+        if (dailyCallObject) {
+            dailyCallObject.sendAppMessage({
+                event: "chat-msg",
+                message: message,
+                name: "System"
+            }, "*");
+            console.log("📤 Sent to Tess:", message);
+        } else {
+            console.warn("⚠️ No active Daily session");
         }
     }
 
-    // Start the integration when window loads
-    window.addEventListener("load", initializeDailyIntegration);
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
@@ -1055,7 +1065,7 @@
         }
     }
 
-    function activateTess() {
+    async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
         // 1. Try to pre-warm audio
@@ -1078,7 +1088,7 @@
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
-        // 4. CREATE MAIN WIDGET
+        // 4. CREATE MAIN WIDGET (KEEP EXISTING)
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
@@ -1089,7 +1099,7 @@
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // 5. Activate Audio
+            // 5. Activate Audio (KEEP EXISTING)
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
                 try {
@@ -1097,13 +1107,7 @@
                         await window.mainWidget.micOn();
                         await window.mainWidget.unmute?.();
                         console.log("✅ Microphone activated");
-                        
-                        // Force unmute shadow DOM as backup
                         await forceUnmute();
-                        
-                        // 🔥 REMOVED: Controller already created earlier in the bridge
-                        // No need to create another instance here
-                        
                     }
                 } catch (e) {
                     console.error("❌ Mic activation failed:", e);
@@ -1111,6 +1115,10 @@
                 }
             }, 3000);
         }, 100);
+        
+        // 🔥 NEW: ALSO START DAILY SESSION IN BACKGROUND
+        // This runs alongside the widget for transcription events
+        startTessSession();
     }
 
     function showPersistentAvatar() {
@@ -1301,6 +1309,112 @@
     else { initWidget(); }
 
     console.log('✅ Botemia Bridge v5.4 loaded for', window.BotemiaConfig.name);
+
+    let dailyCallObject = null;
+    let dailyRoomData = null;
+
+    // Load Daily SDK
+    function loadDailySDK() {
+        return new Promise((resolve, reject) => {
+            if (typeof DailyIframe !== "undefined") {
+                resolve();
+                return;
+            }
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/@daily-co/daily-js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // Start Tess session using Hosted Pipeline
+    async function startTessSession() {
+        console.log("🎬 Starting Tess session...");
+        
+        await loadDailySDK();
+        
+        // const LEMONSLICE_API_KEY = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
+        // const AGENT_ID = "agent_7b0776ef6b855de5";
+        
+        try {
+            const response = await fetch("https://lemonslice.com/api/liveai/rooms", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-Key": LEMONSLICE_API_KEY
+                },
+                body: JSON.stringify({ agent_id: AGENT_ID })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            
+            dailyRoomData = await response.json();
+            console.log("✅ Room created:", dailyRoomData.url);
+            
+            dailyCallObject = DailyIframe.createCallObject({
+                iframeStyle: {
+                    width: "100%",
+                    height: "100%",
+                    border: "0",
+                    borderRadius: "8px"
+                },
+                showLeaveButton: false,
+                showFullscreenButton: true
+            });
+            
+            await dailyCallObject.join({
+                url: dailyRoomData.url,
+                token: dailyRoomData.token
+            });
+            console.log("✅ Joined Daily room");
+            
+            // Listen for Tess transcriptions
+            dailyCallObject.on("app-message", (ev) => {
+                if (ev?.data?.type === "agent_transcription") {
+                    const tessText = ev.data.transcription;
+                    console.log("🤖 Tess said:", tessText);
+                    
+                    // Send to TCS via Supabase
+                    if (window.supabaseChannel) {
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "tess_transcript",
+                            payload: { text: tessText, timestamp: Date.now() }
+                        });
+                    }
+                    
+                    // Check for trigger phrase
+                    if (tessText.toLowerCase().includes("pre-qualified") ||
+                        tessText.toLowerCase().includes("pre qualification")) {
+                        console.log("🎯 TRIGGER PHRASE DETECTED!");
+                        if (window.preQualController && !window.preQualController.isActive) {
+                            window.preQualController.startInterview();
+                        }
+                    }
+                }
+            });
+            
+        } catch (error) {
+            console.error("❌ Failed to start Tess session:", error);
+        }
+    }
+
+    // Send message to Tess
+    async function sendToTess(message) {
+        if (dailyCallObject) {
+            dailyCallObject.sendAppMessage({
+                event: "chat-msg",
+                message: message,
+                name: "System"
+            }, "*");
+            console.log("📤 Sent to Tess:", message);
+        } else {
+            console.warn("⚠️ No active Daily session");
+        }
+    }
 
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
