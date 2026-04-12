@@ -11,13 +11,17 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            /* 🔥 UPDATED: Using the full URL from your server */
+            /* Your Background Image */
             background-image: url('https://client-tester.netlify.app/mortgage-assist/web-template2.png'); 
             background-size: cover;
             background-position: center;
             font-family: sans-serif;
             overflow-x: hidden;
+            display: flex; /* Centers the video */
+            justify-content: center;
+            align-items: center;
         }
+        
         .test-banner {
             position: fixed;
             top: 0;
@@ -31,6 +35,7 @@
             font-weight: 600;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
+        
         .status-toast {
             position: fixed;
             bottom: 20px;
@@ -42,6 +47,20 @@
             font-size: 14px;
             border: 1px solid #f8c400;
             z-index: 1000000;
+        }
+
+        /* 🆕 Daily Video Container */
+        #daily-container {
+            width: 90vw;
+            max-width: 1000px;
+            height: 80vh;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 10;
         }
     </style>
 
@@ -62,12 +81,24 @@
     </script>
 </head>
 <body>
-    <div class="test-banner">🧪 TEST MODE: Mortgage Assist Demo</div>
+    <div class="test-banner">🧪 TEST MODE: Mortgage Assist Demo (Daily Integration)</div>
 
-    <!-- 🔥 STEP 2: LOAD WIDGET -->
-    <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+    <!-- 🆕 DAILY VIDEO CONTAINER -->
+    <div id="daily-container"></div>
+
+    <!-- 🔥 STEP 2: LOAD DAILY SDK (Replaces Old Widget) -->
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
 
     <!-- 🔥 STEP 3: LOAD BRIDGE -->
     <script src="bridge-mortgage-assist-demo.js" defer></script>
+
+    <!-- 🆕 CONFIGURATION: PASTE URL & TOKEN HERE -->
+    <script>
+        // Get these from the Lemon Slice API (POST /liveai/rooms)
+        window.DAILY_CONFIG = {
+            url: "PASTE_YOUR_DAILY_ROOM_URL_HERE",
+            token: "PASTE_YOUR_DAILY_TOKEN_HERE"
+        };
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/11/2026, 9:09:16 AM
+// Generated: 4/11/2026, 10:08:35 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-11T16:09:15.892Z"
+    "updatedAt": "2026-04-12T05:08:35.027Z"
 };
 
     // =========================================
@@ -674,6 +674,34 @@
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated (Universal Mode).");
         
+        // ========================================
+        // 🔥 AUDIO HEARTBEAT (For TCS Smart Filter)
+        // ========================================
+        // This sends a signal to TCS every 500ms telling it if Tess is speaking.
+        setInterval(() => {
+            const widget = document.querySelector('lemon-slice-widget') || document.querySelector('botemia-widget');
+            if (!widget || !widget.shadowRoot) return;
+
+            const audios = widget.shadowRoot.querySelectorAll('audio');
+            let isPlaying = false;
+            audios.forEach(audio => {
+                if (!audio.paused && !audio.ended && audio.currentTime > 0) {
+                    isPlaying = true;
+                }
+            });
+
+            if (window.supabaseChannel) {
+                window.supabaseChannel.send({
+                    type: 'broadcast',
+                    event: 'audio_status',
+                    payload: {
+                        isPlaying: isPlaying,
+                        timestamp: Date.now()
+                    }
+                });
+            }
+        }, 500);
+
         window.addEventListener("message", (event) => {
             
             // ========================================
@@ -786,6 +814,106 @@
 
     setupUniversalListener();
 
+    // ========================================
+    // DAILY INTEGRATION (Professional System)
+    // ========================================
+    async function initializeDailyIntegration() {
+        console.log("🎬 Initializing Daily Integration...");
+        
+        if (typeof DailyIframe === "undefined") {
+            console.error("❌ Daily SDK not loaded.");
+            return;
+        }
+
+        const callObject = DailyIframe.createCallObject({
+            iframeStyle: {
+                width: "100%",
+                height: "100%",
+                border: "0",
+                borderRadius: "8px"
+            },
+            showLeaveButton: false,
+            showFullscreenButton: true
+        });
+
+        // ========================================
+        // STEP 1: FETCH ROOM VIA API KEY
+        // ========================================
+        const apiKey = "undefined";
+
+        if (!apiKey || apiKey === "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP") {
+            console.error("❌ Missing Lemon Slice API Key in Config.");
+            return;
+        }
+
+        let roomUrl = "";
+        let token = "";
+
+        try {
+            console.log("🔑 Fetching Room from Lemon Slice API...");
+            const response = await fetch("https://lemonslice.com/api/liveai/rooms", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-Key": apiKey
+                },
+                body: JSON.stringify({
+                    agent_id: "agent_7b0776ef6b855de5"
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.url && data.token) {
+                roomUrl = data.url;
+                token = data.token;
+                console.log("✅ Room obtained successfully!");
+            } else {
+                console.error("❌ API Error: Could not retrieve room details", data);
+                return;
+            }
+
+        } catch (e) {
+            console.error("❌ Failed to fetch room:", e);
+            return;
+        }
+
+        // ========================================
+        // STEP 2: JOIN THE ROOM
+        // ========================================
+        try {
+            await callObject.join({ url: roomUrl, token: token });
+            console.log("✅ Joined Daily Room Successfully");
+
+            // 3. LISTEN FOR AGENT TRANSCRIPTION (The Golden Ticket)
+            callObject.on("app-message", (ev) => {
+                if (ev && ev.data && ev.data.type === "agent_transcription") {
+                    const tessText = ev.data.transcription;
+                    console.log("📡 AGENT TRANSCRIPTION:", tessText);
+
+                    // Send to TCS via Supabase
+                    if (window.supabaseChannel) {
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "tess_transcript",
+                            payload: {
+                                type: "TESS_TRANSCRIPT",
+                                text: tessText,
+                                timestamp: Date.now()
+                            }
+                        });
+                        console.log("✅ Sent transcript to TCS");
+                    }
+                }
+            });
+
+        } catch (e) {
+            console.error("❌ Failed to join Daily room:", e);
+        }
+    }
+
+    // Start the integration when window loads
+    window.addEventListener("load", initializeDailyIntegration);
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
