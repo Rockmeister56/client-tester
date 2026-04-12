@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/12/2026, 1:48:26 PM
+// Generated: 4/12/2026, 3:53:50 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-12T20:48:25.901Z"
+    "updatedAt": "2026-04-12T22:53:50.463Z"
 };
 
     // =========================================
@@ -674,216 +674,92 @@
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated (Universal Mode).");
         
-
-        window.addEventListener("message", (event) => {
-            
-            // ========================================
-            // 🔇 NOISE FILTER (Must be first!)
-            // ========================================
-            if (event.data && event.data.what === "iframe-call-message") {
-                return; 
-            }
-
-            // SAFETY: Ignore empty/undefined messages
-            if (!event.data || !event.data.type) return;
-
-            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
-            
-            // ========================================
-            // 1. DIAGNOSTIC LISTENER (Highest Priority)
-            // ========================================
-            if (event.data.type === "TEST_PING") {
-                console.log("📡 [PING] RECEIVED! SENDING PONG NOW!");
-                
-                if (window.supabaseChannel) {
-                    window.supabaseChannel.send({
-                        type: "broadcast",
-                        event: "pong",
-                        payload: {
-                            type: "TEST_PONG",
-                            message: "Connection Active!",
-                            timestamp: Date.now()
-                        }
-                    });
-                    console.log("📤 PONG SENT via Supabase!");
-                } else {
-                    console.error("❌ Supabase channel not available");
-                }
-                return;
-            }
-            
-            // ========================================
-            // 2. COMMAND LISTENER (Pre-Qual)
-            // ========================================
-            
-            // Check for START_PRE_QUAL in either format
-            if (event.data && (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL")) {
-                console.log("🎯🎯🎯 MATCH FOUND! START_PRE_QUAL RECEIVED! 🎯🎯🎯");
-                console.log("🎯🎯🎯 STARTING INTERVIEW NOW! 🎯🎯🎯");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-
-            // Also handle TCS_COMMAND format
-            if (event.data && event.data.type === "TCS_COMMAND" && event.data.command === "START_PRE_QUAL") {
-                console.log("🎯🎯🎯 TCS COMMAND FORMAT DETECTED! 🎯🎯🎯");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-            
-            // ========================================
-            // 3. TRANSCRIPT LISTENER (Feeding answers)
-            // ========================================
-            
-            const msgType = event.data.type;
-            const msgText = (event.data.text || event.data.content || "").toLowerCase();
-            
-            const isValidTrigger = (msgType === "transcript" || msgType === "ai_response");
-            if (!isValidTrigger) return;
-            
-            console.log(`📨 Heard: "${msgText}"`);
-            
-            // ===== SEND TESS TRANSCRIPT TO TCS VIA SUPABASE =====
-            if (msgType === "ai_response" && msgText) {
-                try {
-                    if (window.supabaseChannel) {
-                        window.supabaseChannel.send({
-                            type: "broadcast",
-                            event: "tess_transcript",
-                            payload: {
-                                type: "TESS_TRANSCRIPT",
-                                text: msgText,
-                                timestamp: Date.now()
+        // ========== DAILY SETUP (Run once) ==========
+        let dailyCallObject = null;
+        
+        async function initDaily() {
+            console.log("📞 Initializing Daily room...");
+            try {
+                const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
+                if (data.room_url && data.token) {
+                    if (typeof DailyIframe !== "undefined") {
+                        dailyCallObject = DailyIframe.createCallObject(document.getElementById("daily-container") || undefined);
+                        await dailyCallObject.join({ url: data.room_url, token: data.token });
+                        console.log("✅ Joined Daily room");
+                        
+                        // SINGLE listener for Tess transcriptions
+                        dailyCallObject.on("app-message", (ev) => {
+                            if (ev?.data?.type === "agent_transcription") {
+                                const tessText = ev.data.transcription;
+                                console.log("🤖 Tess said:", tessText);
+                                
+                                // Send to TCS via Supabase
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast",
+                                        event: "tess_transcript",
+                                        payload: { text: tessText, timestamp: Date.now() }
+                                    });
+                                }
+                                
+                                // Check for trigger phrase
+                                if (tessText.toLowerCase().includes("pre-qualified")) {
+                                    console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
+                                    if (window.preQualController && !window.preQualController.isActive) {
+                                        window.preQualController.startInterview();
+                                    }
+                                }
                             }
                         });
-                        console.log("📡 [SUPABASE] Sent Tess transcript to TCS");
-                    } else {
-                        console.log("⚠️ Supabase channel not ready yet");
                     }
-                } catch(e) {
-                    console.error("❌ Failed to send via Supabase:", e);
                 }
+            } catch(e) { console.error("Daily init error:", e); }
+        }
+        
+        // Start Daily when ready
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initDaily);
+        } else { initDaily(); }
+        
+        // ========== POSTMESSAGE LISTENER ==========
+        window.addEventListener("message", (event) => {
+            if (event.data && event.data.what === "iframe-call-message") return;
+            if (!event.data || !event.data.type) return;
+            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
+            
+            // Handle TEST_PING
+            if (event.data.type === "TEST_PING") {
+                console.log("📡 PING received, sending PONG...");
+                if (window.supabaseChannel) {
+                    window.supabaseChannel.send({ type: "broadcast", event: "pong", payload: { type: "TEST_PONG", timestamp: Date.now() } });
+                }
+                return;
             }
             
-            // ========================================
-            // 4. INTERVIEW EARS (Feeding answers)
-            // ========================================
+            // Handle START_PRE_QUAL
+            if (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL") {
+                console.log("🎯 START_PRE_QUAL received!");
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
+                return;
+            }
             
-            if (window.preQualController && window.preQualController.isActive) {
-                if (msgType === "transcript") {
+            // Handle transcript for interview answers
+            if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
+                if (window.preQualController && window.preQualController.isActive) {
                     window.preQualController.handleUserInput(event.data.text);
                 }
             }
-            
         });
     }
-
-    // Expose function to global scope for testing/debugging
-    window.setupUniversalListener = setupUniversalListener;
 
     setupUniversalListener();
-
-    // Load Daily SDK
-    function loadDailySDK() {
-        return new Promise((resolve, reject) => {
-            if (typeof DailyIframe !== "undefined") {
-                resolve();
-                return;
-            }
-            const script = document.createElement("script");
-            script.src = "https://unpkg.com/@daily-co/daily-js";
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-        });
-    }
-
-    // Start Tess session using Hosted Pipeline (Direct API)
-    async function startTessSession() {
-        console.log("🎬 Starting Tess session via Edge Function...");
-        
-        await loadDailySDK();
-        
-        try {
-            // Call Supabase Edge Function (NOT LemonSlice directly)
-            const response = await fetch(
-                "https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" }
-                }
-            );
-            
-            if (!response.ok) {
-                throw new Error(`Edge Function error: ${response.status}`);
-            }
-            
-            const roomData = await response.json();
-            console.log("✅ Room created via Edge Function:", roomData.url);
-            
-            dailyCallObject = DailyIframe.createCallObject({
-                iframeStyle: {
-                    width: "100%",
-                    height: "100%",
-                    border: "0",
-                    borderRadius: "8px"
-                },
-                showLeaveButton: false,
-                showFullscreenButton: true
-            });
-            
-            await dailyCallObject.join({
-                url: roomData.url,
-                token: roomData.token
-            });
-            console.log("✅ Joined Daily room");
-            
-            // Listen for Tess transcriptions
-            dailyCallObject.on("app-message", (ev) => {
-                if (ev?.data?.type === "agent_transcription") {
-                    const tessText = ev.data.transcription;
-                    console.log("🤖 Tess said:", tessText);
-                    
-                    if (window.supabaseChannel) {
-                        window.supabaseChannel.send({
-                            type: "broadcast",
-                            event: "tess_transcript",
-                            payload: { text: tessText, timestamp: Date.now() }
-                        });
-                    }
-                    
-                    if (tessText.toLowerCase().includes("pre-qualified") ||
-                        tessText.toLowerCase().includes("pre qualification")) {
-                        console.log("🎯 TRIGGER PHRASE DETECTED!");
-                        if (window.preQualController && !window.preQualController.isActive) {
-                            window.preQualController.startInterview();
-                        }
-                    }
-                }
-            });
-            
-        } catch (error) {
-            console.error("❌ Failed to start Tess session:", error);
-        }
-    }
-    // Send message to Tess
-    async function sendToTess(message) {
-        if (dailyCallObject) {
-            dailyCallObject.sendAppMessage({
-                event: "chat-msg",
-                message: message,
-                name: "System"
-            }, "*");
-            console.log("📤 Sent to Tess:", message);
-        } else {
-            console.warn("⚠️ No active Daily session");
-        }
-    }
-
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
