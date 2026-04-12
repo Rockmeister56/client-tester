@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/11/2026, 10:08:35 PM
+// Generated: 4/11/2026, 10:25:57 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-12T05:08:35.027Z"
+    "updatedAt": "2026-04-12T05:25:57.360Z"
 };
 
     // =========================================
@@ -674,33 +674,6 @@
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated (Universal Mode).");
         
-        // ========================================
-        // 🔥 AUDIO HEARTBEAT (For TCS Smart Filter)
-        // ========================================
-        // This sends a signal to TCS every 500ms telling it if Tess is speaking.
-        setInterval(() => {
-            const widget = document.querySelector('lemon-slice-widget') || document.querySelector('botemia-widget');
-            if (!widget || !widget.shadowRoot) return;
-
-            const audios = widget.shadowRoot.querySelectorAll('audio');
-            let isPlaying = false;
-            audios.forEach(audio => {
-                if (!audio.paused && !audio.ended && audio.currentTime > 0) {
-                    isPlaying = true;
-                }
-            });
-
-            if (window.supabaseChannel) {
-                window.supabaseChannel.send({
-                    type: 'broadcast',
-                    event: 'audio_status',
-                    payload: {
-                        isPlaying: isPlaying,
-                        timestamp: Date.now()
-                    }
-                });
-            }
-        }, 500);
 
         window.addEventListener("message", (event) => {
             
