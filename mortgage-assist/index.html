@@ -17,7 +17,7 @@
             background-position: center;
             font-family: sans-serif;
             overflow-x: hidden;
-            display: flex; /* Centers the video */
+            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -49,16 +49,16 @@
             z-index: 1000000;
         }
 
-        /* 🆕 Daily Video Container */
+        /* 🆕 Daily Video Container - NO BLACK BACKGROUND */
         #daily-container {
             width: 90vw;
             max-width: 1000px;
             height: 80vh;
-            background: rgba(0, 0, 0, 0.5);
+            background: transparent;  /* ← FIXED: Removed black background */
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);  /* Kept outer shadow, removed inner black */
+            border: 2px solid rgba(255,255,255,0.2);  /* Slightly more visible border */
             position: relative;
             z-index: 10;
         }
