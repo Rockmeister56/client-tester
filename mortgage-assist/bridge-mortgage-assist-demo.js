@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/13/2026, 11:03:43 AM
+// Generated: 4/13/2026, 12:00:48 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-13T18:03:43.081Z"
+    "updatedAt": "2026-04-13T19:00:47.770Z"
 };
 
     // =========================================
@@ -646,32 +646,32 @@
             
             window.supabaseChannel = tcsChannel;
             
-             // Create health monitor channel
-             const healthChannel = sbClient.channel("health-monitor");
-             healthChannel.subscribe((status) => {
-                 if (status === "SUBSCRIBED") {
-                     console.log("🩺 Health monitor channel connected");
-                 }
-             });
-             
-             // Make it accessible globally
-             window.healthChannel = healthChannel;
-             
-             // Listen for test_ping from Communication Monitor
-             healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
-                 console.log("📡 TEST_PING received, sending PONG...");
-                 healthChannel.send({
-                     type: "broadcast",
-                     event: "test_pong",
-                     payload: {
-                         clientId: window.BotemiaConfig?.id || "unknown",
-                         timestamp: Date.now(),
-                         echoTimestamp: payload.payload.timestamp
-                     }
-                 });
-                 console.log("📤 test_pong sent");
+            // Create health monitor channel
+            const healthChannel = sbClient.channel("health-monitor");
+            healthChannel.subscribe((status) => {
+                if (status === "SUBSCRIBED") {
+                    console.log("🩺 Health monitor channel connected");
+                }
             });
-        };
+            
+            // Make it accessible globally
+            window.healthChannel = healthChannel;
+            
+            // Listen for test_ping from Communication Monitor
+            healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
+                console.log("📡 TEST_PING received, sending PONG...");
+                healthChannel.send({
+                    type: "broadcast",
+                    event: "test_pong",
+                    payload: {
+                        clientId: window.BotemiaConfig?.id || "unknown",
+                        timestamp: Date.now(),
+                        echoTimestamp: payload.payload.timestamp
+                    }
+                });
+                console.log("📤 test_pong sent");
+                });
+            }
         document.head.appendChild(script);
     })();
 
