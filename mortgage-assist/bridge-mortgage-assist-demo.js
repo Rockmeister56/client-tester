@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/13/2026, 10:38:45 AM
+// Generated: 4/13/2026, 10:51:35 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-13T17:38:44.828Z"
+    "updatedAt": "2026-04-13T17:51:34.677Z"
 };
 
     // =========================================
@@ -608,10 +608,10 @@
             const { createClient } = supabase;
             const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            const channel = sbClient.channel("tess-commands");
+            const tcsChannel = sbClient.channel("tess-commands");
             
             // 🔥 LISTEN FOR COMMANDS FROM TCS
-            channel.on("broadcast", { event: "command" }, (payload) => {
+            tcsChannel.on("broadcast", { event: "command" }, (payload) => {
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload.command;
                 
@@ -624,9 +624,9 @@
             });
             
             // 🔥 LISTEN FOR PING AND RESPOND WITH PONG (DIAGNOSTIC)
-            channel.on("broadcast", { event: "ping" }, (payload) => {
+            tcsChannel.on("broadcast", { event: "ping" }, (payload) => {
                 console.log("📡 PING received, sending PONG...");
-                channel.send({
+                tcsChannel.send({
                     type: "broadcast",
                     event: "pong",
                     payload: {
@@ -638,27 +638,26 @@
                 console.log("📤 PONG sent to TCS");
             });
             
-            channel.subscribe((status) => {
+            tcsChannel.subscribe((status) => {
                 if (status === "SUBSCRIBED") {
                     console.log("✅ [REALTIME] Connected to Supabase channel");
                 }
             });
             
-            const channel = supabase.channel("tess-commands");
-            window.supabaseChannel = channel;
+            window.supabaseChannel = tcsChannel;
             
-            // Create health monitor channel (for Communication Monitor)
-            window.healthChannel = supabase.channel("health-monitor");
-            window.healthChannel.subscribe((status) => {
+            // Create health monitor channel
+            const healthChannel = sbClient.channel("health-monitor");
+            healthChannel.subscribe((status) => {
                 if (status === "SUBSCRIBED") {
                     console.log("🩺 Health monitor channel connected");
                 }
             });
             
             // Listen for test_ping from Communication Monitor
-            window.healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
+            healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
                 console.log("📡 TEST_PING received, sending PONG...");
-                window.healthChannel.send({
+                healthChannel.send({
                     type: "broadcast",
                     event: "test_pong",
                     payload: {
@@ -668,13 +667,14 @@
                     }
                 });
                 console.log("📤 test_pong sent");
-            });
-            
-            channel.subscribe((status) => {
-                if (status === "SUBSCRIBED") {
-                    console.log("✅ [REALTIME] Connected to Supabase channel");
-                }
-            });
+                });
+            } else {
+                console.warn("⚠️ Cannot create health channel - supabase not ready");
+            }
+        };
+        document.head.appendChild(script);
+    })();
+
     // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
