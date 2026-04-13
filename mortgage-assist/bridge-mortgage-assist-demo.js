@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/13/2026, 1:18:08 PM
+// Generated: 4/13/2026, 1:30:45 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-13T20:18:08.052Z"
+    "updatedAt": "2026-04-13T20:30:45.421Z"
 };
 
     // =========================================
@@ -1249,112 +1249,6 @@
         });
     }
 
-    // Start Tess session using Hosted Pipeline
-    async function startTessSession() {
-        console.log("🎬 Starting Tess session...");
-        
-        await loadDailySDK();
-        
-        const LEMONSLICE_API_KEY = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
-        const AGENT_ID = "agent_7b0776ef6b855de5";
-        
-        try {
-            const response = await fetch("https://lemonslice.com/api/liveai/rooms", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-API-Key": LEMONSLICE_API_KEY
-                },
-                body: JSON.stringify({ agent_id: AGENT_ID })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-            
-            dailyRoomData = await response.json();
-            console.log("✅ Room created:", dailyRoomData.url);
-            
-            dailyCallObject = DailyIframe.createCallObject({
-                    lang: "en-us",
-                    startVideoOff: true,
-                    startAudioOff: false,
-                    userMedia: {
-                    video: false,
-                    audio: true
-                },
-                iframeStyle: {
-                    width: "100%",
-                    height: "100%",
-                    border: "0",
-                    borderRadius: "8px"
-                },
-                showLeaveButton: false,
-                showFullscreenButton: true
-            });
-            
-            // Append iframe to container
-            const container = document.getElementById("daily-container");
-            if (container && dailyCallObject.iframe()) {
-                container.appendChild(dailyCallObject.iframe());
-            }
-            
-            await dailyCallObject.join({
-                url: dailyRoomData.url,
-                token: dailyRoomData.token
-            });
-            console.log("✅ Joined Daily room");
-            
-            // Listen for Tess transcriptions
-            dailyCallObject.on("app-message", (ev) => {
-                if (ev?.data?.type === "agent_transcription") {
-                    const tessText = ev.data.transcription;
-                    console.log("🤖 Tess said:", tessText);
-                    
-                    // Send to TCS via Supabase
-                    if (window.supabaseChannel) {
-                        window.supabaseChannel.send({
-                            type: "broadcast",
-                            event: "tess_transcript",
-                            payload: { text: tessText, timestamp: Date.now() }
-                        });
-                    }
-                    
-                    // Check for trigger phrase
-                    if (tessText.toLowerCase().includes("pre-qualified") ||
-                        tessText.toLowerCase().includes("pre qualification")) {
-                        console.log("🎯 TRIGGER PHRASE DETECTED!");
-                        if (window.preQualController && !window.preQualController.isActive) {
-                            window.preQualController.startInterview();
-                        }
-                    }
-                }
-            });
-            
-        } catch (error) {
-            console.error("❌ Failed to start Tess session:", error);
-        }
-    }
-    // Send message to Tess
-    async function sendToTess(message) {
-        if (dailyCallObject) {
-            dailyCallObject.sendAppMessage({
-                event: "chat-msg",
-                message: message,
-                name: "System"
-            }, "*");
-            console.log("📤 Sent to Tess:", message);
-        } else {
-            console.warn("⚠️ No active Daily session");
-        }
-    }
-
-    // Auto-start Tess session when page loads
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", startTessSession);
-    } else {
-        startTessSession();
-    }
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
         // Send via opener (direct window communication)
