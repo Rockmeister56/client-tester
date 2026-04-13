@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/12/2026, 8:17:54 PM
+// Generated: 4/13/2026, 10:13:58 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-13T03:17:54.456Z"
+    "updatedAt": "2026-04-13T17:13:57.882Z"
 };
 
     // =========================================
@@ -647,27 +647,31 @@
             window.supabaseChannel = channel;
             
             // Create health monitor channel
-            window.healthChannel = supabase.channel("health-monitor");
-            window.healthChannel.subscribe((status) => {
-                if (status === "SUBSCRIBED") {
-                    console.log("🩺 Health monitor channel connected");
-                }
-            });
-            
-            // Listen for test_ping from Communication Monitor
-            window.healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
-                console.log("📡 TEST_PING received, sending PONG...");
-                window.healthChannel.send({
-                    type: "broadcast",
-                    event: "test_pong",
-                    payload: {
-                        clientId: window.BotemiaConfig?.id || "unknown",
-                        timestamp: Date.now(),
-                        echoTimestamp: payload.payload.timestamp
+            if (supabase && typeof supabase.channel === "function") {
+                window.healthChannel = supabase.channel("health-monitor");
+                window.healthChannel.subscribe((status) => {
+                    if (status === "SUBSCRIBED") {
+                        console.log("🩺 Health monitor channel connected");
                     }
                 });
-                console.log("📤 test_pong sent");
-            });
+                
+                // Listen for test_ping from Communication Monitor
+                window.healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
+                    console.log("📡 TEST_PING received, sending PONG...");
+                    window.healthChannel.send({
+                        type: "broadcast",
+                        event: "test_pong",
+                        payload: {
+                            clientId: window.BotemiaConfig?.id || "unknown",
+                            timestamp: Date.now(),
+                            echoTimestamp: payload.payload.timestamp
+                        }
+                    });
+                    console.log("📤 test_pong sent");
+                });
+            } else {
+                console.warn("⚠️ Cannot create health channel - supabase not ready");
+            }
         };
         document.head.appendChild(script);
     })();
