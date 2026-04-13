@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/13/2026, 12:24:26 PM
+// Generated: 4/13/2026, 12:41:03 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-13T19:24:26.470Z"
+    "updatedAt": "2026-04-13T19:41:03.169Z"
 };
 
     // =========================================
@@ -1257,8 +1257,8 @@
         
         await loadDailySDK();
         
-        // const LEMONSLICE_API_KEY = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
-        // const AGENT_ID = "agent_7b0776ef6b855de5";
+        const LEMONSLICE_API_KEY = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
+        const AGENT_ID = "agent_7b0776ef6b855de5";
         
         try {
             const response = await fetch("https://lemonslice.com/api/liveai/rooms", {
@@ -1278,6 +1278,11 @@
             console.log("✅ Room created:", dailyRoomData.url);
             
             dailyCallObject = DailyIframe.createCallObject({
+                lang: "en-us",
+                userMedia: {
+                    video: false,
+                    audio: true
+                },
                 iframeStyle: {
                     width: "100%",
                     height: "100%",
@@ -1287,6 +1292,12 @@
                 showLeaveButton: false,
                 showFullscreenButton: true
             });
+            
+            // Append iframe to container
+            const container = document.getElementById("daily-container");
+            if (container && dailyCallObject.iframe()) {
+                container.appendChild(dailyCallObject.iframe());
+            }
             
             await dailyCallObject.join({
                 url: dailyRoomData.url,
@@ -1324,7 +1335,6 @@
             console.error("❌ Failed to start Tess session:", error);
         }
     }
-
     // Send message to Tess
     async function sendToTess(message) {
         if (dailyCallObject) {
@@ -1339,6 +1349,12 @@
         }
     }
 
+    // Auto-start Tess session when page loads
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", startTessSession);
+    } else {
+        startTessSession();
+    }
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
         // Send via opener (direct window communication)
