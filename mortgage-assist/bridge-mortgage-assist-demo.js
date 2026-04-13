@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/13/2026, 12:41:03 PM
+// Generated: 4/13/2026, 1:18:08 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-13T19:41:03.169Z"
+    "updatedAt": "2026-04-13T20:18:08.052Z"
 };
 
     // =========================================
@@ -700,9 +700,6 @@
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated (Universal Mode).");
         
-        // ========== DAILY SETUP (Run once) ==========
-        let dailyCallObject = null;
-        
         async function initDaily() {
             console.log("📞 Initializing Daily room...");
             try {
@@ -715,6 +712,7 @@
                 if (data.room_url && data.token) {
                     if (typeof DailyIframe !== "undefined") {
                         dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
+                        window.dailyCallObject = dailyCallObject;
                         const container = document.getElementById("daily-container");
                         if (container && dailyCallObject.iframe()) { container.appendChild(dailyCallObject.iframe()); }
                         await dailyCallObject.join({ url: data.room_url, token: data.token });
@@ -1278,8 +1276,10 @@
             console.log("✅ Room created:", dailyRoomData.url);
             
             dailyCallObject = DailyIframe.createCallObject({
-                lang: "en-us",
-                userMedia: {
+                    lang: "en-us",
+                    startVideoOff: true,
+                    startAudioOff: false,
+                    userMedia: {
                     video: false,
                     audio: true
                 },
