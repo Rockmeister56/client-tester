@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 6:38:12 AM
+// Generated: 4/15/2026, 6:48:48 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T13:38:12.449Z"
+    "updatedAt": "2026-04-15T13:48:47.765Z"
 };
 
     // =========================================
@@ -953,8 +953,21 @@
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // 5. Activate Audio (REMOVED - Now triggered by button click only)
-            // Microphone activation moved to button click handler
+            // 5. Activate Audio (KEEP EXISTING)
+            setTimeout(async () => {
+                console.log("🎤 Finalizing audio state...");
+                try {
+                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                        await window.mainWidget.micOn();
+                        await window.mainWidget.unmute?.();
+                        console.log("✅ Microphone activated");
+                        await forceUnmute();
+                    }
+                } catch (e) {
+                    console.error("❌ Mic activation failed:", e);
+                    forceUnmute();
+                }
+            }, 3000);
         }, 100);
         
         // 🔥 NEW: ALSO START DAILY SESSION IN BACKGROUND
