@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 6:48:48 AM
+// Generated: 4/15/2026, 8:50:30 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T13:48:47.765Z"
+    "updatedAt": "2026-04-15T15:50:30.248Z"
 };
 
     // =========================================
@@ -539,7 +539,14 @@
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
         script.onload = () => {
             const { createClient } = supabase;
-            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Create client with Realtime enabled (FIXED)
+            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                realtime: {
+                    params: {
+                        eventsPerSecond: 10
+                    }
+                }
+            });
             
             const tcsChannel = sbClient.channel("tess-commands");
             
@@ -571,6 +578,7 @@
                 console.log("📤 PONG sent to TCS");
             });
             
+            // 🔥 SUBSCRIBE TO CHANNEL (FIXED)
             tcsChannel.subscribe((status) => {
                 if (status === "SUBSCRIBED") {
                     console.log("✅ [REALTIME] Connected to Supabase channel");
@@ -919,6 +927,7 @@
         }
     }
 
+    // ===== ACTIVATE TESS FUNCTION (WITH DAILY INTEGRATION ADDED) =====
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
@@ -929,6 +938,7 @@
             }
         } catch(e) { console.warn("Audio pre-check:", e); }
 
+        
         // 2. NUKE THE SPLASH WIDGET
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
@@ -937,7 +947,10 @@
                 splashWidget.parentNode.removeChild(splashWidget);
             }
         }
-
+    }
+    
+    // Expose activateTess globally for button clicks
+    window.activateTess = activateTess;
         // 3. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
