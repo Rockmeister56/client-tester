@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 12:31:40 PM
+// Generated: 4/15/2026, 1:42:52 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,12 +83,14 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T19:31:39.725Z"
+    "updatedAt": "2026-04-15T20:42:52.000Z"
 };
 
     // ===== TRIGGER PHRASE (from dashboard) =====
-    const TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
-    console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
+    // const TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
+    // console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
+
+    const TRIGGER_PHRASE = "secured pre qualification interview";
 
     // =========================================
     // 🍋 AUTO-LOADER: EMAILJS LIBRARY
@@ -683,7 +685,6 @@
                                         payload: { text: tessText, timestamp: Date.now() }
                                     });
                                     
-                                    // Listen for test_ping from Communication Monitor
                                     window.supabaseChannel.on("broadcast", { event: "test_ping" }, (payload) => {
                                         console.log("📡 TEST_PING received via Supabase, sending PONG...");
                                         window.supabaseChannel.send({
@@ -699,7 +700,6 @@
                                     });
                                 }
                                 
-                                // DYNAMIC TRIGGER PHRASE (from config)
                                 if (tessText.toLowerCase().includes(TRIGGER_PHRASE.toLowerCase())) {
                                     console.log("🎯 EXACT TRIGGER MATCHED:", TRIGGER_PHRASE);
                                     if (window.preQualController && !window.preQualController.isActive) {
@@ -708,6 +708,12 @@
                                 }
                             }
                         });
+                    }
+                }
+            } catch(e) { console.error("Daily init error:", e); }
+        }
+
+    }
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
