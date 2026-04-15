@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 10:01:47 AM
+// Generated: 4/15/2026, 12:31:40 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,8 +83,12 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T17:01:47.560Z"
+    "updatedAt": "2026-04-15T19:31:39.725Z"
 };
+
+    // ===== TRIGGER PHRASE (from dashboard) =====
+    const TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
+    console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
 
     // =========================================
     // 🍋 AUTO-LOADER: EMAILJS LIBRARY
@@ -695,65 +699,15 @@
                                     });
                                 }
                                 
-                                if (tessText.toLowerCase().includes("pre-qualified")) {
-                                    console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
+                                // DYNAMIC TRIGGER PHRASE (from config)
+                                if (tessText.toLowerCase().includes(TRIGGER_PHRASE.toLowerCase())) {
+                                    console.log("🎯 EXACT TRIGGER MATCHED:", TRIGGER_PHRASE);
                                     if (window.preQualController && !window.preQualController.isActive) {
                                         window.preQualController.startInterview();
                                     }
                                 }
                             }
                         });
-                    }
-                }
-            } catch(e) { console.error("Daily init error:", e); }
-        }
-        
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initDaily);
-        } else { initDaily(); }
-        
-        // ========== SINGLE POSTMESSAGE LISTENER ==========
-        window.addEventListener("message", (event) => {
-            if (event.data && event.data.what === "iframe-call-message") return;
-            if (!event.data || !event.data.type) return;
-            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
-            
-            // Handle TEST_PING from Communication Monitor
-            if (event.data.type === "TEST_PING") {
-                console.log("📡 TEST_PING received, sending PONG...");
-                if (window.supabaseChannel) {
-                    window.supabaseChannel.send({
-                        type: "broadcast",
-                        event: "test_pong",
-                        payload: {
-                            clientId: window.BotemiaConfig?.id || "unknown",
-                            timestamp: Date.now(),
-                            echoTimestamp: event.data.timestamp
-                        }
-                    });
-                }
-                return;
-            }
-            
-            // Handle START_PRE_QUAL
-            if (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL") {
-                console.log("🎯 START_PRE_QUAL received!");
-                if (window.preQualController && !window.preQualController.isActive) {
-                    window.preQualController.startInterview();
-                }
-                return;
-            }
-            
-            // Handle transcript for interview answers
-            if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
-                if (window.preQualController && window.preQualController.isActive) {
-                    window.preQualController.handleUserInput(event.data.text);
-                }
-            }
-        });
-    }
-
-    setupUniversalListener();
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
