@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/14/2026, 8:02:45 PM
+// Generated: 4/15/2026, 6:38:12 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T03:02:44.595Z"
+    "updatedAt": "2026-04-15T13:38:12.449Z"
 };
 
     // =========================================
@@ -953,21 +953,8 @@
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
-            // 5. Activate Audio (KEEP EXISTING)
-            setTimeout(async () => {
-                console.log("🎤 Finalizing audio state...");
-                try {
-                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                        await window.mainWidget.micOn();
-                        await window.mainWidget.unmute?.();
-                        console.log("✅ Microphone activated");
-                        await forceUnmute();
-                    }
-                } catch (e) {
-                    console.error("❌ Mic activation failed:", e);
-                    forceUnmute();
-                }
-            }, 3000);
+            // 5. Activate Audio (REMOVED - Now triggered by button click only)
+            // Microphone activation moved to button click handler
         }, 100);
         
         // 🔥 NEW: ALSO START DAILY SESSION IN BACKGROUND
@@ -1214,4 +1201,12 @@
 
     setTimeout(announceToTCS, 2000);
 
+    // Create controller instance
+    window.preQualController = new PreQualificationController();
+    if (window.preQualScript) {
+        window.preQualController.script = window.preQualScript;
+        console.log("✅ Controller created with", window.preQualScript.steps?.length, "steps");
+    } else {
+        console.error("❌ No preQualScript found!");
+    }
 })();
