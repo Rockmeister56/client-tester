@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/14/2026, 6:41:49 PM
+// Generated: 4/14/2026, 8:02:45 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T01:41:48.356Z"
+    "updatedAt": "2026-04-15T03:02:44.595Z"
 };
 
     // =========================================
@@ -475,19 +475,20 @@
             }
         }
 
-         sendEmail: async function() {
+        sendEmail() {
             console.log("📧 Sending dynamic email with collected responses...");
-            
-            const data = this.responses;
+            const data = this.answers;
             
             // Convert all responses to a formatted string for email
             let formattedAnswers = "";
-            for (const [key, value] of Object.entries(data)) {
-                formattedAnswers += key + ": " + value + "\n";
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    formattedAnswers += key + ": " + data[key] + "\n";
+                }
             }
             
-            // ===== EMAIL 1: TO PROSPECTIVE CLIENT (Business Owner) =====
-            const prospectiveClientParams = {
+            // ===== EMAIL 1: TO PROSPECTIVE CLIENT =====
+            var prospectiveClientParams = {
                 full_name: data.fullName || data.name || "Not provided",
                 email: data.email || "Not provided",
                 phone: data.phone || data.phoneNumber || "Not provided",
@@ -497,8 +498,8 @@
                 submitted_at: new Date().toLocaleString()
             };
             
-            // ===== EMAIL 2: TO WEB PROSPECT (Visitor) =====
-            const webProspectParams = {
+            // ===== EMAIL 2: TO WEB PROSPECT =====
+            var webProspectParams = {
                 full_name: data.fullName || data.name || "Valued Client",
                 email: data.email || "Not provided",
                 phone: data.phone || data.phoneNumber || "Not provided",
@@ -506,20 +507,25 @@
                 message: "Thank you for completing the pre-qualification! A loan officer will reach out to you shortly."
             };
             
-            try {
-                await emailjs.send("service_b9bppgb", "template_uix9cyx", prospectiveClientParams);
-                console.log("✅ Dynamic email sent to prospective client");
-                
-                if (data.email) {
-                    await emailjs.send("service_b9bppgb", "template_8kx812d", webProspectParams);
-                    console.log("✅ Visitor confirmation email sent to web prospect");
-                }
-            } catch (error) {
-                console.error("❌ Email error:", error);
+            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectiveClientParams)
+                .then(function() {
+                    console.log("✅ Dynamic email sent to prospective client");
+                })
+                .catch(function(error) {
+                    console.error("❌ Email error (prospective):", error);
+                });
+            
+            if (data.email) {
+                emailjs.send("service_b9bppgb", "template_8kx812d", webProspectParams)
+                    .then(function() {
+                        console.log("✅ Visitor confirmation email sent to web prospect");
+                    })
+                    .catch(function(error) {
+                        console.error("❌ Email error (visitor):", error);
+                    });
             }
-        },
-    };
-    
+        }
+    }
     // Expose class to global scope for testing/debugging
     window.PreQualificationController = PreQualificationController;
     // =========================================
