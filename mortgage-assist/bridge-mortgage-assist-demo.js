@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 9:11:56 AM
+// Generated: 4/15/2026, 10:01:47 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T16:11:56.106Z"
+    "updatedAt": "2026-04-15T17:01:47.560Z"
 };
 
     // =========================================
@@ -529,22 +529,30 @@
     // Expose class to global scope for testing/debugging
     window.PreQualificationController = PreQualificationController;
     // =========================================
-    // 🍋 SUPABASE REALTIME SETUP
+    // 🍋 SUPABASE REALTIME SETUP (Corrected Syntax)
     // =========================================
     (function() {
         const SUPABASE_URL = "https://fcgbusobfdwnpoqyuzoe.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk";
         
+        // Load Supabase Library dynamically
         const script = document.createElement("script");
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-        script.onload = () => {
+        script.onload = function() {
+            // Initialize Supabase Client
             const { createClient } = supabase;
-            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                realtime: {
+                    params: {
+                        eventsPerSecond: 10
+                    }
+                }
+            });
             
             const tcsChannel = sbClient.channel("tess-commands");
             
-            // 🔥 LISTEN FOR COMMANDS FROM TCS
-            tcsChannel.on("broadcast", { event: "command" }, (payload) => {
+            // Listen for commands
+            tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload.command;
                 
@@ -556,8 +564,8 @@
                 }
             });
             
-            // 🔥 LISTEN FOR PING AND RESPOND WITH PONG (DIAGNOSTIC)
-            tcsChannel.on("broadcast", { event: "ping" }, (payload) => {
+            // Listen for ping and respond with pong
+            tcsChannel.on("broadcast", { event: "ping" }, function(payload) {
                 console.log("📡 PING received, sending PONG...");
                 tcsChannel.send({
                     type: "broadcast",
@@ -571,7 +579,8 @@
                 console.log("📤 PONG sent to TCS");
             });
             
-            tcsChannel.subscribe((status) => {
+            // Subscribe to channel
+            tcsChannel.subscribe(function(status) {
                 if (status === "SUBSCRIBED") {
                     console.log("✅ [REALTIME] Connected to Supabase channel");
                 }
@@ -581,17 +590,16 @@
             
             // Create health monitor channel
             const healthChannel = sbClient.channel("health-monitor");
-            healthChannel.subscribe((status) => {
+            healthChannel.subscribe(function(status) {
                 if (status === "SUBSCRIBED") {
                     console.log("🩺 Health monitor channel connected");
                 }
             });
             
-            // Make it accessible globally
             window.healthChannel = healthChannel;
             
-            // Listen for test_ping from Communication Monitor
-            healthChannel.on("broadcast", { event: "test_ping" }, (payload) => {
+            // Listen for test_ping
+            healthChannel.on("broadcast", { event: "test_ping" }, function(payload) {
                 console.log("📡 TEST_PING received, sending PONG...");
                 healthChannel.send({
                     type: "broadcast",
@@ -608,6 +616,14 @@
         document.head.appendChild(script);
     })();
 
+    // Create controller instance
+    window.preQualController = new PreQualificationController();
+    if (window.preQualScript) {
+        window.preQualController.script = window.preQualScript;
+        console.log("✅ Controller created with", window.preQualScript.steps?.length, "steps");
+    } else {
+        console.error("❌ No preQualScript found!");
+    }
     // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
@@ -939,10 +955,7 @@
                 splashWidget.parentNode.removeChild(splashWidget);
             }
         }
-    }
-    
-    // Expose activateTess globally for button clicks
-    window.activateTess = activateTess;
+
         // 3. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
@@ -964,7 +977,7 @@
                 try {
                     if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
                         await window.mainWidget.micOn();
-                        await window.mainWidget.unmute?.();
+                        await window.mainWidget.unmute?.();      
                         console.log("✅ Microphone activated");
                         await forceUnmute();
                     }
@@ -979,8 +992,10 @@
         // This runs alongside the widget for transcription events
         // startTessSession(); // REMOVED - Using initDaily instead
         if (typeof initDaily === "function") { initDaily(); }
+        
+        // Expose activateTess globally for button clicks (MOVED TO BOTTOM)
+        window.activateTess = activateTess;
     }
-})();
 
     function showPersistentAvatar() {
         const config = window.BotemiaConfig.modules?.splashScreen;
@@ -1219,13 +1234,4 @@
     }
 
     setTimeout(announceToTCS, 2000);
-
-    // Create controller instance
-    window.preQualController = new PreQualificationController();
-    if (window.preQualScript) {
-        window.preQualController.script = window.preQualScript;
-        console.log("✅ Controller created with", window.preQualScript.steps?.length, "steps");
-    } else {
-        console.error("❌ No preQualScript found!");
-    }
 })();
