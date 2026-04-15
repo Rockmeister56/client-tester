@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 8:50:30 AM
+// Generated: 4/15/2026, 9:11:56 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-15T15:50:30.248Z"
+    "updatedAt": "2026-04-15T16:11:56.106Z"
 };
 
     // =========================================
@@ -539,14 +539,7 @@
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
         script.onload = () => {
             const { createClient } = supabase;
-            // Create client with Realtime enabled (FIXED)
-            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                realtime: {
-                    params: {
-                        eventsPerSecond: 10
-                    }
-                }
-            });
+            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
             const tcsChannel = sbClient.channel("tess-commands");
             
@@ -578,7 +571,6 @@
                 console.log("📤 PONG sent to TCS");
             });
             
-            // 🔥 SUBSCRIBE TO CHANNEL (FIXED)
             tcsChannel.subscribe((status) => {
                 if (status === "SUBSCRIBED") {
                     console.log("✅ [REALTIME] Connected to Supabase channel");
@@ -988,6 +980,7 @@
         // startTessSession(); // REMOVED - Using initDaily instead
         if (typeof initDaily === "function") { initDaily(); }
     }
+})();
 
     function showPersistentAvatar() {
         const config = window.BotemiaConfig.modules?.splashScreen;
