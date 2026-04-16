@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 5:00:22 PM
+// Generated: 4/15/2026, 5:27:05 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-16T00:00:21.624Z"
+    "updatedAt": "2026-04-16T00:27:05.290Z"
 };
 
     // ===== TRIGGER PHRASE (from dashboard) =====
@@ -630,8 +630,8 @@
     } else {
         console.error("❌ No preQualScript found!");
     }
+
     // Function to broadcast Tess's speech to TCS via Supabase
-       // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
             if (window.supabaseChannel) {
@@ -720,6 +720,9 @@
         } catch(e) { console.error("❌ Daily init error:", e); }
     }
 
+    // ✅ EXPOSE INITDAILY TO WINDOW (So Dashboard tests can see it)
+    window.initDaily = initDaily;
+
     // ==========================================
     // 🍋 UNIVERSAL LISTENER (For PostMessages)
     // ==========================================
@@ -768,7 +771,6 @@
 
     // Initialize the listener immediately
     setupUniversalListener();
-
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         
@@ -1006,7 +1008,7 @@
         // 🔥 NEW: ALSO START DAILY SESSION IN BACKGROUND
         // This runs alongside the widget for transcription events
         // startTessSession(); // REMOVED - Using initDaily instead
-     initDaily();
+        if (typeof initDaily === "function") { initDaily(); }
         
         // Expose activateTess globally for button clicks (MOVED TO BOTTOM)
         window.activateTess = activateTess;
