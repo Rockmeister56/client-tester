@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 5:27:05 PM
+// Generated: 4/15/2026, 5:41:07 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-16T00:27:05.290Z"
+    "updatedAt": "2026-04-16T00:41:07.271Z"
 };
 
     // ===== TRIGGER PHRASE (from dashboard) =====
@@ -658,13 +658,26 @@
     // ==========================================
     
     async function initDaily() {
-        // 1. Ensure SDK is loaded
+        console.log("📞 initDaily: Starting process...");
+        
+        // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
-            console.log("⏳ Daily SDK missing, loading now...");
-            await loadDailySDK();
+            console.log("⏳ Daily SDK missing. Loading & Waiting...");
+            
+            try {
+                await loadDailySDK();
+                // Double check after load
+                if (typeof DailyIframe === "undefined") {
+                    console.error("❌ Failed to load Daily SDK after waiting.");
+                    return;
+                }
+            } catch (e) {
+                console.error("❌ Error loading Daily SDK:", e);
+                return;
+            }
         }
 
-        console.log("📞 Initializing Daily room...");
+        console.log("✅ Daily SDK loaded. Creating room...");
         try {
             const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
                 method: "POST",
@@ -672,6 +685,7 @@
                 body: JSON.stringify({})
             });
             const data = await response.json();
+            
             if (data.room_url && data.token) {
                 dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
                 window.dailyCallObject = dailyCallObject;
@@ -707,7 +721,6 @@
                         }
                         
                         // CHECK FOR TRIGGER PHRASE
-                        // We use the global TRIGGER_PHRASE defined at the top of the file
                         if (tessText.toLowerCase().includes("pre-qualified")) {
                             console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
                             if (window.preQualController && !window.preQualController.isActive) {
@@ -716,11 +729,15 @@
                         }
                     }
                 });
+            } else {
+                console.warn("⚠️ Daily API did not return room_url");
             }
-        } catch(e) { console.error("❌ Daily init error:", e); }
+        } catch(e) { 
+            console.error("❌ Daily init error:", e); 
+        }
     }
 
-    // ✅ EXPOSE INITDAILY TO WINDOW (So Dashboard tests can see it)
+    // ✅ CRITICAL: Expose initDaily to window IMMEDIATELY
     window.initDaily = initDaily;
 
     // ==========================================
