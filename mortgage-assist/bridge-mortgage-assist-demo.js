@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 11:33:16 PM
+// Generated: 4/15/2026, 11:57:05 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -661,6 +661,12 @@
                 console.log("✅ Joined Daily room (Server Connection Active)");
                 
                 dailyCallObject.on("app-message", (ev) => {
+                    // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
+                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
+                        console.log("🚫 Silencing default AI - controller is active");
+                        return;
+                    }
+                    
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         console.log("🤖 [DAILY] Tess said:", tessText);
