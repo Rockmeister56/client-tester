@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 9:24:25 PM
+// Generated: 4/15/2026, 9:50:15 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -7,7 +7,7 @@
     "use strict";
 
     // ===== TRIGGER PHRASE (from dashboard) =====
-    const TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
+    const TRIGGER_PHRASE = "secured pre-qualification interview";
     console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
 
     // =========================================
