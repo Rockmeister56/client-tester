@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 9:50:15 PM
+// Generated: 4/15/2026, 10:00:54 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -548,10 +548,6 @@
     } else {
         console.error("❌ No preQualScript found!");
     }
-
-    // ===== TRIGGER PHRASE (Global Scope Fix) =====
-    window.TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre-qualification interview";
-    console.log("🎯 Global TRIGGER_PHRASE set to:", window.TRIGGER_PHRASE);
 
     // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
