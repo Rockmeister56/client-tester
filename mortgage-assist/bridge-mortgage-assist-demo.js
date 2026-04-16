@@ -1,10 +1,14 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 11:57:05 PM
+// Generated: 4/16/2026, 12:42:51 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
+
+    // ===== GLOBAL VARIABLES =====
+    let isPreQualificationActive = false;
+    window.preQualController = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -165,91 +169,100 @@
     window.preQualScript = {
         steps: [
             { 
-                id: "loanPurpose", 
-                type: "choice",
-                text: "Tess: What type of loans do you currently offer on your website? Purchase, refinance, or both?",
-                question: "Tess: What type of loans do you currently offer on your website? Purchase, refinance, or both?",
-                field: "loanPurpose",
+                id: "step_0", 
+                type: "message",
+                text: "Tess: Perfect! I'm all set up and ready to help you get the best rates with a secured pre-qualification interview. Let's get started.",
+                question: "Tess: Perfect! I'm all set up and ready to help you get the best rates with a secured pre-qualification interview. Let's get started.",
+                field: "",
                 validation: "text",
-                options: ["Purchase","Refinance","Both","Not sure"]
+                options: null
+            },
+            { 
+                id: "loanType", 
+                type: "choice",
+                text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                question: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                field: "loanType",
+                validation: "text",
+                options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
+            },
+            { 
+                id: "monthlyIncome", 
+                type: "currency",
+                text: "Tess: What is your total gross monthly income?",
+                question: "Tess: What is your total gross monthly income?",
+                field: "monthlyIncome",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "employmentHistory", 
+                type: "choice",
+                text: "Tess: How long have you been at your current employer or in the same industry?",
+                question: "Tess: How long have you been at your current employer or in the same industry?",
+                field: "employmentHistory",
+                validation: "text",
+                options: ["Less than 1 year","1-2 years","3-5 years","5+ years"]
+            },
+            { 
+                id: "downPayment", 
+                type: "choice",
+                text: "Tess: How much do you plan on putting down for a down payment?",
+                question: "Tess: How much do you plan on putting down for a down payment?",
+                field: "downPayment",
+                validation: "text",
+                options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
             },
             { 
                 id: "creditScore", 
                 type: "choice",
-                text: "Tess: Do you currently capture credit score ranges on your forms?",
-                question: "Tess: Do you currently capture credit score ranges on your forms?",
+                text: "Tess: What is your estimated credit score?",
+                question: "Tess: What is your estimated credit score?",
                 field: "creditScore",
                 validation: "text",
-                options: ["Yes","No","Sometimes"]
+                options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
             },
             { 
-                id: "incomeCapture", 
-                type: "choice",
-                text: "Tess: What about income information? Do your forms ask for annual income?",
-                question: "Tess: What about income information? Do your forms ask for annual income?",
-                field: "incomeCapture",
-                validation: "text",
-                options: ["Yes","No","Only sometimes"]
-            },
-            { 
-                id: "currentFormRate", 
-                type: "choice",
-                text: "Tess: On average, what percentage of visitors complete your current forms?",
-                question: "Tess: On average, what percentage of visitors complete your current forms?",
-                field: "currentFormRate",
-                validation: "text",
-                options: ["Less than 20%","20-40%","40-60%","60%+","Not sure"]
-            },
-            { 
-                id: "websiteTraffic", 
-                type: "choice",
-                text: "Tess: About how many monthly visitors does your website get?",
-                question: "Tess: About how many monthly visitors does your website get?",
-                field: "websiteTraffic",
-                validation: "text",
-                options: ["Less than 1","000","1","000-5","000","5","000-10","000","10","000+","Not sure"]
-            },
-            { 
-                id: "step_5", 
+                id: "step_6", 
                 type: "text",
-                text: "Tess: Thank you for allowing me to demo how I can pre-qualify your future web visitors. Aside from a form that gets a 70% abandonment rate, I can help you capture up to 5x more leads.",
-                question: "Tess: Thank you for allowing me to demo how I can pre-qualify your future web visitors. Aside from a form that gets a 70% abandonment rate, I can help you capture up to 5x more leads.",
+                text: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                question: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
                 field: "",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "zoomInterest", 
+                type: "choice",
+                text: "Tess: Would you be interested in a free Zoom meeting with a high conversion specialist?",
+                question: "Tess: Would you be interested in a free Zoom meeting with a high conversion specialist?",
+                field: "zoomInterest",
+                validation: "text",
+                options: ["Yes","No"]
+            },
+            { 
+                id: "fullName", 
+                type: "text",
+                text: "Tess: Perfect! Can I start with your full name?",
+                question: "Tess: Perfect! Can I start with your full name?",
+                field: "fullName",
                 validation: "text",
                 options: null
             },
             { 
                 id: "scheduledDateTime", 
                 type: "text",
-                text: "Tess: What date and time works best for your Zoom demo?",
-                question: "Tess: What date and time works best for your Zoom demo?",
+                text: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                question: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
                 field: "scheduledDateTime",
-                validation: "text",
-                options: null
-            },
-            { 
-                id: "step_7", 
-                type: "text",
-                text: "Tess: Great! Let me get your contact info to send the Zoom invitation.",
-                question: "Tess: Great! Let me get your contact info to send the Zoom invitation.",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
-                id: "fullName", 
-                type: "text",
-                text: "Tess: What's your full name?",
-                question: "Tess: What's your full name?",
-                field: "fullName",
                 validation: "text",
                 options: null
             },
             { 
                 id: "email", 
                 type: "email",
-                text: "Tess: What's your email address? I'll send the Zoom link there.",
-                question: "Tess: What's your email address? I'll send the Zoom link there.",
+                text: "Tess: Perfect! And what email address can I send your confirmation to?",
+                question: "Tess: Perfect! And what email address can I send your confirmation to?",
                 field: "email",
                 validation: "text",
                 options: null
@@ -257,17 +270,26 @@
             { 
                 id: "phone", 
                 type: "phone",
-                text: "Tess: And your phone number? In case we need to reach you before the demo.",
-                question: "Tess: And your phone number? In case we need to reach you before the demo.",
+                text: "Tess: And may I get your phone number please?",
+                question: "Tess: And may I get your phone number please?",
                 field: "phone",
                 validation: "text",
                 options: null
             },
             { 
-                id: "step_11", 
+                id: "specialRequests", 
                 type: "text",
-                text: "Tess: Perfect! ✅",
-                question: "Tess: Perfect! ✅",
+                text: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                question: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                field: "specialRequests",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "step_13", 
+                type: "text",
+                text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
+                question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
                 field: "",
                 validation: "text",
                 options: null
@@ -500,9 +522,7 @@
                 
                 if (command === "START_PRE_QUAL") {
                     console.log("🎯 [REALTIME] START_PRE_QUAL received!");
-                    if (window.preQualController && !window.preQualController.isActive) {
-                        window.preQualController.startInterview();
-                    }
+                    forcePreQualification();
                 }
             });
             
@@ -649,7 +669,7 @@
                 if (!container) {
                     container = document.createElement('div');
                     container.id = 'daily-container';
-                    container.style.display = 'none'; // Run in background
+                    container.style.display = 'none';
                     document.body.appendChild(container);
                 }
                 
@@ -683,9 +703,7 @@
                         // CHECK FOR TRIGGER PHRASE (Using Global)
                         if (tessText.toLowerCase().includes(window.TRIGGER_PHRASE.toLowerCase())) {
                             console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
-                            if (window.preQualController && !window.preQualController.isActive) {
-                                window.preQualController.startInterview();
-                            }
+                            forcePreQualification();
                         }
                     }
                 });
@@ -696,7 +714,6 @@
             console.error("❌ Daily init error:", e); 
         }
     }
-
     // ==========================================
     // 🍋 UNIVERSAL LISTENER (For PostMessages)
     // ==========================================
@@ -761,14 +778,17 @@
         let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
+        
         // 3. Set API KEY (Required for Auth)
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
         widget.setAttribute('api-key', apiKey);
         widget.apiKey = apiKey;
+        
         // 4. Set ROOM ID (Shared Session)
         let sessionId = window.tessSessionId || 'session-' + crypto.randomUUID();
         widget.setAttribute('room-id', sessionId);
         widget.roomId = sessionId;
+        
         // 5. Dimensions & State
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
@@ -776,58 +796,41 @@
         widget.id = 'main-widget';
         widget.style.display = 'none';
         
-        // 6. Listener
+        // 6. Listener (No intro message - LemonSlice handles initial conversation)
         widget.addEventListener('ready', () => {
-            console.log('[Bridge] Main Widget Ready.');
-            forceMortgageIntro(widget);
+            console.log('[Bridge] Main Widget Ready - Waiting for trigger phrase');
         });
         
         return widget;
     }
 
-    function forceMortgageIntro(widget) {
-        console.log("🚀 forceMortgageIntro Triggered");
+    // ===== FORCE PRE-QUALIFICATION FUNCTION =====
+    function forcePreQualification() {
+        console.log("🚀 forcePreQualification - Starting pre-qualification interview");
         
-        // 1. Ensure Widget is Active
-        widget.setAttribute('controlled-widget-state', 'active');
-        
-        // 2. Force the Widget to read its attributes (The Handshake)
-        try {
-            if (typeof widget.initialize === 'function') {
-                widget.initialize();
-            } else {
-                // Fallback: Re-set attributes to trigger internal setters
-                const id = widget.getAttribute('client-id');
-                const key = widget.getAttribute('api-key');
-                widget.setAttribute('client-id', id); 
-                widget.setAttribute('api-key', key);
-            }
-            console.log("✅ Authentication Handshake Forced");
-        } catch (e) {
-            console.warn("⚠️ Handshake warning:", e);
+        // Prevent duplicate starts
+        if (isPreQualificationActive) {
+            console.log("⚠️ Pre-qualification already active, skipping");
+            return;
         }
         
-        // 3. Ensure Mic is On
-        try { widget.micOn?.(); widget.unmute?.(); } catch(e) {}
+        // Check if controller and script are ready
+        if (!window.preQualController) {
+            console.error("❌ preQualController not found");
+            return;
+        }
         
-        const message = "Hi! I'm Tess, your mortgage AI assistant. I'm here to help you with rates, qualification, and finding the right loan program. What's your first name?";
+        if (!window.preQualScript) {
+            console.error("❌ preQualScript not found");
+            return;
+        }
         
-        // 4. Send Message with a delay
-        setTimeout(() => {
-            console.log("🗣️ Sending intro message...");
-            try {
-                if (typeof widget.sendMessage === 'function') {
-                    widget.sendMessage(message);
-                    console.log("✅ Message sent successfully");
-                } else {
-                    console.error("❌ ERROR: sendMessage missing");
-                }
-            } catch (e) {
-                console.error("❌ CRASH: " + e.message);
-            }
-        }, 1500); // Reduced to 1.5s
+        // Set the script and start
+        window.preQualController.script = window.preQualScript;
+        window.preQualController.startInterview();
+        isPreQualificationActive = true;
+        console.log("✅ Pre-qualification interview started");
     }
-
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
         if (!config || !config.enabled) return;
