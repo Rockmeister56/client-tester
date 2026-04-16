@@ -1,96 +1,14 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 7:19:26 PM
+// Generated: 4/15/2026, 9:24:25 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
 
-    // ===== EMBEDDED CLIENT CONFIGURATION =====
-    window.BotemiaConfig = {
-    "id": "mortgage-assist-demo",
-    "name": "Mortgage Assist Demo",
-    "websiteUrl": "https://client-tester.netlify.app/mortgage-assist/",
-    "agentId": "agent_7b0776ef6b855de5",
-    "widgetId": "",
-    "apiKey": "",
-    "environment": "production",
-    "industry": "mortgage",
-    "modules": {
-        "emailConfig": {
-            "loanOfficerEmail": "loans@clientcompany.com",
-            "ccEmail": "",
-            "emailSubject": "New Lead: {{name}}"
-        },
-        "splashScreen": {
-            "enabled": true,
-            "agentId": "agent_7b0776ef6b855de5",
-            "title": "Meet Tess",
-            "subtitle": "Your Personal AI Smart Guide",
-            "tessVideoUrl": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ",
-            "tessVideoFit": "cover",
-            "tickerKeywords": "Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans",
-            "gradientCenter": "#1e4a8a",
-            "gradientOuter": "#0a1a2f",
-            "primaryButton": {
-                "text": "Get AI help with Tess",
-                "gradientTop": "#f8c400",
-                "gradientBottom": "#d4a000",
-                "hoverTop": "#ffd700",
-                "hoverBottom": "#e0b000",
-                "textColor": "#0a0f1e"
-            },
-            "secondaryButton": {
-                "text": "Just Browsing",
-                "gradientTop": "#3a4050",
-                "gradientBottom": "#2a2f3f",
-                "hoverTop": "#4a5060",
-                "hoverBottom": "#3a4050",
-                "textColor": "#ffffff"
-            },
-            "persistentButton": {
-                "enabled": true,
-                "position": "middle-right",
-                "action": "activate-tess",
-                "gradientTop": "#f8c400",
-                "gradientBottom": "#d4a000"
-            },
-            "branding": {
-                "name": "",
-                "logo": ""
-            }
-        },
-        "testimonial": {
-            "groups": []
-        },
-        "videoVault": {
-            "videos": []
-        },
-        "smartScreen": {
-            "action": "showBestMatch",
-            "images": []
-        },
-        "websiteInfo": {
-            "triggers": [],
-            "infoType": "navigation",
-            "action": "showSmartNavigation"
-        },
-        "preQualification": {
-            "enabled": true,
-            "knowledgeBaseScript": "mortgage",
-            "triggerPhrase": "secured pre qualification interview",
-            "emailSubject": "New Lead: {{name}}",
-            "emailTemplate": ""
-        }
-    },
-    "updatedAt": "2026-04-16T02:19:25.807Z"
-};
-
     // ===== TRIGGER PHRASE (from dashboard) =====
-    // const TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
-    // console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
-
-    const TRIGGER_PHRASE = "secured pre qualification interview";
+    const TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
+    console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
 
     // =========================================
     // 🍋 AUTO-LOADER: EMAILJS LIBRARY
@@ -632,7 +550,7 @@
     }
 
     // ===== TRIGGER PHRASE (Global Scope Fix) =====
-    window.TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
+    window.TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre-qualification interview";
     console.log("🎯 Global TRIGGER_PHRASE set to:", window.TRIGGER_PHRASE);
 
     // Function to broadcast Tess's speech to TCS via Supabase
