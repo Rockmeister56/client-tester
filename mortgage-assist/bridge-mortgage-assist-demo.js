@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 5:41:07 PM
+// Generated: 4/15/2026, 6:53:05 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -83,7 +83,7 @@
             "emailTemplate": ""
         }
     },
-    "updatedAt": "2026-04-16T00:41:07.271Z"
+    "updatedAt": "2026-04-16T01:53:04.696Z"
 };
 
     // ===== TRIGGER PHRASE (from dashboard) =====
@@ -631,6 +631,10 @@
         console.error("❌ No preQualScript found!");
     }
 
+    // ===== TRIGGER PHRASE (Global Scope Fix) =====
+    window.TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase || "secured pre qualification interview";
+    console.log("🎯 Global TRIGGER_PHRASE set to:", window.TRIGGER_PHRASE);
+
     // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
@@ -652,6 +656,24 @@
             console.error("❌ Failed to send via Supabase:", e);
         }
     };
+
+    // ==========================================
+    // 🍋 DAILY SDK LOADER (Explicit Definition)
+    // ==========================================
+    function loadDailySDK() {
+        return new Promise((resolve, reject) => {
+            if (typeof DailyIframe !== "undefined") {
+                console.log("✅ Daily SDK already loaded");
+                resolve();
+                return;
+            }
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/@daily-co/daily-js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
 
     // ==========================================
     // 🍋 EXTRACTED: DAILY INITIALIZATION
@@ -720,8 +742,8 @@
                             });
                         }
                         
-                        // CHECK FOR TRIGGER PHRASE
-                        if (tessText.toLowerCase().includes("pre-qualified")) {
+                        // CHECK FOR TRIGGER PHRASE (Using Global)
+                        if (tessText.toLowerCase().includes(window.TRIGGER_PHRASE.toLowerCase())) {
                             console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
                             if (window.preQualController && !window.preQualController.isActive) {
                                 window.preQualController.startInterview();
