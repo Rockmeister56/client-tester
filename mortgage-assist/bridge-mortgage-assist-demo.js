@@ -1,14 +1,31 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/15/2026, 10:00:54 PM
+// Generated: 4/15/2026, 10:36:14 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
 (function() {
     "use strict";
 
+    // ===== EMBEDDED CLIENT CONFIGURATION =====
+    window.BotemiaConfig = {
+        "id": "mortgage-assist-demo",
+        "name": "Mortgage Assist Demo",
+        "websiteUrl": "https://client-tester.netlify.app/mortgage-assist/",
+        "agentId": "agent_7b0776ef6b855de5",
+        "modules": {
+            "preQualification": {
+                "triggerPhrase": "secured pre-qualification interview"
+            }
+        }
+    };
+
     // ===== TRIGGER PHRASE (from dashboard) =====
-    const TRIGGER_PHRASE = "secured pre-qualification interview";
-    console.log("🎯 Bridge using trigger phrase:", TRIGGER_PHRASE);
+    window.TRIGGER_PHRASE = window.BotemiaConfig.modules?.preQualification?.triggerPhrase;
+    if (!window.TRIGGER_PHRASE) {
+        console.error("❌ CRITICAL: No trigger phrase configured in dashboard!");
+    } else {
+        console.log("🎯 Bridge using trigger phrase:", window.TRIGGER_PHRASE);
+    }
 
     // =========================================
     // 🍋 AUTO-LOADER: EMAILJS LIBRARY
