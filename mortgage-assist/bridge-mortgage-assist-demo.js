@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/16/2026, 1:08:10 PM
+// Generated: 4/17/2026, 12:11:24 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.4 - BATON PASS FIX
 
@@ -18,7 +18,7 @@
         "agentId": "agent_7b0776ef6b855de5",
         "modules": {
             "preQualification": {
-                "triggerPhrase": "it will only take a few seconds"
+                "triggerPhrase": "I am ready to begin with the first question"
             },
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Smart Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}}
         }
@@ -169,15 +169,6 @@
     window.preQualScript = {
         steps: [
             { 
-                id: "step_0", 
-                type: "message",
-                text: "Tess: Perfect! I'm all set up and ready to help you get the best rates with a secured pre-qualification interview. Let's get started.",
-                question: "Tess: Perfect! I'm all set up and ready to help you get the best rates with a secured pre-qualification interview. Let's get started.",
-                field: "",
-                validation: "text",
-                options: null
-            },
-            { 
                 id: "loanType", 
                 type: "choice",
                 text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
@@ -223,8 +214,8 @@
                 options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
             },
             { 
-                id: "step_6", 
-                type: "text",
+                id: "step_5", 
+                type: "message",
                 text: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
                 question: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
                 field: "",
@@ -286,8 +277,8 @@
                 options: null
             },
             { 
-                id: "step_13", 
-                type: "text",
+                id: "step_12", 
+                type: "message",
                 text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
                 question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
                 field: "",
@@ -434,8 +425,24 @@
         speak(text) {
             if (!text) return;
             console.log("🤖 Tess says: " + text);
-            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
-                window.mainWidget.sendMessage(text);
+            
+            if (window.mainWidget) {
+                // Method 1: Try sendMessage
+                if (typeof window.mainWidget.sendMessage === "function") {
+                    window.mainWidget.sendMessage(text);
+                    console.log("📤 sendMessage called");
+                }
+                // Method 2: Set message attribute
+                window.mainWidget.setAttribute('message', text);
+                console.log("📤 message attribute set");
+                // Method 3: Dispatch custom event
+                const event = new CustomEvent('lemon-slice-message', {
+                    detail: { message: text, type: 'agent_response' }
+                });
+                window.mainWidget.dispatchEvent(event);
+                console.log("📤 CustomEvent dispatched");
+            } else {
+                console.warn("⚠️ mainWidget not available");
             }
         }
 
