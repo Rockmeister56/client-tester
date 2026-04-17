@@ -293,45 +293,105 @@
         });
     }
 
+       // ==========================================
+    // 🍋 EXTRACTED: DAILY INITIALIZATION (FIXED)
+    // ==========================================
+    
     async function initDaily() {
         console.log("📞 initDaily: Starting process...");
+        
+        // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
-            try { await loadDailySDK(); } catch(e) { console.error("❌ Error loading Daily SDK:", e); return; }
+            console.log("⏳ Daily SDK missing. Loading & Waiting...");
+            try {
+                await loadDailySDK();
+                if (typeof DailyIframe === "undefined") {
+                    console.error("❌ Failed to load Daily SDK after waiting.");
+                    return;
+                }
+            } catch (e) {
+                console.error("❌ Error loading Daily SDK:", e);
+                return;
+            }
         }
+
+        console.log("✅ Daily SDK loaded. Creating room...");
         try {
-            const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+            const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({})
+            });
             const data = await response.json();
+            
             if (data.room_url && data.token) {
-                window.dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
+                dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
+                window.dailyCallObject = dailyCallObject;
+                
+                // Create hidden container if not exists
                 let container = document.getElementById("daily-container");
-                if (!container) { container = document.createElement('div'); container.id = 'daily-container'; container.style.display = 'none'; document.body.appendChild(container); }
-                if (window.dailyCallObject.iframe()) { container.appendChild(window.dailyCallObject.iframe()); }
-                await window.dailyCallObject.join({ url: data.room_url, token: data.token });
-                console.log("✅ Joined Daily room");
-
-                window.dailyCallObject.on("app-message", (ev) => {
-                    // Silence AI if controller is active
-                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") return;
-
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'daily-container';
+                    container.style.display = 'none';
+                    document.body.appendChild(container);
+                }
+                
+                if (dailyCallObject.iframe()) { 
+                    container.appendChild(dailyCallObject.iframe()); 
+                }
+                
+                await dailyCallObject.join({ url: data.room_url, token: data.token });
+                console.log("✅ Joined Daily room (Server Connection Active)");
+                
+                dailyCallObject.on("app-message", (ev) => {
+                    // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
+                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
+                        console.log("🚫 Silencing default AI - controller is active");
+                        return;
+                    }
+                    
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         console.log("🤖 [DAILY] Tess said:", tessText);
                         
                         // Broadcast to Supabase
                         if (window.supabaseChannel) {
-                            window.supabaseChannel.send({ type: 'broadcast', event: 'tess_transcript', payload: { text: tessText, timestamp: Date.now() } });
+                            window.supabaseChannel.send({
+                                type: "broadcast",
+                                event: "tess_transcript",
+                                payload: { text: tessText, timestamp: Date.now() }
+                            });
                         }
                         
-                        // 🍋 CRITICAL FIX: CHECK FOR SPECIFIC TRIGGER
-                        // We normalize to lowercase just in case, but the phrase is distinct
-                        if (tessText.toLowerCase().includes("yes_initiate_prequal") || tessText.toLowerCase().includes("i am ready to begin with the first question")) {
-                             console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
-                             forcePreQualification();
+                        // ===== 🔥 NEW: FUZZY TRIGGER LOGIC =====
+                        // We check if ANY of these keywords appear in her sentence
+                        const fuzzyTriggers = [
+                            "ready to begin", 
+                            "first question", 
+                            "begin with the first", 
+                            "start the interview",
+                            "YES_INITIATE_PREQUAL" // Keep exact match as backup
+                        ];
+                        
+                        const lowerText = tessText.toLowerCase();
+                        
+                        // Check if she contains ANY of the trigger phrases
+                        const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
+                        
+                        if (hasTrigger) {
+                            console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
+                            console.log("🔥 Triggered by:", tessText); // Log exactly what she said
+                            forcePreQualification();
                         }
                     }
                 });
+            } else {
+                console.warn("⚠️ Daily API did not return room_url");
             }
-        } catch(e) { console.error("❌ Daily init error:", e); }
+        } catch(e) { 
+            console.error("❌ Daily init error:", e); 
+        }
     }
 
     function setupUniversalListener() {
