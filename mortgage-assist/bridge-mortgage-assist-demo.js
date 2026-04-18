@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/17/2026, 5:58:49 AM
+// Generated: 4/18/2026, 1:09:39 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.6 - DYNAMIC STEPS & FUZZY FIX
 
@@ -18,7 +18,7 @@
         "agentId": "agent_7b0776ef6b855de5",
         "modules": {
             "preQualification": {
-                "triggerPhrase": "Are you ready to get started"
+                "triggerPhrase": "are you ready for your first question"
             },
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Smart Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}}
         }
@@ -428,37 +428,101 @@
         });
     }
     async function initDaily() {
-        console.log("📞 initDaily: Starting...");
+        console.log("📞 initDaily: Starting process...");
+        
+        // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
-            try { await loadDailySDK(); } 
-            catch (e) { console.error("❌ Error loading Daily SDK:", e); return; }
+            console.log("⏳ Daily SDK missing. Loading & Waiting...");
+            try {
+                await loadDailySDK();
+                // Double check after load
+                if (typeof DailyIframe === "undefined") {
+                    console.error("❌ Failed to load Daily SDK after waiting.");
+                    return;
+                }
+            } catch (e) {
+                console.error("❌ Error loading Daily SDK:", e);
+                return;
+            }
         }
+
+        console.log("✅ Daily SDK loaded. Creating room...");
         try {
-            const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+            const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({})
+            });
             const data = await response.json();
+            
             if (data.room_url && data.token) {
-                window.dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
+                dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
+                window.dailyCallObject = dailyCallObject;
+                
+                // Create hidden container if not exists
                 let container = document.getElementById("daily-container");
-                if (!container) { container = document.createElement('div'); container.id = 'daily-container'; container.style.display = 'none'; document.body.appendChild(container); }
-                if (window.dailyCallObject.iframe()) { container.appendChild(window.dailyCallObject.iframe()); }
-                await window.dailyCallObject.join({ url: data.room_url, token: data.token });
-                console.log("✅ Joined Daily room");
-                window.dailyCallObject.on("app-message", (ev) => {
-                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") { return; }
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'daily-container';
+                    container.style.display = 'none';
+                    document.body.appendChild(container);
+                }
+                
+                if (dailyCallObject.iframe()) { 
+                    container.appendChild(dailyCallObject.iframe()); 
+                }
+                
+                await dailyCallObject.join({ url: data.room_url, token: data.token });
+                console.log("✅ Joined Daily room (Server Connection Active)");
+                
+                dailyCallObject.on("app-message", (ev) => {
+                    // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
+                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
+                        console.log("🚫 Silencing default AI - controller is active");
+                        return;
+                    }
+                    
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
-                        if (window.supabaseChannel) { window.supabaseChannel.send({ type: 'broadcast', event: 'tess_transcript', payload: { text: tessText, timestamp: Date.now() } }); }
-                        // ===== FUZZY TRIGGER LOGIC =====
-                        const fuzzyTriggers = ["ready to begin", "first question", "begin with the first", "start interview", "YES_INITIATE_PREQUAL"];
+                        console.log("🤖 [DAILY] Tess said:", tessText);
+                        
+                        // Broadcast to Supabase
+                        if (window.supabaseChannel) {
+                            window.supabaseChannel.send({
+                                type: "broadcast",
+                                event: "tess_transcript",
+                                payload: { text: tessText, timestamp: Date.now() }
+                            });
+                        }
+                        
+                        // ===== 🔥 NEW: FUZZY TRIGGER LOGIC =====
+                        // We check if ANY of these keywords appear in her sentence
+                        const fuzzyTriggers = [
+                            "ready to begin", 
+                            "first question", 
+                            "begin with the first", 
+                            "start interview",
+                            "YES_INITIATE_PREQUAL" // Keep exact match as backup
+                        ];
+                        
                         const lowerText = tessText.toLowerCase();
-                        if (fuzzyTriggers.some(trigger => lowerText.includes(trigger))) {
-                            console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
+                        
+                        // Check if she contains ANY of the trigger phrases
+                        const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
+                        
+                        if (hasTrigger) {
+                            console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
+                            console.log("🔥 Triggered by:", tessText); // Log exactly what she said
                             forcePreQualification();
                         }
                     }
                 });
-            } else { console.warn("⚠️ Daily API did not return room_url"); }
-        } catch(e) { console.error("❌ Daily init error:", e); }
+            } else {
+                console.warn("⚠️ Daily API did not return room_url");
+            }
+        } catch(e) { 
+            console.error("❌ Daily init error:", e); 
+        }
     }
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
