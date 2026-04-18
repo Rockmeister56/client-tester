@@ -693,28 +693,26 @@
             window.mainWidget.style.display = 'block';
         }
     }
-    window.disableBridgeTriggers = false;
+  window.disableBridgeTriggers = false;
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
-        script.onload = () => { console.log('✅ Widget script loaded'); }; 
+        script.onload = () => { console.log('✅ Widget script loaded'); };
         script.onerror = () => console.error('❌ Failed to load widget');
         document.head.appendChild(script);
         setTimeout(() => { showSplash(); }, 100);
     }
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
-    else { initWidget(); }
-    console.log('✅ Botemia Bridge v5.6 loaded for', window.BotemiaConfig.name);
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); } else { initWidget(); }
+    console.log('✅ Botemia Bridge v5.5 loaded for', window.BotemiaConfig.name);
+    
+    // ===== CLIENT ANNOUNCEMENT =====
     function announceToTCS() {
-        if (window.opener) {
-            window.opener.postMessage({ type: 'BRIDGE_ACTIVE', clientId: window.BotemiaConfig.id, url: window.location.href }, '*');
-        }
         if (window.supabaseChannel) {
             window.supabaseChannel.send({ type: 'broadcast', event: 'client_info', payload: { type: 'CLIENT_INFO', clientId: window.BotemiaConfig.id, url: window.location.href, timestamp: Date.now() } });
-            console.log('📢 Announced to TCS via Supabase Realtime');
         }
     }
     setTimeout(announceToTCS, 2000);
 })();
+
