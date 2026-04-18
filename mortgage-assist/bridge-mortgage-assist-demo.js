@@ -10,6 +10,7 @@
     let isPreQualificationActive = false;
     window.preQualController = null;
     let dailyCallObject = null;
+    let dailyRoomData = null; 
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
