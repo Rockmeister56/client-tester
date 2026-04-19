@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 11:55:53 AM
+// Generated: 4/19/2026, 12:24:00 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -626,9 +626,9 @@
                 }
                 
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
-                console.log("✅ Joined Daily room (Server Connection Active");
+                console.log("✅ Joined Daily room (Server Connection Active)");
                 
-                // ===== 🎧 CLEAN AUDIO LISTENER =====
+                // ===== 🎧 CLEAN AUDIO LISTENER (WITH DELAY) =====
                 dailyCallObject.on("app-message", (ev) => {
                     
                     // 1. SILENCE LOGIC
@@ -651,20 +651,27 @@
                             });
                         }
                         
-                        // ===== 🔥 FUZZY TRIGGER LOGIC =====
+                        // ===== 🔥 SMART TRIGGER (WITH DELAY) =====
                         const fuzzyTriggers = [
                             "are you ready for your first question", 
                             "first question", 
-                            "YES_INITIATE_PREQUAL" // Fixed Typo
+                            "YES_INITIATE_PREQUAL"
                         ];
                         
                         const lowerText = tessText.toLowerCase();
                         const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
                         
                         if (hasTrigger) {
-                            console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
-                            console.log("🔥 Triggered by:", tessText);
-                            forcePreQualification();
+                            console.log("🎯 Trigger heard! Waiting 1.5s for silence...");
+                            
+                            // ⏱️ CLEAR PREVIOUS TIMEOUTS (Debounce)
+                            if (window.triggerTimeout) clearTimeout(window.triggerTimeout);
+                            
+                            // ⏱️ SET NEW TIMEOUT (The "Polite" Delay)
+                            window.triggerTimeout = setTimeout(() => {
+                                console.log("⏱️ Silence detected. Starting Interview.");
+                                forcePreQualification();
+                            }, 1500); // Waits 1.5 seconds
                         }
                     }
                 });
