@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/18/2026, 5:23:36 PM
+// Generated: 4/18/2026, 5:37:16 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.6 - DYNAMIC STEPS & FUZZY FIX
 
@@ -10,6 +10,7 @@
     let isPreQualificationActive = false;
     window.preQualController = null;
     let dailyCallObject = null;
+    let dailyRoomData = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -430,6 +431,8 @@
     }
     async function initDaily() {
         console.log("📞 initDaily: Starting process...");
+        
+        // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
             console.log("⏳ Daily SDK missing. Loading & Waiting...");
             try {
@@ -443,6 +446,7 @@
                 return;
             }
         }
+
         console.log("✅ Daily SDK loaded. Creating room...");
         try {
             const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
@@ -451,29 +455,39 @@
                 body: JSON.stringify({})
             });
             const data = await response.json();
+            
             if (data.room_url && data.token) {
                 dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
                 window.dailyCallObject = dailyCallObject;
+                
+                // Create hidden container if not exists
                 let container = document.getElementById("daily-container");
                 if (!container) {
-                    container = document.createElement('div');
-                    container.id = 'daily-container';
-                    container.style.display = 'none';
+                    container = document.createElement("div");
+                    container.id = "daily-container";
+                    container.style.display = "none";
                     document.body.appendChild(container);
                 }
-                if (dailyCallObject.iframe()) {
-                    container.appendChild(dailyCallObject.iframe());
+                
+                if (dailyCallObject.iframe()) { 
+                    container.appendChild(dailyCallObject.iframe()); 
                 }
+                
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
                 console.log("✅ Joined Daily room (Server Connection Active)");
+                
                 dailyCallObject.on("app-message", (ev) => {
+                    // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
                         console.log("🚫 Silencing default AI - controller is active");
                         return;
                     }
+                    
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         console.log("🤖 [DAILY] Tess said:", tessText);
+                        
+                        // Broadcast to Supabase
                         if (window.supabaseChannel) {
                             window.supabaseChannel.send({
                                 type: "broadcast",
@@ -481,15 +495,19 @@
                                 payload: { text: tessText, timestamp: Date.now() }
                             });
                         }
+                        
+                        // ===== 🔥 FUZZY TRIGGER LOGIC =====
                         const fuzzyTriggers = [
-                            "ready to begin",
-                            "first question",
-                            "begin with the first",
+                            "ready to begin", 
+                            "first question", 
+                            "begin with the first", 
                             "start the interview",
                             "YES_INITIATE_PREQUAL"
                         ];
+                        
                         const lowerText = tessText.toLowerCase();
                         const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
+                        
                         if (hasTrigger) {
                             console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
                             console.log("🔥 Triggered by:", tessText);
@@ -500,8 +518,8 @@
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
             }
-        } catch(e) {
-            console.error("❌ Daily init error:", e);
+        } catch(e) { 
+            console.error("❌ Daily init error:", e); 
         }
     }
 
