@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/18/2026, 5:37:16 PM
+// Generated: 4/18/2026, 5:58:21 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.6 - DYNAMIC STEPS & FUZZY FIX
 
@@ -497,11 +497,9 @@
                         }
                         
                         // ===== 🔥 FUZZY TRIGGER LOGIC =====
-                        const fuzzyTriggers = [
-                            "ready to begin", 
+                          const fuzzyTriggers = [
+                            "are you ready for your first question", 
                             "first question", 
-                            "begin with the first", 
-                            "start the interview",
                             "YES_INITIATE_PREQUAL"
                         ];
                         
