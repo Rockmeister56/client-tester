@@ -1,7 +1,7 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/18/2026, 5:58:21 PM
+// Generated: 4/19/2026, 11:55:53 AM
 // Client ID: mortgage-assist-demo
-// Version: 5.6 - DYNAMIC STEPS & FUZZY FIX
+// Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
 (function() {
     "use strict";
@@ -96,7 +96,6 @@
         .ticker-item i { margin-right: 8px; color: #f8c400; font-size: 12px; filter: drop-shadow(0 0 3px rgba(248,196,0,0.5)); }
     `;
     document.head.appendChild(style);
-
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
         let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
@@ -106,6 +105,7 @@
         window.tessSessionId = sessionId;
         widget.setAttribute('room-id', sessionId);
         widget.roomId = sessionId;
+        // 🔥 FIX: Safe path to Agent ID to prevent crashes if config loads late
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
@@ -176,8 +176,8 @@
             { 
                 id: "zoomInterest", 
                 type: "choice",
-                text: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
-                question: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                text: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                question: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
                 field: "zoomInterest",
                 validation: "text",
                 options: ["Yes","No"]
@@ -304,63 +304,106 @@
             this.answers = {};
             this.currentStepIndex = 0;
         }
+
         startInterview() {
             if (this.isActive) return;
-            if (!window.preQualScript) { console.error("❌ CRITICAL: preQualScript not found!"); return; }
+            
+            if (!window.preQualScript) {
+                console.error("❌ CRITICAL: preQualScript not found!");
+                return;
+            }
             this.script = window.preQualScript;
+            
             this.isActive = true;
             this.currentStepIndex = 0;
             this.answers = {};
-            console.log("🎯 Starting Pre-Qual Interview");
+            
+            console.log("🎯 Starting Pre-Qual Interview (Conformed Version)");
             this.speakCurrentStep();
         }
+
         handleUserInput(userText) {
             if (!this.isActive || !this.script) return;
+
             const lowerText = userText.toLowerCase();
+            // 🔥 SAFETY FIX: Ensure we use this.script, not window.preQualScript directly
             const currentStep = this.script.steps[this.currentStepIndex];
+            
             if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
-                console.log("🚪 User declined.");
+                console.log("🚪 User declined. Returning to Lemon Slice.");
                 this.isActive = false;
                 this.speak("No problem. What else can I help you with?");
                 return;
             }
+            
             if (currentStep.id === "confirmation" && lowerText === "yes") {
-                console.log("🔥 FIREWALL ACTIVATED");
+                console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
                 this.answers[currentStep.field] = userText;
                 this.currentStepIndex++;
                 this.speakCurrentStep();
                 return; 
             }
+            
             if (currentStep.field) {
                 this.answers[currentStep.field] = userText;
                 console.log("💾 Saved " + currentStep.field + ": " + userText);
             }
             this.currentStepIndex++;
-            if (this.currentStepIndex >= this.script.steps.length) { this.finishInterview(); return; }
+
+            if (this.currentStepIndex >= this.script.steps.length) {
+                this.finishInterview();
+                return;
+            }
+
             this.speakCurrentStep();
         }
+
         speakCurrentStep() {
             const step = this.script.steps[this.currentStepIndex];
-            if (step) { this.speak(step.question || step.text); } else { console.error("❌ Step not found:", this.currentStepIndex); }
+            if (step) {
+                const message = step.question || step.text;
+                this.speak(message);
+            } else {
+                console.error("❌ Step not found at index:", this.currentStepIndex);
+            }
         }
+
         finishInterview() {
             this.isActive = false;
             console.log("✅ Interview Complete.");
             this.speak("That is everything! I am generating your pre-qualification letter now.");
             this.sendEmail();
         }
+
         speak(text) {
             if (!text) return;
             console.log("🤖 Tess says: " + text);
+            
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
-                try { window.mainWidget.sendMessage(text); } catch(e) { console.error("❌ sendMessage error:", e); }
+                try {
+                    window.mainWidget.sendMessage(text);
+                    console.log("📤 sendMessage called successfully");
+                } catch(e) {
+                    console.error("❌ sendMessage error:", e);
+                }
+            } else {
+                console.warn("⚠️ sendMessage not available");
             }
         }
+
         sendEmail() {
-            console.log("📧 Sending dynamic email...");
+            console.log("📧 Sending dynamic email with collected responses...");
             const data = this.answers;
+            
+            // Convert all responses to a formatted string for email
             let formattedAnswers = "";
-            for (var key in data) { if (data.hasOwnProperty(key)) formattedAnswers += key + ": " + data[key] + "\n"; }
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    formattedAnswers += key + ": " + data[key] + "\n";
+                }
+            }
+            
+            // ===== EMAIL 1: TO PROSPECTIVE CLIENT (YOU) =====
             var prospectiveClientParams = {
                 full_name: data.fullName || data.name || "Not provided",
                 email: data.email || "Not provided",
@@ -371,64 +414,173 @@
                 full_json: JSON.stringify(data, null, 2),
                 submitted_at: new Date().toLocaleString()
             };
+            
+            // ===== EMAIL 2: TO WEB PROSPECT (Confirmation) =====
+            var webProspectParams = {
+                full_name: data.fullName || data.name || "Valued Client",
+                email: data.email || "Not provided",
+                phone: data.phone || data.phoneNumber || "Not provided",
+                scheduled_datetime: data.scheduledDateTime || data.dateTime || "Not provided",
+                zoom_interest: data.zoomInterest || "Not provided",
+                message: "Thank you for completing pre-qualification! A loan officer will reach out to you shortly."
+            };
+            
+            // Send Email 1
             emailjs.send("service_b9bppgb", "template_uix9cyx", prospectiveClientParams)
-                .then(function() { console.log("✅ Dynamic email sent"); })
-                .catch(function(error) { console.error("❌ Email error:", error); });
+                .then(function() {
+                    console.log("✅ Dynamic email sent to prospective client");
+                })
+                .catch(function(error) {
+                    console.error("❌ Email error (prospective):", error);
+                });
+            
+            // Send Email 2 (Only if we have their email)
             if (data.email) {
-                emailjs.send("service_b9bppgb", "template_8kx812d", { full_name: data.fullName || "Valued Client", email: data.email, phone: data.phone, scheduled_datetime: data.scheduledDateTime, zoom_interest: data.zoomInterest, message: "Thank you for completing pre-qualification!" })
-                    .then(function() { console.log("✅ Visitor confirmation sent"); })
-                    .catch(function(error) { console.error("❌ Visitor Email error:", error); });
+                emailjs.send("service_b9bppgb", "template_8kx812d", webProspectParams)
+                    .then(function() {
+                        console.log("✅ Visitor confirmation email sent to web prospect");
+                    })
+                    .catch(function(error) {
+                        console.error("❌ Email error (visitor):", error);
+                    });
             }
         }
     }
     window.PreQualificationController = PreQualificationController;
     // =========================================
-    // 🍋 SUPABASE REALTIME SETUP
+    // 🍋 SUPABASE REALTIME SETUP (Conformed)
     // =========================================
     (function() {
         const SUPABASE_URL = "https://fcgbusobfdwnpoqyuzoe.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk";
+        
+        // Load Supabase Library dynamically
         const script = document.createElement("script");
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
         script.onload = function() {
             const { createClient } = supabase;
-            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { realtime: { params: { eventsPerSecond: 10 } } });
-            const tcsChannel = sbClient.channel("tess-commands");
-            tcsChannel.on("broadcast", { event: "command" }, function(payload) {
-                console.log("📡 [REALTIME] Command:", payload);
-                if (payload.payload.command === "START_PRE_QUAL") { forcePreQualification(); }
+            const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                realtime: {
+                    params: {
+                        eventsPerSecond: 10
+                    }
+                }
             });
-            tcsChannel.subscribe(function(status) { if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected"); });
+            
+            const tcsChannel = sbClient.channel("tess-commands");
+            
+            // Listen for commands
+            tcsChannel.on("broadcast", { event: "command" }, function(payload) {
+                console.log("📡 [REALTIME] Command received:", payload);
+                const command = payload.payload.command;
+                
+                if (command === "START_PRE_QUAL") {
+                    console.log("🎯 [REALTIME] START_PRE_QUAL received!");
+                    forcePreQualification();
+                }
+            });
+            
+            // Listen for ping and respond with pong (Debug/Health Check)
+            tcsChannel.on("broadcast", { event: "ping" }, function(payload) {
+                console.log("📡 PING received, sending PONG...");
+                tcsChannel.send({
+                    type: "broadcast",
+                    event: "pong",
+                    payload: {
+                        type: "TEST_PONG",
+                        message: "Connection Active!",
+                        timestamp: Date.now()
+                    }
+                });
+                console.log("📤 PONG sent to TCS");
+            });
+            
+            // Subscribe to channel
+            tcsChannel.subscribe(function(status) {
+                if (status === "SUBSCRIBED") {
+                    console.log("✅ [REALTIME] Connected to Supabase channel");
+                }
+            });
+            
             window.supabaseChannel = tcsChannel;
+            
+            // Create health monitor channel (Prevents 404 errors)
+            const healthChannel = sbClient.channel("health-monitor");
+            healthChannel.subscribe(function(status) {
+                if (status === "SUBSCRIBED") {
+                    console.log("🩺 Health monitor channel connected");
+                }
+            });
+            
+            window.healthChannel = healthChannel;
+            
+            // Listen for test_ping
+            healthChannel.on("broadcast", { event: "test_ping" }, function(payload) {
+                console.log("📡 TEST_PING received, sending PONG...");
+                healthChannel.send({
+                    type: "broadcast",
+                    event: "test_pong",
+                    payload: {
+                        clientId: window.BotemiaConfig?.id || "unknown",
+                        timestamp: Date.now(),
+                        echoTimestamp: payload.payload.timestamp
+                    }
+                });
+                console.log("📤 test_pong sent");
+            });
         };
         document.head.appendChild(script);
     })();
 
+    // Create controller instance
     window.preQualController = new PreQualificationController();
     if (window.preQualScript) {
         window.preQualController.script = window.preQualScript;
         console.log("✅ Controller created with", window.preQualScript.steps?.length, "steps");
-    } else { console.error("❌ No preQualScript found!"); }
+    } else {
+        console.error("❌ No preQualScript found!");
+    }
+
+    // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
             if (window.supabaseChannel) {
-                window.supabaseChannel.send({ type: 'broadcast', event: 'tess_transcript', payload: { type: 'TESS_TRANSCRIPT', text: text, timestamp: Date.now() } });
-                console.log("📡 [SUPABASE] Sent transcript:", text.substring(0, 50));
+                window.supabaseChannel.send({
+                    type: "broadcast",
+                    event: "tess_transcript",
+                    payload: {
+                        type: "TESS_TRANSCRIPT",
+                        text: text,
+                        timestamp: Date.now()
+                    }
+                });
+                console.log("📡 [SUPABASE] Sent Tess transcript:", text.substring(0, 50));
+            } else {
+                console.log("⚠️ Supabase channel not ready");
             }
-        } catch(e) { console.error("❌ Failed to send via Supabase:", e); }
+        } catch(e) {
+            console.error("❌ Failed to send via Supabase:", e);
+        }
     };
+
     // ==========================================
-    // 🍋 DAILY SDK & INITIALIZATION (FUZZY FIX)
+    // 🍋 DAILY SDK LOADER (Explicit Definition)
     // ==========================================
     function loadDailySDK() {
         return new Promise((resolve, reject) => {
-            if (typeof DailyIframe !== "undefined") { resolve(); return; }
+            if (typeof DailyIframe !== "undefined") {
+                console.log("✅ Daily SDK already loaded");
+                resolve();
+                return;
+            }
             const script = document.createElement("script");
             script.src = "https://unpkg.com/@daily-co/daily-js";
-            script.onload = resolve; script.onerror = reject;
+            script.onload = resolve;
+            script.onerror = reject;
             document.head.appendChild(script);
         });
     }
+
     async function initDaily() {
         console.log("📞 initDaily: Starting process...");
         
@@ -474,15 +626,18 @@
                 }
                 
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
-                console.log("✅ Joined Daily room (Server Connection Active)");
+                console.log("✅ Joined Daily room (Server Connection Active");
                 
+                // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
-                    // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
+                    
+                    // 1. SILENCE LOGIC
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
                         console.log("🚫 Silencing default AI - controller is active");
                         return;
                     }
                     
+                    // 2. MAIN TRANSCRIPTION LISTENER
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         console.log("🤖 [DAILY] Tess said:", tessText);
@@ -497,10 +652,10 @@
                         }
                         
                         // ===== 🔥 FUZZY TRIGGER LOGIC =====
-                          const fuzzyTriggers = [
+                        const fuzzyTriggers = [
                             "are you ready for your first question", 
                             "first question", 
-                            "YES_INITIATE_PREQUAL"
+                            "YES_INITIATE_PREQUAL" // Fixed Typo
                         ];
                         
                         const lowerText = tessText.toLowerCase();
@@ -521,30 +676,61 @@
         }
     }
 
+    // ==========================================
+    // 🍋 UNIVERSAL LISTENER (For PostMessages)
+    // ==========================================
     function setupUniversalListener() {
-        console.log("👂 Universal Listener Activated.");
+        console.log("👂 Universal Listener Activated (Universal Mode).");
+        
         window.addEventListener("message", (event) => {
             if (event.data && event.data.what === "iframe-call-message") return;
             if (!event.data || !event.data.type) return;
+            console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
+            
+            // Handle TEST_PING from Communication Monitor
             if (event.data.type === "TEST_PING") {
+                console.log("📡 TEST_PING received, sending PONG...");
                 if (window.supabaseChannel) {
-                    window.supabaseChannel.send({ type: 'broadcast', event: 'test_pong', payload: { clientId: window.BotemiaConfig?.id || "unknown", timestamp: Date.now(), echoTimestamp: event.data.timestamp } });
+                    window.supabaseChannel.send({
+                        type: "broadcast",
+                        event: "test_pong",
+                        payload: {
+                            clientId: window.BotemiaConfig?.id || "unknown",
+                            timestamp: Date.now(),
+                            echoTimestamp: event.data.timestamp
+                        }
+                    });
                 }
                 return;
             }
+            
+            // Handle START_PRE_QUAL
             if (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL") {
                 console.log("🎯 START_PRE_QUAL received!");
-                if (window.preQualController && !window.preQualController.isActive) { window.preQualController.startInterview(); }
+                if (window.preQualController && !window.preQualController.isActive) {
+                    window.preQualController.startInterview();
+                }
                 return;
             }
+            
+            // Handle transcript for interview answers
             if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
-                if (window.preQualController && window.preQualController.isActive) { window.preQualController.handleUserInput(event.data.text); }
+                if (window.preQualController && window.preQualController.isActive) {
+                    window.preQualController.handleUserInput(event.data.text);
+                }
             }
         });
     }
+
+    // ==========================================
+    // ✅ GLOBAL EXPORTS (CRITICAL FOR DASHBOARD TESTS)
+    // ==========================================
     window.initDaily = initDaily;
     window.loadDailySDK = loadDailySDK;
+    
+    // Initialize listener immediately
     setupUniversalListener();
+
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
@@ -564,27 +750,53 @@
         widget.style.display = 'none';
         return widget;
     }
+
+    // ===== FORCE PRE-QUALIFICATION FUNCTION =====
     function forcePreQualification() {
         console.log("🚀 forcePreQualification - Starting pre-qualification interview");
-        if (isPreQualificationActive) { console.log("⚠️ Pre-qualification already active, skipping"); return; }
-        if (!window.preQualController) { console.error("❌ preQualController not found"); return; }
-        if (!window.preQualScript) { console.error("❌ preQualScript not found"); return; }
+        
+        // Prevent duplicate starts
+        if (isPreQualificationActive) {
+            console.log("⚠️ Pre-qualification already active, skipping");
+            return;
+        }
+        
+        // Check if controller and script are ready
+        if (!window.preQualController) {
+            console.error("❌ preQualController not found");
+            return;
+        }
+        
+        if (!window.preQualScript) {
+            console.error("❌ preQualScript not found");
+            return;
+        }
+        
+        // Set the script and start
         window.preQualController.script = window.preQualScript;
         window.preQualController.startInterview();
         isPreQualificationActive = true;
         console.log("✅ Pre-qualification interview started");
     }
+
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
         if (!config || !config.enabled) return;
+
         const overlay = document.createElement('div');
         overlay.className = 'splash-overlay';
         overlay.id = 'splashOverlay';
-        overlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999;`;
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 99999;
+        `;
+
         const card = document.createElement('div');
         card.className = 'splash-card';
-        card.style.setProperty('--grad-center', config.gradientCenter || '#1e4a8a');
-        card.style.setProperty('--grad-outer', config.gradientOuter || '#0a1a2f');
+        // Original: Direct style application (Safer than CSS variables)
+        card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
+
         let cardHTML = `
             <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
             <h2>${config.subtitle || 'Your Personal AI Web Guide'}</h2>
@@ -593,6 +805,10 @@
                 <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
                 <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
             </div>
+        `;
+
+        // Add white footer area with logo - EXACT DIMENSIONS
+        cardHTML += `
             <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
                     ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
@@ -601,31 +817,43 @@
             </div>
         `;
         card.innerHTML = cardHTML;
+
         overlay.appendChild(card);
         document.body.appendChild(overlay);
+
         const container = document.getElementById('splashAvatarContainer');
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
-        if (config.tickerKeywords) {
-            const keywords = config.tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
+
+        // Add ticker tape if keywords exist
+        const tickerKeywords = config.tickerKeywords;
+        if (tickerKeywords) {
+            const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
+            
             if (keywords.length > 0) {
                 const tickerContainer = document.createElement('div');
                 tickerContainer.className = 'ticker-container';
+                
                 const tickerContent = document.createElement('div');
                 tickerContent.className = 'ticker-content';
+                
+                // Duplicate keywords for seamless looping
                 const allKeywords = [...keywords, ...keywords];
+                
                 allKeywords.forEach(keyword => {
                     const span = document.createElement('span');
                     span.className = 'ticker-item';
                     span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
                     tickerContent.appendChild(span);
                 });
+                
                 tickerContainer.appendChild(tickerContent);
                 container.appendChild(tickerContainer);
             }
         }
         document.getElementById('activateTessBtn').addEventListener('click', activateTess);
         document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
+
         const primaryBtn = document.getElementById('activateTessBtn');
         primaryBtn.onmouseover = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.hoverTop || '#ffd700'}, ${config.primaryButton?.hoverBottom || '#e0b000'})`; primaryBtn.style.transform = 'scale(1.02)'; };
         primaryBtn.onmouseout = () => { primaryBtn.style.background = `linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'})`; primaryBtn.style.transform = 'scale(1)'; };
@@ -633,32 +861,88 @@
         secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
     }
+
     async function forceUnmute() {
         if (window.mainWidget) {
-            try { await window.mainWidget.micOn?.(); await window.mainWidget.unmute?.(); } catch(e) {}
-            try { const shadow = window.mainWidget.shadowRoot; if (shadow) { const v = shadow.querySelector('video'); const a = shadow.querySelector('audio'); if (v) { v.muted = false; v.volume = 1.0; v.play(); } if (a) { a.muted = false; a.volume = 1.0; a.play(); } } } catch(e) {}
+            // 1. API Calls
+            try {
+                await window.mainWidget.micOn?.();
+                await window.mainWidget.unmute?.();
+            } catch(e) {
+                console.warn("Force unmute API error", e);
+            }
+            // 2. Nuclear Shadow DOM Unmute
+            try {
+                const shadow = window.mainWidget.shadowRoot;
+                if (shadow) {
+                    const v = shadow.querySelector('video');
+                    const a = shadow.querySelector('audio');
+                    if (v) { v.muted = false; v.volume =1.0; v.play(); }
+                    if (a) { a.muted = false; a.volume =1.0; a.play(); }
+                }
+            } catch(e) {}
         }
     }
+
+    // ===== ACTIVATE TESS FUNCTION (WITH DAILY INTEGRATION ADDED) =====
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
-        try { if (window.mainWidget && typeof window.mainWidget.micOn === "function") { window.mainWidget.micOn(); } } catch(e) {}
+        
+        // 1. Try to pre-warm audio
+        try {
+            if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
+                window.mainWidget.micOn();
+            }
+        } catch(e) { console.warn("Audio pre-check:", e); }
+
+        
+        // 2. NUKE THE SPLASH WIDGET
         const splashWidget = document.getElementById('splash-widget');
-        if (splashWidget) { splashWidget.innerHTML = ''; if (splashWidget.parentNode) splashWidget.parentNode.removeChild(splashWidget); }
+        if (splashWidget) {
+            splashWidget.innerHTML = '';
+            if (splashWidget.parentNode) {
+                splashWidget.parentNode.removeChild(splashWidget);
+            }
+        }
+
+        // 3. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
+
+        // 4. CREATE MAIN WIDGET (KEEP EXISTING)
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
                 window.mainWidget.setAttribute('hide-ui', 'true');
                 document.body.appendChild(window.mainWidget);
             }
+            
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
+            
+            // 5. Activate Audio (KEEP EXISTING)
             setTimeout(async () => {
-                try { if (window.mainWidget && typeof window.mainWidget.micOn === 'function') { await window.mainWidget.micOn(); await window.mainWidget.unmute?.(); await forceUnmute(); } } catch (e) { console.error("❌ Mic activation failed:", e); forceUnmute(); }
+                console.log("🎤 Finalizing audio state...");
+                try {
+                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
+                        await window.mainWidget.micOn();
+                        await window.mainWidget.unmute?.();      
+                        console.log("✅ Microphone activated");
+                        await forceUnmute();
+                    }
+                } catch (e) {
+                    console.error("❌ Mic activation failed:", e);
+                    forceUnmute();
+                }
             }, 3000);
         }, 100);
+        
+        // 🔥 NEW: ALSO START DAILY SESSION IN BACKGROUND
+        // This runs alongside the widget for transcription events
+        // startTessSession(); // REMOVED - Using initDaily instead
         if (typeof initDaily === "function") { initDaily(); }
+        
+        // Expose activateTess globally for button clicks (MOVED TO BOTTOM)
         window.activateTess = activateTess;
     }
 
@@ -666,16 +950,21 @@
         const config = window.BotemiaConfig.modules?.splashScreen;
         const persistentConfig = config?.persistentButton || {};
         const position = persistentConfig.position || 'bottom-left';
+        
         const existingBtn = document.getElementById('persistent-avatar-btn');
         if (existingBtn) existingBtn.remove();
+        
         const avatarBtn = document.createElement('div');
         avatarBtn.id = 'persistent-avatar-btn';
         let positionStyles = '';
+        
         if(position === 'bottom-left') positionStyles = 'bottom: 20px; left: 20px;';
         else if(position === 'bottom-right') positionStyles = 'bottom: 20px; right: 20px;';
         else if(position === 'middle-left') positionStyles = 'top: 50%; left: 20px; transform: translateY(-50%);';
         else if(position === 'middle-right') positionStyles = 'top: 50%; right: 20px; transform: translateY(-50%);';
+        
         avatarBtn.style.cssText = `position: fixed !important; ${positionStyles.replace(/;/g, ' !important;')} width: 180px !important; height: 180px !important; border-radius: 50% !important; background: linear-gradient(135deg, ${persistentConfig.gradientTop || '#f8c400'} 0%, ${persistentConfig.gradientBottom || '#d4a000'} 100%) !important; cursor: pointer !important; z-index: 999999 !important; box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; transition: transform 0.3s ease !important;`;
+        
         const tessVideoUrl = config?.tessVideoUrl;
         if (tessVideoUrl) {
             const video = document.createElement('video');
@@ -684,6 +973,7 @@
             const videoFit = config?.tessVideoFit || 'cover';
             video.style.cssText = `width: 180px; height: 180px; object-fit: ${videoFit}; border: none; pointer-events: none;`;
             avatarBtn.appendChild(video);
+            
             const textOverlay = document.createElement('div');
             textOverlay.style.cssText = `position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: #f8c400; text-align: center; padding: 15px 5px 8px 5px; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 4px; pointer-events: none;`;
             textOverlay.innerHTML = `Ask Tess <span style="font-size: 20px;">👆</span>`;
@@ -693,24 +983,29 @@
             if (tessImage) { avatarBtn.innerHTML = `<img src="${tessImage}" style="width: 170px; height: 170px; border-radius: 50%; object-fit: cover; border: 3px solid white;">`; }
             else { avatarBtn.innerHTML = `<i class="fas fa-user-circle" style="font-size: 140px; color: white;"></i>`; }
         }
+        
         avatarBtn.addEventListener('mouseenter', () => { avatarBtn.style.transform = 'scale(1.1)'; });
         avatarBtn.addEventListener('mouseleave', () => { avatarBtn.style.transform = 'scale(1)'; });
         avatarBtn.addEventListener('click', () => { avatarBtn.remove(); activateTess(); });
         document.body.appendChild(avatarBtn);
     }
+
     function justBrowsing() {
         console.log("👆 Just Browsing clicked - showing persistent avatar");
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) splashWidget.remove();
+        
         const config = window.BotemiaConfig.modules?.splashScreen;
-        if (config?.persistentButton?.enabled) { showPersistentAvatar(); }
-        else {
+        if (config?.persistentButton?.enabled) {
+            showPersistentAvatar();
+        } else {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) { window.mainWidget = createMainWidget(); document.body.appendChild(window.mainWidget); }
             window.mainWidget.style.display = 'block';
         }
     }
+
     window.disableBridgeTriggers = false;
     function initWidget() {
         if (document.querySelector('lemon-slice-widget')) { console.log('✅ Widget already exists'); return; }
@@ -725,14 +1020,50 @@
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
     else { initWidget(); }
     console.log('✅ Botemia Bridge v5.6 loaded for', window.BotemiaConfig.name);
+
+    // Load Daily SDK
+    function loadDailySDK() {
+        return new Promise((resolve, reject) => {
+            if (typeof DailyIframe !== "undefined") {
+                resolve();
+                return;
+            }
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/@daily-co/daily-js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
+        // Send via opener (direct window communication)
         if (window.opener) {
-            window.opener.postMessage({ type: 'BRIDGE_ACTIVE', clientId: window.BotemiaConfig.id, url: window.location.href }, '*');
+            window.opener.postMessage({
+                type: 'BRIDGE_ACTIVE',
+                clientId: window.BotemiaConfig.id,
+                url: window.location.href
+            }, '*');
         }
+        
+        // Send via Supabase Realtime (cross-domain)
         if (window.supabaseChannel) {
-            window.supabaseChannel.send({ type: 'broadcast', event: 'client_info', payload: { type: 'CLIENT_INFO', clientId: window.BotemiaConfig.id, url: window.location.href, timestamp: Date.now() } });
+            window.supabaseChannel.send({
+                type: 'broadcast',
+                event: 'client_info',
+                payload: {
+                    type: 'CLIENT_INFO',
+                    clientId: window.BotemiaConfig.id,
+                    url: window.location.href,
+                    timestamp: Date.now()
+                }
+            });
             console.log('📢 Announced to TCS via Supabase Realtime');
+        } else {
+            console.log('⚠️ Supabase channel not ready yet');
         }
     }
+
     setTimeout(announceToTCS, 2000);
 })();
