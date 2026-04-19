@@ -159,37 +159,188 @@
         return widget;
     }
 
-    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT =====
+       // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (MATCHING YOUR HTML ORDER) =====
     window.preQualScript = {
         steps: [
-            { id: "loanType", type: "choice", text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?", question: "Tess: What type of loan are you looking for?", field: "loanType", validation: "text", options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"] },
-            { id: "monthlyIncome", type: "currency", text: "Tess: What is your total gross monthly income?", question: "Tess: What is your total gross monthly income?", field: "monthlyIncome", validation: "text", options: null },
-            { id: "employmentHistory", type: "choice", text: "Tess: How long have you been at your current employer?", question: "Tess: How long have you been at your current employer?", field: "employmentHistory", validation: "text", options: ["Less than 1 year","1-2 years","3-5 years","5+ years"] },
-            { id: "downPayment", type: "choice", text: "Tess: How much do you plan on putting down?", question: "Tess: How much do you plan on putting down?", field: "downPayment", validation: "text", options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"] },
-            { id: "creditScore", type: "choice", text: "Tess: What is your estimated credit score?", question: "Tess: What is your estimated credit score?", field: "creditScore", validation: "text", options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"] },
-            { id: "step_5", type: "message", text: "Tess: [Name], as you can see as your website mortgage assistant...", question: "Tess: [Name]...", field: "", validation: "text", options: null },
-            { id: "zoomInterest", type: "choice", text: "Tess: Would you be interested in a free Zoom meeting?", question: "Tess: Would you be interested in a free Zoom meeting?", field: "zoomInterest", validation: "text", options: ["Yes","No"] },
-            { id: "fullName", type: "text", text: "Tess: Perfect! Can I start with your full name?", question: "Tess: Perfect! Can I start with your full name?", field: "fullName", validation: "text", options: null },
-            { id: "scheduledDateTime", type: "text", text: "Tess: And when would be the best date and time for a Zoom meeting?", question: "Tess: And when would be the best date and time?", field: "scheduledDateTime", validation: "text", options: null },
-            { id: "email", type: "email", text: "Tess: Perfect! And what email address can I send your confirmation to?", question: "Tess: And what email address?", field: "email", validation: "text", options: null },
-            { id: "phone", type: "phone", text: "Tess: And may I get your phone number please?", question: "Tess: And may I get your phone number please?", field: "phone", validation: "text", options: null },
-            { id: "specialRequests", type: "text", text: "Tess: Do you have any special requests?", question: "Tess: Do you have any special requests?", field: "specialRequests", validation: "text", options: null },
-            { id: "step_12", type: "message", text: "Tess: Excellent! Your confirmation has been sent.", question: "Tess: Excellent! Your confirmation has been sent.", field: "", validation: "text", options: null }
+            // ===== 1. LOAN TYPE =====
+            { 
+                id: "loanType", 
+                type: "choice",
+                text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                question: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                field: "loanType",
+                validation: "text",
+                options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
+            },
+            // ===== 2. MONTHLY INCOME =====
+            { 
+                id: "monthlyIncome", 
+                type: "currency",
+                text: "Tess: What is your total gross monthly income?",
+                question: "Tess: What is your total gross monthly income?",
+                field: "monthlyIncome",
+                validation: "text",
+                options: null
+            },
+            // ===== 3. EMPLOYMENT HISTORY =====
+            { 
+                id: "employmentHistory", 
+                type: "choice",
+                text: "Tess: How long have you been at your current employer or in the same industry?",
+                question: "Tess: How long have you been at your current employer or in the same industry?",
+                field: "employmentHistory",
+                validation: "text",
+                options: ["Less than 1 year","1-2 years","3-5 years","5+ years"]
+            },
+            // ===== 4. DOWN PAYMENT =====
+            { 
+                id: "downPayment", 
+                type: "choice",
+                text: "Tess: How much do you plan on putting down for a down payment?",
+                question: "Tess: How much do you plan on putting down for a down payment?",
+                field: "downPayment",
+                validation: "text",
+                options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
+            },
+            // ===== 5. CREDIT SCORE =====
+            { 
+                id: "creditScore", 
+                type: "choice",
+                text: "Tess: What is your estimated credit score?",
+                question: "Tess: What is your estimated credit score?",
+                field: "creditScore",
+                validation: "text",
+                options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
+            },
+            // ===== 6. SALES PITCH & ZOOM QUESTION =====
+            { 
+                id: "zoomInterest", 
+                type: "choice",
+                text: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate. So with that said, would you be interested in a free Zoom meeting with a high conversion specialist that can show you how easy it would be to convert your website into a lead generating machine?",
+                question: "Tess: [Name], as you can see as your website mortgage assistant, I'm able to ask as many pre-qualification questions needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate. So with that said, would you be interested in a free Zoom meeting with a high conversion specialist that can show you how easy it would be to convert your website into a lead generating machine?",
+                field: "zoomInterest",
+                validation: "text",
+                options: ["Yes","No"]
+            },
+            // ===== 7. FULL NAME (CAPTURED AFTER ZOOM YES) =====
+            { 
+                id: "fullName", 
+                type: "text",
+                text: "Tess: Perfect! Can I start with your full name?",
+                question: "Tess: Perfect! Can I start with your full name?",
+                field: "fullName",
+                validation: "text",
+                options: null
+            },
+            // ===== 8. SCHEDULING =====
+            { 
+                id: "scheduledDateTime", 
+                type: "text",
+                text: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                question: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                field: "scheduledDateTime",
+                validation: "text",
+                options: null
+            },
+            // ===== 9. EMAIL =====
+            { 
+                id: "email", 
+                type: "email",
+                text: "Tess: Perfect! And what email address can I send your confirmation to?",
+                question: "Tess: Perfect! And what email address can I send your confirmation to?",
+                field: "email",
+                validation: "text",
+                options: null
+            },
+            // ===== 10. PHONE =====
+            { 
+                id: "phone", 
+                type: "phone",
+                text: "Tess: And may I get your phone number please?",
+                question: "Tess: And may I get your phone number please?",
+                field: "phone",
+                validation: "text",
+                options: null
+            },
+            // ===== 11. SPECIAL REQUESTS =====
+            { 
+                id: "specialRequests", 
+                type: "text",
+                text: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                question: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                field: "specialRequests",
+                validation: "text",
+                options: null
+            },
+            // ===== 12. COMPLETION =====
+            { 
+                id: "step_12", 
+                type: "message",
+                text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included. Is there anything else I can help you with today? It's been a pleasure showing you how I can generate three to five times more conversion from your website. You have a great day!",
+                question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included. Is there anything else I can help you with today? It's been a pleasure showing you how I can generate three to five times more conversion from your website. You have a great day!",
+                field: "",
+                validation: "text",
+                options: null
+            },
         ],
-        responses: {}, currentStepIndex: 0, active: false,
-        start: function() { this.active = true; this.currentStepIndex = 0; this.responses = {}; return this.getCurrentQuestion(); },
+        responses: {},
+        currentStepIndex: 0,
+        active: false,
+        
+        start: function() {
+            console.log("📋 Starting pre-qual script");
+            this.active = true;
+            this.currentStepIndex = 0;
+            this.responses = {};
+            return this.getCurrentQuestion();
+        },
+        
         processResponse: async function(userInput) {
             if (!this.active) return null;
             const currentStep = this.steps[this.currentStepIndex];
-            if (!currentStep) { await this.sendEmail(); this.active = false; return "Thank you! Your pre-qualification is complete."; }
-            if (currentStep.type === "message") { this.currentStepIndex++; return this.getCurrentQuestion(); }
-            if (currentStep.field) { this.responses[currentStep.field] = userInput; }
+            if (!currentStep) {
+                await this.sendEmail();
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
+            // If it's a message step, just move to next
+            if (currentStep.type === "message") {
+                this.currentStepIndex++;
+                return this.getCurrentQuestion();
+            }
+            
+            // Store the response if it has a field
+            if (currentStep.field) {
+                this.responses[currentStep.field] = userInput;
+                console.log("✅ Stored " + currentStep.field + ": " + userInput);
+            }
+            
+            // Move to next step
             this.currentStepIndex++;
-            if (this.currentStepIndex >= this.steps.length) { await this.sendEmail(); this.active = false; return "Thank you! Your pre-qualification is complete."; }
+            
+            // Check if interview is complete
+            if (this.currentStepIndex >= this.steps.length) {
+                await this.sendEmail();
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
             return this.getCurrentQuestion();
         },
-        getCurrentQuestion: function() { const step = this.steps[this.currentStepIndex]; return step ? (step.question || step.text) : null; },
-        getResults: function() { return this.responses; }
+        
+        getCurrentQuestion: function() {
+            const step = this.steps[this.currentStepIndex];
+            if (!step) {
+                this.active = false;
+                return null;
+            }
+            return step.question || step.text;
+        },
+        
+        getResults: function() {
+            return this.responses;
+        }
     };
 
     class PreQualificationController {
