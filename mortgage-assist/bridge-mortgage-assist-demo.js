@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/20/2026, 9:13:26 AM
+// Generated: 4/20/2026, 9:47:49 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -317,7 +317,6 @@
             if (!this.isActive || !this.script) return;
 
             const lowerText = userText.toLowerCase();
-            // 🔥 SAFETY FIX: Ensure we use this.script, not window.preQualScript directly
             const currentStep = this.script.steps[this.currentStepIndex];
             
             if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
@@ -370,6 +369,19 @@
             if (!text) return;
             console.log("🤖 Tess says: " + text);
             
+            // 🔥 FIX: Ensure widget exists before sending
+            if (!window.mainWidget) {
+                console.warn("⚠️ mainWidget not found, attempting to create...");
+                if (typeof createMainWidget === "function") {
+                    window.mainWidget = createMainWidget();
+                    document.body.appendChild(window.mainWidget);
+                    console.log("✅ mainWidget created");
+                } else {
+                    console.error("❌ Cannot create mainWidget - createMainWidget not found");
+                    return;
+                }
+            }
+            
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                 try {
                     window.mainWidget.sendMessage(text);
@@ -378,7 +390,7 @@
                     console.error("❌ sendMessage error:", e);
                 }
             } else {
-                console.warn("⚠️ sendMessage not available");
+                console.error("❌ sendMessage not available on mainWidget");
             }
         }
 
