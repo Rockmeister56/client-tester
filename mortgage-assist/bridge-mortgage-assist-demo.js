@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 7:53:35 PM
+// Generated: 4/19/2026, 8:26:41 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -629,7 +629,10 @@
                         return;
                     }
                     
-                        // ===== 🔥 EXACT TRIGGER WITH PUNCTUATION FLEXIBILITY =====
+                    // ===== 🔥 FIX: MISSING IF STATEMENT HERE =====
+                    if (ev && ev.data) {
+                        const tessText = ev.data.text || "";
+
                         const triggerPhrase = window.TRIGGER_PHRASE || "are you ready for your first question";
                         const lowerText = tessText.toLowerCase();
                         
@@ -642,8 +645,8 @@
                             console.log("🎯 EXACT TRIGGER DETECTED! Starting pre-qualification...");
                             console.log("🔥 Triggered by:", tessText);
                             
-                            // Small delay to let Tess finish speaking
-                            setTimeout(() => {
+                            // Delay to let Tess finish speaking naturally
+                            setTimeout(function() {
                                 forcePreQualification();
                             }, 1500);
                         }
@@ -656,7 +659,6 @@
             console.error("❌ Daily init error:", e); 
         }
     }
-
     // ==========================================
     // 🍋 UNIVERSAL LISTENER (For PostMessages)
     // ==========================================
