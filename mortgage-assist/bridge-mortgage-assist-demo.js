@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/20/2026, 1:18:56 PM
+// Generated: 4/20/2026, 1:45:54 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -772,7 +772,8 @@
         return widget;
     }
 
-        function forcePreQualification() {
+    // ===== FORCE PRE-QUALIFICATION FUNCTION =====
+    function forcePreQualification() {
         console.log("🚀 forcePreQualification - Starting pre-qualification interview");
         
         // Prevent duplicate starts
@@ -781,22 +782,10 @@
             return;
         }
         
-        // 🔥 NEW: Force Stop any audio from the default AI to prevent overlap
+        // 🔥 NEW: Force Stop the default AI to prevent overlap/skip
         try {
-            // 1. Stop Daily call object audio if it exists
-            if (window.dailyCallObject) {
-                // We mute the remote participants (Tess)
-                const participants = window.dailyCallObject.participants();
-                for (const id in participants) {
-                    if (id !== 'local') {
-                        window.dailyCallObject.setParticipantAudio(id, false);
-                    }
-                }
-            }
-            
-            // 2. Stop the Main Widget (Lemon Slice)
+            // Stop the Main Widget (Lemon Slice) audio
             if (window.mainWidget) {
-                // Send a generic stop command or just mute the element
                 const shadow = window.mainWidget.shadowRoot;
                 if (shadow) {
                     const v = shadow.querySelector('video');
@@ -805,12 +794,12 @@
                     if (a) { a.pause(); a.currentTime = 0; }
                 }
             }
-            console.log("🔇 Stopped all background audio.");
+            console.log("🔇 Stopped default AI audio.");
         } catch (e) {
             console.warn("⚠️ Could not stop audio:", e);
         }
-        // -----------------------------------------
-
+        
+        // Check if controller and script are ready
         if (!window.preQualController) {
             console.error("❌ preQualController not found");
             return;
@@ -827,7 +816,7 @@
         isPreQualificationActive = true;
         console.log("✅ Pre-qualification interview started");
     }
-    window.forcePreQualification = forcePreQualification; 
+    window.forcePreQualification = forcePreQualification; // ← ADD THIS LINE
 
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
