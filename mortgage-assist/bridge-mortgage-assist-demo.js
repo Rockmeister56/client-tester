@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 8:26:41 PM
+// Generated: 4/19/2026, 8:58:49 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -631,7 +631,7 @@
                     
                     // ===== 🔥 FIX: MISSING IF STATEMENT HERE =====
                     if (ev && ev.data) {
-                        const tessText = ev.data.text || "";
+                        const tessText = ev.data.transcription || "";
 
                         const triggerPhrase = window.TRIGGER_PHRASE || "are you ready for your first question";
                         const lowerText = tessText.toLowerCase();
