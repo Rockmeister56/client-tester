@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 7:16:17 PM
+// Generated: 4/19/2026, 7:48:19 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -643,32 +643,24 @@
                             });
                         }
                         
-                        // ===== 🔥 SMART TRIGGER (WITH DELAY) - DISABLED =====
-                        // 🔥 COMMENTED OUT - Using Supabase Realtime trigger instead
-                        /*
-                        const fuzzyTriggers = [
-                            "are you ready for your first question", 
-                            "first question", 
-                            "YES_INITIATE_PREQUAL"
-                        ];
-                        
+                        // ===== 🔥 EXACT TRIGGER WITH PUNCTUATION FLEXIBILITY =====
+                        const triggerPhrase = window.TRIGGER_PHRASE || "are you ready for your first question";
                         const lowerText = tessText.toLowerCase();
-                        const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
                         
-                        if (hasTrigger) {
-                            console.log("🎯 Trigger heard! Waiting 1.5s for silence...");
+                        // Remove punctuation from both for comparison
+                        const cleanTrigger = triggerPhrase.toLowerCase().replace(/[^\w\s]/g, "");
+                        const cleanText = lowerText.replace(/[^\w\s]/g, "");
+                        
+                        // Check if cleaned text contains cleaned trigger
+                        if (cleanText.includes(cleanTrigger)) {
+                            console.log("🎯 EXACT TRIGGER DETECTED! Starting pre-qualification...");
+                            console.log("🔥 Triggered by:", tessText);
                             
-                            // ⏱️ CLEAR PREVIOUS TIMEOUTS (Debounce)
-                            if (window.triggerTimeout) clearTimeout(window.triggerTimeout);
-                            
-                            // ⏱️ SET NEW TIMEOUT (The "Polite" Delay)
-                            window.triggerTimeout = setTimeout(() => {
-                                console.log("⏱️ Silence detected. Starting Interview.");
+                            // Small delay to let Tess finish speaking
+                            setTimeout(() => {
                                 forcePreQualification();
-                            }, 1500); // Waits 1.5 seconds
+                            }, 500);
                         }
-                        */
-                        // 🔥 END DISABLED FUZZY TRIGGER
                     }
                 });
             } else {
