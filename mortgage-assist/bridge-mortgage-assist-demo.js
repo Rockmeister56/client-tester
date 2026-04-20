@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 6:55:49 PM
+// Generated: 4/19/2026, 7:06:37 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -465,10 +465,11 @@
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload.command;
                 
-                if (command === "START_PRE_QUAL") {
-                    console.log("🎯 [REALTIME] START_PRE_QUAL received!");
-                    forcePreQualification();
-                }
+                // 🔥 DISABLED - No auto-trigger from Supabase Realtime
+                // if (command === "START_PRE_QUAL") {
+                //     console.log("🎯 [REALTIME] START_PRE_QUAL received!");
+                //     forcePreQualification();
+                // }
             });
             
             // Listen for ping and respond with pong (Debug/Health Check)
