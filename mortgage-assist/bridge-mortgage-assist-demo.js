@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/20/2026, 10:13:31 AM
+// Generated: 4/20/2026, 10:23:12 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -476,14 +476,11 @@
             tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload.command;
-                const source = payload.payload.source || "unknown";
                 
-                // 🔥 ONLY trigger if source is "tcs_dashboard" (manual button click)
-                if (command === "START_PRE_QUAL" && source === "tcs_dashboard") {
-                    console.log("🎯 [REALTIME] START_PRE_QUAL received from TCS Dashboard!");
+                // 🔥 RE-ENABLED: Accept all START_PRE_QUAL commands
+                if (command === "START_PRE_QUAL") {
+                    console.log("🎯 [REALTIME] START_PRE_QUAL received!");
                     forcePreQualification();
-                } else if (command === "START_PRE_QUAL") {
-                    console.log("⏸️ [REALTIME] Ignoring START_PRE_QUAL from unknown source:", source);
                 }
             });
             
