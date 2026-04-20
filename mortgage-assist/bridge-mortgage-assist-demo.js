@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 11:09:05 PM
+// Generated: 4/19/2026, 11:37:44 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -631,11 +631,8 @@
                     
                     // ===== 🔥 CLEAN TRIGGER LOGIC =====
                     if (ev && ev.data) {
-                        // 🔥 FIX: Support both .text and .transcription fields
-                        const tessText = ev.data.text || ev.data.transcription || "";
+                        const tessText = ev.data.text || "";
                         console.log("🤖 [DAILY] Tess said:", tessText);
-                        
-                        // Broadcast to Supabase
                         if (window.supabaseChannel) {
                             window.supabaseChannel.send({
                                 type: "broadcast",
@@ -643,34 +640,25 @@
                                 payload: { text: tessText, timestamp: Date.now() }
                             });
                         }
-
                         const triggerPhrase = window.TRIGGER_PHRASE;
                         if (!triggerPhrase) {
                             console.warn("⚠️ No trigger phrase configured");
                             return;
                         }
-                        
                         const lowerText = tessText.toLowerCase();
-                        
-                        // Remove punctuation from both for comparison
                         const cleanTrigger = triggerPhrase.toLowerCase().replace(/[^\w\s]/g, "");
                         const cleanText = lowerText.replace(/[^\w\s]/g, "");
-                        
-                        // Check if cleaned text contains cleaned trigger
                         if (cleanText.includes(cleanTrigger)) {
                             console.log("🎯 EXACT TRIGGER DETECTED! Starting pre-qualification...");
                             console.log("🔥 Triggered by:", tessText);
-                            
-                            // 🔥 SAFETY CHECK: Prevent double-triggering
-                            if (window.preQualController && window.preQualController.isActive) {
-                                console.log("⚠️ Pre-qualification already active. Ignoring trigger.");
+                            if (window.hasTriggeredPreQual) {
+                                console.log("⚠️ Trigger already fired once. Ignoring duplicate.");
                                 return;
                             }
-
-                            // Delay to let Tess finish speaking naturally
+                            window.hasTriggeredPreQual = true;
                             setTimeout(function() {
                                 forcePreQualification();
-                            }, 2000);
+                            }, 1500);
                         }
                     }
                 });
