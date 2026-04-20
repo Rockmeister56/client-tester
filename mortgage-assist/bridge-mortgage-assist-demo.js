@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/20/2026, 12:03:57 AM
+// Generated: 4/20/2026, 1:03:37 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -673,7 +673,7 @@
                             // Delay to let Tess finish speaking naturally
                             setTimeout(function() {
                                 forcePreQualification();
-                            }, 1500);
+                            }, 4000);
                         }
                     }
                 });
@@ -684,7 +684,6 @@
             console.error("❌ Daily init error:", e); 
         }
     }
-    
     // ==========================================
     // 🍋 UNIVERSAL LISTENER (For PostMessages)
     // ==========================================
