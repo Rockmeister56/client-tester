@@ -772,8 +772,7 @@
         return widget;
     }
 
-    // ===== FORCE PRE-QUALIFICATION FUNCTION =====
-    function forcePreQualification() {
+        function forcePreQualification() {
         console.log("🚀 forcePreQualification - Starting pre-qualification interview");
         
         // Prevent duplicate starts
@@ -782,7 +781,36 @@
             return;
         }
         
-        // Check if controller and script are ready
+        // 🔥 NEW: Force Stop any audio from the default AI to prevent overlap
+        try {
+            // 1. Stop Daily call object audio if it exists
+            if (window.dailyCallObject) {
+                // We mute the remote participants (Tess)
+                const participants = window.dailyCallObject.participants();
+                for (const id in participants) {
+                    if (id !== 'local') {
+                        window.dailyCallObject.setParticipantAudio(id, false);
+                    }
+                }
+            }
+            
+            // 2. Stop the Main Widget (Lemon Slice)
+            if (window.mainWidget) {
+                // Send a generic stop command or just mute the element
+                const shadow = window.mainWidget.shadowRoot;
+                if (shadow) {
+                    const v = shadow.querySelector('video');
+                    const a = shadow.querySelector('audio');
+                    if (v) { v.pause(); v.currentTime = 0; }
+                    if (a) { a.pause(); a.currentTime = 0; }
+                }
+            }
+            console.log("🔇 Stopped all background audio.");
+        } catch (e) {
+            console.warn("⚠️ Could not stop audio:", e);
+        }
+        // -----------------------------------------
+
         if (!window.preQualController) {
             console.error("❌ preQualController not found");
             return;
@@ -799,7 +827,7 @@
         isPreQualificationActive = true;
         console.log("✅ Pre-qualification interview started");
     }
-    window.forcePreQualification = forcePreQualification; // ← ADD THIS LINE
+    window.forcePreQualification = forcePreQualification; 
 
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
