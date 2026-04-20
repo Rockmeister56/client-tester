@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 8:58:49 PM
+// Generated: 4/19/2026, 9:21:53 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -761,6 +761,7 @@
         isPreQualificationActive = true;
         console.log("✅ Pre-qualification interview started");
     }
+    window.forcePreQualification = forcePreQualification; // ← ADD THIS LINE
 
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
