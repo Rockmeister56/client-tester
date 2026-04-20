@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/19/2026, 12:24:00 PM
+// Generated: 4/19/2026, 6:39:23 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -125,7 +125,7 @@
     }
 
 
-        // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (DEMO FIX) =====
+    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         steps: [
             { 
@@ -167,8 +167,8 @@
             { 
                 id: "zoomInterest", 
                 type: "choice",
-                text: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate. So with that said, would you be interested in a free Zoom meeting with a high conversion specialist that can show you how easy it would be to convert your website into a lead generating machine?",
-                question: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate. So with that said, would you be interested in a free Zoom meeting with a high conversion specialist that can show you how easy it would be to convert your website into a lead generating machine?",
+                text: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                question: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
                 field: "zoomInterest",
                 validation: "text",
                 options: ["Yes","No"]
@@ -193,9 +193,7 @@
             },
             { 
                 id: "email", 
-                type: "text",
-                // 🔥 FIX: Added isInput: false to prevent Lemon Slice from muting here
-                isInput: false, 
+                type: "email",
                 text: "Tess: Perfect! And what email address can I send your confirmation to?",
                 question: "Tess: Perfect! And what email address can I send your confirmation to?",
                 field: "email",
@@ -205,8 +203,6 @@
             { 
                 id: "phone", 
                 type: "phone",
-                // 🔥 FIX: Added isInput: false to prevent Lemon Slice from muting here
-                isInput: false, 
                 text: "Tess: And may I get your phone number please?",
                 question: "Tess: And may I get your phone number please?",
                 field: "phone",
@@ -223,10 +219,10 @@
                 options: null
             },
             { 
-                id: "step_11", 
+                id: "step_10", 
                 type: "message",
-                text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included. Is there anything else I can help you with today? It's been a pleasure showing you how I can generate three to five times more conversion from your website. You have a great day!",
-                question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included. Is there anything else I can help you with today? It's been a pleasure showing you how I can generate three to five times more conversion from your website. You have a great day!",
+                text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
+                question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
                 field: "",
                 validation: "text",
                 options: null
@@ -244,39 +240,39 @@
             return this.getCurrentQuestion();
         },
         
-        processResponse: async function(userInput) {
-            if (!this.active) return null;
-            const currentStep = this.steps[this.currentStepIndex];
-            if (!currentStep) {
-                await this.sendEmail();
-                this.active = false;
-                return "Thank you! Your pre-qualification is complete.";
-            }
-            
-            // If it's a message step, just move to next
-            if (currentStep.type === "message") {
-                this.currentStepIndex++;
-                return this.getCurrentQuestion();
-            }
-            
-            // Store the response if it has a field
-            if (currentStep.field) {
-                this.responses[currentStep.field] = userInput;
-                console.log("✅ Stored " + currentStep.field + ": " + userInput);
-            }
-            
-            // Move to next step
-            this.currentStepIndex++;
-            
-            // Check if interview is complete
-            if (this.currentStepIndex >= this.steps.length) {
-                await this.sendEmail();
-                this.active = false;
-                return "Thank you! Your pre-qualification is complete.";
-            }
-            
-            return this.getCurrentQuestion();
-        },
+   processResponse: async function(userInput) {
+    if (!this.active) return null;
+    const currentStep = this.steps[this.currentStepIndex];
+    if (!currentStep) {
+        await this.sendEmail();
+        this.active = false;
+        return "Thank you! Your pre-qualification is complete.";
+    }
+    
+    // If it's a message step, just move to next
+    if (currentStep.type === "message") {
+        this.currentStepIndex++;
+        return this.getCurrentQuestion();
+    }
+    
+    // Store the response if it has a field
+    if (currentStep.field) {
+        this.responses[currentStep.field] = userInput;
+        console.log("✅ Stored " + currentStep.field + ": " + userInput);
+    }
+    
+    // Move to next step
+    this.currentStepIndex++;
+    
+    // Check if interview is complete
+    if (this.currentStepIndex >= this.steps.length) {
+        await this.sendEmail();
+        this.active = false;
+        return "Thank you! Your pre-qualification is complete.";
+    }
+    
+    return this.getCurrentQuestion();
+},
         
         getCurrentQuestion: function() {
             const step = this.steps[this.currentStepIndex];
@@ -673,7 +669,7 @@
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
             }
-        } catch(e) { 
+        } catch (e) { 
             console.error("❌ Daily init error:", e); 
         }
     }
