@@ -1,5 +1,7 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Version: 5.8 - FIX PHANTOM TRIGGERS & 404 ERRORS
+// Generated: 4/20/2026, 1:18:56 PM
+// Client ID: mortgage-assist-demo
+// Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
 (function() {
     "use strict";
@@ -20,21 +22,7 @@
             "preQualification": {
                 "triggerPhrase": "let me help get you the best rates"
             },
-            "splashScreen": {
-                "enabled":true,
-                "agentId":"agent_7b0776ef6b855de5",
-                "title":"Meet Tess",
-                "subtitle":"Your Personal AI Smart Guide",
-                "tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3QtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ",
-                "tessVideoFit":"cover",
-                "tickerKeywords":"Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans",
-                "gradientCenter":"#1e4a8a",
-                "gradientOuter":"#0a1a2f",
-                "primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},
-                "secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},
-                "persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},
-                "branding":{"name":"","logo":""}
-            }
+            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Smart Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}}
         }
     };
 
@@ -91,7 +79,7 @@
         }
         .splash-card h1 { color: white; font-size: 2.5rem; margin-bottom: 5px; font-weight: 700; }
         .splash-card h2 { color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
-        .button-group { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        .button-group { display: flex; gap: 10px; justifyjustify-content: center; margin-top: 15px; }
         .primary-btn, .secondary-btn { padding: 12px 20px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 200px; border: none; transition: all 0.2s; }
         .primary-btn:hover, .secondary-btn:hover { transform: scale(1.02); }
         .ticker-container {
@@ -108,7 +96,6 @@
         .ticker-item i { margin-right: 8px; color: #f8c400; font-size: 12px; filter: drop-shadow(0 0 3px rgba(248,196,0,0.5)); }
     `;
     document.head.appendChild(style);
-
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
         let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
@@ -118,6 +105,7 @@
         window.tessSessionId = sessionId;
         widget.setAttribute('room-id', sessionId);
         widget.roomId = sessionId;
+        // 🔥 FIX: Safe path to Agent ID to prevent crashes if config loads late
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
         widget.agentId = 'agent_7b0776ef6b855de5';
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
@@ -136,7 +124,8 @@
         return widget;
     }
 
-    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT =====
+
+    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         steps: [
             { 
@@ -260,18 +249,22 @@
                 return "Thank you! Your pre-qualification is complete.";
             }
             
+            // If it's a message step, just move to next
             if (currentStep.type === "message") {
                 this.currentStepIndex++;
                 return this.getCurrentQuestion();
             }
             
+            // Store the response if it has a field
             if (currentStep.field) {
                 this.responses[currentStep.field] = userInput;
                 console.log("✅ Stored " + currentStep.field + ": " + userInput);
             }
             
+            // Move to next step
             this.currentStepIndex++;
             
+            // Check if interview is complete
             if (this.currentStepIndex >= this.steps.length) {
                 await this.sendEmail();
                 this.active = false;
@@ -392,6 +385,7 @@
             console.log("📧 Sending dynamic email with collected responses...");
             const data = this.answers;
             
+            // Convert all responses to a formatted string for email
             let formattedAnswers = "";
             for (var key in data) {
                 if (data.hasOwnProperty(key)) {
@@ -399,6 +393,7 @@
                 }
             }
             
+            // ===== EMAIL 1: TO PROSPECTIVE CLIENT (YOU) =====
             var prospectiveClientParams = {
                 full_name: data.fullName || data.name || "Not provided",
                 email: data.email || "Not provided",
@@ -410,6 +405,7 @@
                 submitted_at: new Date().toLocaleString()
             };
             
+            // ===== EMAIL 2: TO WEB PROSPECT (Confirmation) =====
             var webProspectParams = {
                 full_name: data.fullName || data.name || "Valued Client",
                 email: data.email || "Not provided",
@@ -419,6 +415,7 @@
                 message: "Thank you for completing pre-qualification! A loan officer will reach out to you shortly."
             };
             
+            // Send Email 1
             emailjs.send("service_b9bppgb", "template_uix9cyx", prospectiveClientParams)
                 .then(function() {
                     console.log("✅ Dynamic email sent to prospective client");
@@ -427,6 +424,7 @@
                     console.error("❌ Email error (prospective):", error);
                 });
             
+            // Send Email 2 (Only if we have their email)
             if (data.email) {
                 emailjs.send("service_b9bppgb", "template_8kx812d", webProspectParams)
                     .then(function() {
@@ -439,45 +437,56 @@
         }
     }
     window.PreQualificationController = PreQualificationController;
-
     // =========================================
-    // 🍋 SUPABASE REALTIME SETUP
+    // 🍋 SUPABASE REALTIME SETUP (Conformed)
     // =========================================
     (function() {
         const SUPABASE_URL = "https://fcgbusobfdwnpoqyuzoe.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk";
         
+        // Load Supabase Library dynamically
         const script = document.createElement("script");
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
         script.onload = function() {
             const { createClient } = supabase;
             const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                realtime: { params: { eventsPerSecond: 10 } }
+                realtime: {
+                    params: {
+                        eventsPerSecond: 10
+                    }
+                }
             });
             
             const tcsChannel = sbClient.channel("tess-commands");
             
+            // Listen for commands
             tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload.command;
                 
-                // ✅ RE-ENABLED: This allows your Dashboard to force the start
+                // 🔥 RE-ENABLED: Accept all START_PRE_QUAL commands
                 if (command === "START_PRE_QUAL") {
                     console.log("🎯 [REALTIME] START_PRE_QUAL received!");
                     forcePreQualification();
                 }
             });
             
+            // Listen for ping and respond with pong (Debug/Health Check)
             tcsChannel.on("broadcast", { event: "ping" }, function(payload) {
                 console.log("📡 PING received, sending PONG...");
                 tcsChannel.send({
                     type: "broadcast",
                     event: "pong",
-                    payload: { type: "TEST_PONG", message: "Connection Active!", timestamp: Date.now() }
+                    payload: {
+                        type: "TEST_PONG",
+                        message: "Connection Active!",
+                        timestamp: Date.now()
+                    }
                 });
                 console.log("📤 PONG sent to TCS");
             });
             
+            // Subscribe to channel
             tcsChannel.subscribe(function(status) {
                 if (status === "SUBSCRIBED") {
                     console.log("✅ [REALTIME] Connected to Supabase channel");
@@ -486,13 +495,30 @@
             
             window.supabaseChannel = tcsChannel;
             
+            // Create health monitor channel (Prevents 404 errors)
             const healthChannel = sbClient.channel("health-monitor");
             healthChannel.subscribe(function(status) {
                 if (status === "SUBSCRIBED") {
                     console.log("🩺 Health monitor channel connected");
                 }
             });
+            
             window.healthChannel = healthChannel;
+            
+            // Listen for test_ping
+            healthChannel.on("broadcast", { event: "test_ping" }, function(payload) {
+                console.log("📡 TEST_PING received, sending PONG...");
+                healthChannel.send({
+                    type: "broadcast",
+                    event: "test_pong",
+                    payload: {
+                        clientId: window.BotemiaConfig?.id || "unknown",
+                        timestamp: Date.now(),
+                        echoTimestamp: payload.payload.timestamp
+                    }
+                });
+                console.log("📤 test_pong sent");
+            });
         };
         document.head.appendChild(script);
     })();
@@ -506,24 +532,35 @@
         console.error("❌ No preQualScript found!");
     }
 
+    // Function to broadcast Tess's speech to TCS via Supabase
     window.broadcastTessTranscript = function(text) {
         try {
             if (window.supabaseChannel) {
                 window.supabaseChannel.send({
                     type: "broadcast",
                     event: "tess_transcript",
-                    payload: { type: "TESS_TRANSCRIPT", text: text, timestamp: Date.now() }
+                    payload: {
+                        type: "TESS_TRANSCRIPT",
+                        text: text,
+                        timestamp: Date.now()
+                    }
                 });
                 console.log("📡 [SUPABASE] Sent Tess transcript:", text.substring(0, 50));
+            } else {
+                console.log("⚠️ Supabase channel not ready");
             }
         } catch(e) {
             console.error("❌ Failed to send via Supabase:", e);
         }
     };
 
+    // ==========================================
+    // 🍋 DAILY SDK LOADER (Explicit Definition)
+    // ==========================================
     function loadDailySDK() {
         return new Promise((resolve, reject) => {
             if (typeof DailyIframe !== "undefined") {
+                console.log("✅ Daily SDK already loaded");
                 resolve();
                 return;
             }
@@ -538,6 +575,7 @@
     async function initDaily() {
         console.log("📞 initDaily: Starting process...");
         
+        // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
             console.log("⏳ Daily SDK missing. Loading & Waiting...");
             try {
@@ -554,7 +592,6 @@
 
         console.log("✅ Daily SDK loaded. Creating room...");
         try {
-            // 🔥 FIX: Using the Supabase Edge Function for room creation
             const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -566,6 +603,7 @@
                 dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
                 window.dailyCallObject = dailyCallObject;
                 
+                // Create hidden container if not exists
                 let container = document.getElementById("daily-container");
                 if (!container) {
                     container = document.createElement("div");
@@ -581,18 +619,17 @@
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
                 console.log("✅ Joined Daily room (Server Connection Active)");
                 
-                // ===== 🎧 CLEAN AUDIO LISTENER =====
+                // ===== 🎧 CLEAN AUDIO LISTENER (WITH DELAY) =====
                 dailyCallObject.on("app-message", (ev) => {
                     
-                    // 1. SILENCE DEFAULT AI DURING INTERVIEW
-                    // This stops the "Phantom" from talking over the interview
+                    // ✅ FIX: Interview Mode - Silence Default AI
                     if (window.preQualController && window.preQualController.isActive) {
                         if (ev?.data?.type === "agent_transcription") {
                             console.log("🚫 Silencing default AI - interview is active");
                             return;
                         }
                         
-                        // Accept USER input during interview
+                        // But we DO listen to the user's answers
                         if (ev?.data?.type === "user_transcription") {
                             const userText = ev.data.transcription || ev.data.text || "";
                             console.log("👤 [DAILY] User said:", userText);
@@ -600,10 +637,11 @@
                             return;
                         }
                     }
-                    
-                    // ===== 🔥 ROBUST TRIGGER LOGIC =====
+                    // ===== 🔥 CLEAN TRIGGER LOGIC (ROBUST VERSION) =====
                     if (ev && ev.data) {
+                        // 🔥 FIX: Check BOTH .text and .transcription to be safe
                         const tessText = ev.data.text || ev.data.transcription || "";
+                        // DEBUG: Log exactly what we captured
                         console.log("🤖 [DAILY] Tess said:", tessText);
                         
                         // Broadcast to Supabase
@@ -616,28 +654,36 @@
                         }
 
                         const triggerPhrase = window.TRIGGER_PHRASE;
-                        if (!triggerPhrase) return;
+                        if (!triggerPhrase) {
+                            console.warn("⚠️ No trigger phrase configured");
+                            return;
+                        }
                         
                         const lowerText = tessText.toLowerCase();
+                        
+                        // Remove punctuation from both for comparison
                         const cleanTrigger = triggerPhrase.toLowerCase().replace(/[^\w\s]/g, "");
                         const cleanText = lowerText.replace(/[^\w\s]/g, "");
                         
-                        // ✅ FIX: Check if interview is ALREADY active to prevent re-triggering
+                        // ✅ FIX: Check if interview is already running to prevent restart/skip
                         if (window.preQualController && window.preQualController.isActive) {
                             console.log("⚠️ Interview already active. Ignoring trigger phrase.");
                             return;
                         }
-
+                        
+                        // Check if cleaned text contains cleaned trigger
                         if (cleanText.includes(cleanTrigger)) {
                             console.log("🎯 EXACT TRIGGER DETECTED! Starting pre-qualification...");
                             console.log("🔥 Triggered by:", tessText);
 
+                            // 🔥 ONE-TIME SWITCH: Prevents double-triggering safely
                             if (window.hasTriggeredPreQual) {
                                 console.log("⚠️ Trigger already fired once. Ignoring duplicate.");
                                 return;
                             }
                             window.hasTriggeredPreQual = true;
 
+                            // Delay to let Tess finish speaking naturally
                             setTimeout(function() {
                                 forcePreQualification();
                             }, 3500);
@@ -651,7 +697,9 @@
             console.error("❌ Daily init error:", e); 
         }
     }
-
+    // ==========================================
+    // 🍋 UNIVERSAL LISTENER (For PostMessages)
+    // ==========================================
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated (Universal Mode).");
         
@@ -660,6 +708,7 @@
             if (!event.data || !event.data.type) return;
             console.log("📩 [INCOMING] Type:", event.data?.type, "Command:", event.data?.command);
             
+            // Handle TEST_PING from Communication Monitor
             if (event.data.type === "TEST_PING") {
                 console.log("📡 TEST_PING received, sending PONG...");
                 if (window.supabaseChannel) {
@@ -676,14 +725,16 @@
                 return;
             }
             
+            // Handle START_PRE_QUAL
             if (event.data.type === "START_PRE_QUAL" || event.data.command === "START_PRE_QUAL") {
-                console.log("🎯 START_PRE_QUAL received via PostMessage!");
+                console.log("🎯 START_PRE_QUAL received!");
                 if (window.preQualController && !window.preQualController.isActive) {
                     window.preQualController.startInterview();
                 }
                 return;
             }
             
+            // Handle transcript for interview answers
             if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
                 if (window.preQualController && window.preQualController.isActive) {
                     window.preQualController.handleUserInput(event.data.text);
@@ -692,8 +743,13 @@
         });
     }
 
+    // ==========================================
+    // ✅ GLOBAL EXPORTS (CRITICAL FOR DASHBOARD TESTS)
+    // ==========================================
     window.initDaily = initDaily;
     window.loadDailySDK = loadDailySDK;
+    
+    // Initialize listener immediately
     setupUniversalListener();
 
     function createMainWidget() {
@@ -716,14 +772,17 @@
         return widget;
     }
 
+    // ===== FORCE PRE-QUALIFICATION FUNCTION =====
     function forcePreQualification() {
         console.log("🚀 forcePreQualification - Starting pre-qualification interview");
         
+        // Prevent duplicate starts
         if (isPreQualificationActive) {
             console.log("⚠️ Pre-qualification already active, skipping");
             return;
         }
         
+        // Check if controller and script are ready
         if (!window.preQualController) {
             console.error("❌ preQualController not found");
             return;
@@ -734,12 +793,13 @@
             return;
         }
         
+        // Set the script and start
         window.preQualController.script = window.preQualScript;
         window.preQualController.startInterview();
         isPreQualificationActive = true;
         console.log("✅ Pre-qualification interview started");
     }
-    window.forcePreQualification = forcePreQualification; 
+    window.forcePreQualification = forcePreQualification; // ← ADD THIS LINE
 
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
@@ -756,6 +816,7 @@
 
         const card = document.createElement('div');
         card.className = 'splash-card';
+        // Original: Direct style application (Safer than CSS variables)
         card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
 
         let cardHTML = `
@@ -768,6 +829,7 @@
             </div>
         `;
 
+        // Add white footer area with logo - EXACT DIMENSIONS
         cardHTML += `
             <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
@@ -785,21 +847,28 @@
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
 
+        // Add ticker tape if keywords exist
         const tickerKeywords = config.tickerKeywords;
         if (tickerKeywords) {
             const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
+            
             if (keywords.length > 0) {
                 const tickerContainer = document.createElement('div');
                 tickerContainer.className = 'ticker-container';
+                
                 const tickerContent = document.createElement('div');
                 tickerContent.className = 'ticker-content';
+                
+                // Duplicate keywords for seamless looping
                 const allKeywords = [...keywords, ...keywords];
+                
                 allKeywords.forEach(keyword => {
                     const span = document.createElement('span');
                     span.className = 'ticker-item';
                     span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
                     tickerContent.appendChild(span);
                 });
+                
                 tickerContainer.appendChild(tickerContent);
                 container.appendChild(tickerContainer);
             }
@@ -817,10 +886,14 @@
 
     async function forceUnmute() {
         if (window.mainWidget) {
+            // 1. API Calls
             try {
                 await window.mainWidget.micOn?.();
                 await window.mainWidget.unmute?.();
-            } catch(e) { console.warn("Force unmute API error", e); }
+            } catch(e) {
+                console.warn("Force unmute API error", e);
+            }
+            // 2. Nuclear Shadow DOM Unmute
             try {
                 const shadow = window.mainWidget.shadowRoot;
                 if (shadow) {
@@ -833,15 +906,19 @@
         }
     }
 
+    // ===== ACTIVATE TESS FUNCTION (WITH DAILY INTEGRATION ADDED) =====
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
+        // 1. Try to pre-warm audio
         try {
             if (window.mainWidget && typeof window.mainWidget.micOn === "function") {
                 window.mainWidget.micOn();
             }
         } catch(e) { console.warn("Audio pre-check:", e); }
 
+        
+        // 2. NUKE THE SPLASH WIDGET
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = '';
@@ -850,9 +927,11 @@
             }
         }
 
+        // 3. Remove the overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
+        // 4. CREATE MAIN WIDGET (KEEP EXISTING)
         setTimeout(() => {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
@@ -863,6 +942,7 @@
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
+            // 5. Activate Audio (KEEP EXISTING)
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
                 try {
@@ -879,8 +959,12 @@
             }, 3000);
         }, 100);
         
+        // 🔥 NEW: ALSO START DAILY SESSION IN BACKGROUND
+        // This runs alongside the widget for transcription events
+        // startTessSession(); // REMOVED - Using initDaily instead
         if (typeof initDaily === "function") { initDaily(); }
         
+        // Expose activateTess globally for button clicks (MOVED TO BOTTOM)
         window.activateTess = activateTess;
     }
 
@@ -957,9 +1041,26 @@
     }
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
     else { initWidget(); }
-    console.log('✅ Botemia Bridge v5.8 loaded for', window.BotemiaConfig.name);
+    console.log('✅ Botemia Bridge v5.6 loaded for', window.BotemiaConfig.name);
 
+    // Load Daily SDK
+    function loadDailySDK() {
+        return new Promise((resolve, reject) => {
+            if (typeof DailyIframe !== "undefined") {
+                resolve();
+                return;
+            }
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/@daily-co/daily-js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
+        // Send via opener (direct window communication)
         if (window.opener) {
             window.opener.postMessage({
                 type: 'BRIDGE_ACTIVE',
@@ -968,6 +1069,7 @@
             }, '*');
         }
         
+        // Send via Supabase Realtime (cross-domain)
         if (window.supabaseChannel) {
             window.supabaseChannel.send({
                 type: 'broadcast',
