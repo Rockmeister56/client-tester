@@ -9,7 +9,6 @@
     // ===== GLOBAL VARIABLES =====
     let isPreQualificationActive = false;
     window.preQualController = null;
-    let dailyCallObject = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -318,6 +317,8 @@
     
        async function initDaily() {
         console.log("📞 initDaily: Starting process...");
+
+        let dailyCallObject = null;
         
         // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
