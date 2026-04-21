@@ -392,9 +392,16 @@
             }
         }
 
-        finishInterview() {
+                finishInterview() {
             this.isActive = false;
             console.log("✅ Interview Complete.");
+            
+            // 🔥 RESTORE LEMONSLICE AI
+            if (window.mainWidget) {
+                window.mainWidget.removeAttribute('suppress-ai');
+                window.mainWidget.setAttribute('controlled-widget-state', 'inactive');
+            }
+            
             this.speak("That is everything! I am generating your pre-qualification letter now.");
             this.sendEmail();
         }
@@ -402,6 +409,12 @@
         speak(text) {
             if (!text) return;
             console.log("🤖 Tess says: " + text);
+            
+            // 🔥 FORCE DISABLE LEMONSLICE AI DURING INTERVIEW
+            if (this.isActive && window.mainWidget) {
+                window.mainWidget.setAttribute('suppress-ai', 'true');
+                window.mainWidget.setAttribute('controlled-widget-state', 'active');
+            }
             
             if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                 try {
