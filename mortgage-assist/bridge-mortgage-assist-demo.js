@@ -6,10 +6,11 @@
 (function() {
     "use strict";
 
-   // ===== MODULE-LEVEL VARIABLES (Private to this file) =====
-    let isPreQualificationActive = false;
-    let dailyCallObject = null;  // ← Private, not on window
-    window.preQualController = null;
+  // ===== GLOBAL VARIABLES =====
+let isPreQualificationActive = false;
+window.preQualController = null;
+let _dailyCallInstance = null;  // ← RENAMED (private-ish)
+window.dailyCallObject = null;  // ← Keep this as a getter-only property
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -316,7 +317,7 @@
     // 🍋 EXTRACTED: DAILY INITIALIZATION (FIXED)
     // ==========================================
     
-       async function initDaily() {
+          async function initDaily() {
         console.log("📞 initDaily: Starting process...");
         
         // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
@@ -344,8 +345,14 @@
             const data = await response.json();
             
             if (data.room_url && data.token) {
-                dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
-                window.dailyCallObject = dailyCallObject;
+                _dailyCallInstance = DailyIframe.createCallObject({ lang: "en-us" });
+                
+                // Protect the window property
+                Object.defineProperty(window, 'dailyCallObject', {
+                    get: function() { return _dailyCallInstance; },
+                    set: function() { /* ignore */ },
+                    configurable: true
+                });
                 
                 // Create hidden container if not exists
                 let container = document.getElementById("daily-container");
@@ -356,15 +363,15 @@
                     document.body.appendChild(container);
                 }
                 
-                if (dailyCallObject.iframe()) { 
-                    container.appendChild(dailyCallObject.iframe()); 
+                if (_dailyCallInstance.iframe()) { 
+                    container.appendChild(_dailyCallInstance.iframe()); 
                 }
                 
-                await dailyCallObject.join({ url: data.room_url, token: data.token });
+                await _dailyCallInstance.join({ url: data.room_url, token: data.token });
                 console.log("✅ Joined Daily room (Server Connection Active)");
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
-                dailyCallObject.on("app-message", (ev) => {
+                _dailyCallInstance.on("app-message", (ev) => {
                     
                     // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
@@ -386,33 +393,27 @@
                         }
                         
                         // ===== 🔥 NEW: FUZZY TRIGGER LOGIC =====
-                        // We check if ANY of these keywords appear in her sentence
                         const fuzzyTriggers = [
                             "ready to begin", 
                             "first question", 
                             "begin with the first", 
                             "start the interview",
-                            "YES_INITIATE_PREQUAL" // Keep exact match as backup
+                            "YES_INITIATE_PREQUAL"
                         ];
                         
                         const lowerText = tessText.toLowerCase();
-                        
-                        // Check if she contains ANY of the trigger phrases
                         const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
                         
                         if (hasTrigger) {
                             console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
-                            // Log WHICH specific keyword triggered it
                             const foundTrigger = fuzzyTriggers.find(trigger => lowerText.includes(trigger));
                             console.log("🔥 Triggered by keyword:", foundTrigger); 
                             
-                            // ✅ FIX: SAFETY GATE (Prevents crash if Daily isn't fully ready)
-                            if (!window.dailyCallObject) {
+                            if (!_dailyCallInstance) {
                                 console.warn("⚠️ Daily Call Object not ready. Aborting trigger.");
                                 return;
                             }
 
-                            // Delay to let Tess finish speaking naturally
                             setTimeout(function() {
                                 forcePreQualification();
                             }, 3500);
