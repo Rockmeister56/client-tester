@@ -257,14 +257,11 @@
         const script = document.createElement("script");
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
         script.onload = function() {
-            const { createClient } = supabase;
             const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 realtime: {
                     params: {
                         eventsPerSecond: 10
-                    },
-                    // ✅ FIX: Force WebSocket, Disable REST Fallback
-                    transport: 'websocket' 
+                    }
                 }
             });
             const tcsChannel = sbClient.channel("tess-commands");
