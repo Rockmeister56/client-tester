@@ -411,15 +411,10 @@
                             });
                         }
                         
-                        // ===== 🔥 NEW: FUZZY TRIGGER LOGIC =====
-                        // We check if ANY of these keywords appear in her sentence
-                        const fuzzyTriggers = [
-                            "ready to begin", 
-                            "first question", 
-                            "begin with the first", 
-                            "start the interview",
-                            "YES_INITIATE_PREQUAL" // Keep exact match as backup
-                        ];
+                       const fuzzyTriggers = [
+                       "let's get started",           // What Tess actually says now
+                       "YES_INITIATE_PREQUAL"         // Keep as backup
+                       ];
                         
                         const lowerText = tessText.toLowerCase();
                         
