@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/20/2026, 1:45:54 PM
+// Generated: 4/20/2026, 2:30:11 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.7 - DYNAMIC STEPS & FUZZY FIX
 
@@ -664,6 +664,12 @@
                         // Remove punctuation from both for comparison
                         const cleanTrigger = triggerPhrase.toLowerCase().replace(/[^\w\s]/g, "");
                         const cleanText = lowerText.replace(/[^\w\s]/g, "");
+                        
+                        // ✅ FIX: Ignore trigger if a Dashboard Command (System) is starting it
+                        if (window.hasTriggeredPreQual) {
+                            console.log("⚠️ Dashboard trigger active. Ignoring local trigger phrase.");
+                            return;
+                        }
                         
                         // ✅ FIX: Check if interview is already running to prevent restart/skip
                         if (window.preQualController && window.preQualController.isActive) {
