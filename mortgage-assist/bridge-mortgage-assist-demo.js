@@ -9,6 +9,7 @@
     // ===== GLOBAL VARIABLES =====
     let isPreQualificationActive = false;
     window.preQualController = null;
+    let dailyCallObject = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
