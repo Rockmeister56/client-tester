@@ -261,9 +261,18 @@
             const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { realtime: { params: { eventsPerSecond: 10 } } });
             const tcsChannel = sbClient.channel("tess-commands");
             
-            tcsChannel.on("broadcast", { event: "command" }, function(payload) {
+                tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
-                if (payload.payload.command === "START_PRE_QUAL") { forcePreQualification(); }
+                
+                // ✅ CRITICAL FIX: Safety Gate
+                // Only start if Daily Call Object is ready (defined)
+                if (payload.payload.command === "START_PRE_QUAL") {
+                    if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
+                        console.warn("⚠️ Dashboard ignored: Daily not ready yet.");
+                        return; // STOP. Do not run forcePreQualification.
+                    }
+                    forcePreQualification();
+                }
             });
             
             tcsChannel.subscribe(function(status) { if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); });
@@ -297,7 +306,7 @@
     // 🍋 EXTRACTED: DAILY INITIALIZATION (FIXED)
     // ==========================================
     
-    async function initDaily() {
+       async function initDaily() {
         console.log("📞 initDaily: Starting process...");
         
         // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
@@ -344,7 +353,9 @@
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
                 console.log("✅ Joined Daily room (Server Connection Active)");
                 
+                // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
+                    
                     // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
                         console.log("🚫 Silencing default AI - controller is active");
@@ -381,8 +392,20 @@
                         
                         if (hasTrigger) {
                             console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
-                            console.log("🔥 Triggered by:", tessText); // Log exactly what she said
-                            forcePreQualification();
+                            // Log WHICH specific keyword triggered it
+                            const foundTrigger = fuzzyTriggers.find(trigger => lowerText.includes(trigger));
+                            console.log("🔥 Triggered by keyword:", foundTrigger); 
+                            
+                            // ✅ FIX: SAFETY GATE (Prevents crash if Daily isn't fully ready)
+                            if (!window.dailyCallObject) {
+                                console.warn("⚠️ Daily Call Object not ready. Aborting trigger.");
+                                return;
+                            }
+
+                            // Delay to let Tess finish speaking naturally
+                            setTimeout(function() {
+                                forcePreQualification();
+                            }, 3500);
                         }
                     }
                 });
