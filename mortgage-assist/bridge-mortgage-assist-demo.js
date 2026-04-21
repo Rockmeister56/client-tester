@@ -6,8 +6,9 @@
 (function() {
     "use strict";
 
-    // ===== GLOBAL VARIABLES =====
+   // ===== MODULE-LEVEL VARIABLES (Private to this file) =====
     let isPreQualificationActive = false;
+    let dailyCallObject = null;  // ← Private, not on window
     window.preQualController = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
@@ -317,8 +318,6 @@
     
        async function initDaily() {
         console.log("📞 initDaily: Starting process...");
-
-        let dailyCallObject = null;
         
         // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
         if (typeof DailyIframe === "undefined") {
