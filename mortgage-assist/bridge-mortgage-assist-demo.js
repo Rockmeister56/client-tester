@@ -159,92 +159,315 @@
         return widget;
     }
 
-    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT =====
+    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         steps: [
-            { id: "loanType", type: "choice", text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?", question: "Tess: What type of loan are you looking for?", field: "loanType", validation: "text", options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"] },
-            { id: "monthlyIncome", type: "currency", text: "Tess: What is your total gross monthly income?", question: "Tess: What is your total gross monthly income?", field: "monthlyIncome", validation: "text", options: null },
-            { id: "employmentHistory", type: "choice", text: "Tess: How long have you been at your current employer?", question: "Tess: How long have you been at your current employer?", field: "employmentHistory", validation: "text", options: ["Less than 1 year","1-2 years","3-5 years","5+ years"] },
-            { id: "downPayment", type: "choice", text: "Tess: How much do you plan on putting down?", question: "Tess: How much do you plan on putting down?", field: "downPayment", validation: "text", options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"] },
-            { id: "creditScore", type: "choice", text: "Tess: What is your estimated credit score?", question: "Tess: What is your estimated credit score?", field: "creditScore", validation: "text", options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"] },
-            { id: "step_5", type: "message", text: "Tess: [Name], as you can see as your website mortgage assistant...", question: "Tess: [Name]...", field: "", validation: "text", options: null },
-            { id: "zoomInterest", type: "choice", text: "Tess: Would you be interested in a free Zoom meeting?", question: "Tess: Would you be interested in a free Zoom meeting?", field: "zoomInterest", validation: "text", options: ["Yes","No"] },
-            { id: "fullName", type: "text", text: "Tess: Perfect! Can I start with your full name?", question: "Tess: Perfect! Can I start with your full name?", field: "fullName", validation: "text", options: null },
-            { id: "scheduledDateTime", type: "text", text: "Tess: And when would be the best date and time for a Zoom meeting?", question: "Tess: And when would be the best date and time?", field: "scheduledDateTime", validation: "text", options: null },
-            { id: "email", type: "email", text: "Tess: Perfect! And what email address can I send your confirmation to?", question: "Tess: And what email address?", field: "email", validation: "text", options: null },
-            { id: "phone", type: "phone", text: "Tess: And may I get your phone number please?", question: "Tess: And may I get your phone number please?", field: "phone", validation: "text", options: null },
-            { id: "specialRequests", type: "text", text: "Tess: Do you have any special requests?", question: "Tess: Do you have any special requests?", field: "specialRequests", validation: "text", options: null },
-            { id: "step_12", type: "message", text: "Tess: Excellent! Your confirmation has been sent.", question: "Tess: Excellent! Your confirmation has been sent.", field: "", validation: "text", options: null }
+            { 
+                id: "loanType", 
+                type: "choice",
+                text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                question: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                field: "loanType",
+                validation: "text",
+                options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
+            },
+            { 
+                id: "monthlyIncome", 
+                type: "currency",
+                text: "Tess: What is your total gross monthly income?",
+                question: "Tess: What is your total gross monthly income?",
+                field: "monthlyIncome",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "downPayment", 
+                type: "choice",
+                text: "Tess: How much do you plan on putting down for a down payment?",
+                question: "Tess: How much do you plan on putting down for a down payment?",
+                field: "downPayment",
+                validation: "text",
+                options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
+            },
+            { 
+                id: "creditScore", 
+                type: "choice",
+                text: "Tess: What is your estimated credit score?",
+                question: "Tess: What is your estimated credit score?",
+                field: "creditScore",
+                validation: "text",
+                options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
+            },
+            { 
+                id: "zoomInterest", 
+                type: "choice",
+                text: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                question: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                field: "zoomInterest",
+                validation: "text",
+                options: ["Yes","No"]
+            },
+            { 
+                id: "fullName", 
+                type: "text",
+                text: "Tess: Perfect! Can I start with your full name?",
+                question: "Tess: Perfect! Can I start with your full name?",
+                field: "fullName",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "scheduledDateTime", 
+                type: "text",
+                text: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                question: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                field: "scheduledDateTime",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "email", 
+                type: "email",
+                text: "Tess: Perfect! And what email address can I send your confirmation to?",
+                question: "Tess: Perfect! And what email address can I send your confirmation to?",
+                field: "email",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "phone", 
+                type: "phone",
+                text: "Tess: And may I get your phone number please?",
+                question: "Tess: And may I get your phone number please?",
+                field: "phone",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "specialRequests", 
+                type: "text",
+                text: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                question: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                field: "specialRequests",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "step_10", 
+                type: "message",
+                text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
+                question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
+                field: "",
+                validation: "text",
+                options: null
+            },
         ],
-        responses: {}, currentStepIndex: 0, active: false,
-        start: function() { this.active = true; this.currentStepIndex = 0; this.responses = {}; return this.getCurrentQuestion(); },
+        responses: {},
+        currentStepIndex: 0,
+        active: false,
+        
+        start: function() {
+            console.log("📋 Starting pre-qual script");
+            this.active = true;
+            this.currentStepIndex = 0;
+            this.responses = {};
+            return this.getCurrentQuestion();
+        },
+        
         processResponse: async function(userInput) {
             if (!this.active) return null;
             const currentStep = this.steps[this.currentStepIndex];
-            if (!currentStep) { await this.sendEmail(); this.active = false; return "Thank you! Your pre-qualification is complete."; }
-            if (currentStep.type === "message") { this.currentStepIndex++; return this.getCurrentQuestion(); }
-            if (currentStep.field) { this.responses[currentStep.field] = userInput; }
+            if (!currentStep) {
+                await this.sendEmail();
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
+            // If it's a message step, just move to next
+            if (currentStep.type === "message") {
+                this.currentStepIndex++;
+                return this.getCurrentQuestion();
+            }
+            
+            // Store the response if it has a field
+            if (currentStep.field) {
+                this.responses[currentStep.field] = userInput;
+                console.log("✅ Stored " + currentStep.field + ": " + userInput);
+            }
+            
+            // Move to next step
             this.currentStepIndex++;
-            if (this.currentStepIndex >= this.steps.length) { await this.sendEmail(); this.active = false; return "Thank you! Your pre-qualification is complete."; }
+            
+            // Check if interview is complete
+            if (this.currentStepIndex >= this.steps.length) {
+                await this.sendEmail();
+                this.active = false;
+                return "Thank you! Your pre-qualification is complete.";
+            }
+            
             return this.getCurrentQuestion();
         },
-        getCurrentQuestion: function() { const step = this.steps[this.currentStepIndex]; return step ? (step.question || step.text) : null; },
-        getResults: function() { return this.responses; }
+        
+        getCurrentQuestion: function() {
+            const step = this.steps[this.currentStepIndex];
+            if (!step) {
+                this.active = false;
+                return null;
+            }
+            return step.question || step.text;
+        },
+        
+        getResults: function() {
+            return this.responses;
+        }
     };
 
     class PreQualificationController {
-        constructor() { this.isActive = false; this.script = null; this.answers = {}; this.currentStepIndex = 0; }
+        constructor() {
+            this.isActive = false;
+            this.script = null;
+            this.answers = {};
+            this.currentStepIndex = 0;
+        }
+
         startInterview() {
             if (this.isActive) return;
-            if (!window.preQualScript) { console.error("❌ CRITICAL: preQualScript not found!"); return; }
+            
+            if (!window.preQualScript) {
+                console.error("❌ CRITICAL: preQualScript not found!");
+                return;
+            }
             this.script = window.preQualScript;
+            
             this.isActive = true;
             this.currentStepIndex = 0;
             this.answers = {};
-            console.log("🎯 Starting Pre-Qual Interview");
+            
+            console.log("🎯 Starting Pre-Qual Interview (Conformed Version)");
             this.speakCurrentStep();
         }
+
         handleUserInput(userText) {
             if (!this.isActive || !this.script) return;
+
             const lowerText = userText.toLowerCase();
             const currentStep = this.script.steps[this.currentStepIndex];
+            
             if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
                 console.log("🚪 User declined. Returning to Lemon Slice.");
                 this.isActive = false;
                 this.speak("No problem. What else can I help you with?");
                 return;
             }
-            if (currentStep.field) { this.answers[currentStep.field] = userText; console.log("💾 Saved " + currentStep.field + ": " + userText); }
+            
+            if (currentStep.id === "confirmation" && lowerText === "yes") {
+                console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
+                this.answers[currentStep.field] = userText;
+                this.currentStepIndex++;
+                this.speakCurrentStep();
+                return; 
+            }
+            
+            if (currentStep.field) {
+                this.answers[currentStep.field] = userText;
+                console.log("💾 Saved " + currentStep.field + ": " + userText);
+            }
             this.currentStepIndex++;
-            if (this.currentStepIndex >= this.script.steps.length) { this.finishInterview(); return; }
+
+            if (this.currentStepIndex >= this.script.steps.length) {
+                this.finishInterview();
+                return;
+            }
+
             this.speakCurrentStep();
         }
+
         speakCurrentStep() {
             const step = this.script.steps[this.currentStepIndex];
-            if (step) { this.speak(step.question || step.text); } else { console.error("❌ Step not found at index:", this.currentStepIndex); }
+            if (step) {
+                const message = step.question || step.text;
+                this.speak(message);
+            } else {
+                console.error("❌ Step not found at index:", this.currentStepIndex);
+            }
         }
+
         finishInterview() {
             this.isActive = false;
             console.log("✅ Interview Complete.");
             this.speak("That is everything! I am generating your pre-qualification letter now.");
             this.sendEmail();
         }
+
         speak(text) {
             if (!text) return;
             console.log("🤖 Tess says: " + text);
-            if (window.mainWidget) {
-                if (typeof window.mainWidget.sendMessage === "function") { window.mainWidget.sendMessage(text); }
-                window.mainWidget.setAttribute('message', text);
-                window.mainWidget.dispatchEvent(new CustomEvent('lemon-slice-message', { detail: { message: text, type: 'agent_response' } }));
+            
+            if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+                try {
+                    window.mainWidget.sendMessage(text);
+                    console.log("📤 sendMessage called successfully");
+                } catch(e) {
+                    console.error("❌ sendMessage error:", e);
+                }
+            } else {
+                console.error("❌ mainWidget not ready - activate Tess first!");
             }
         }
+
         sendEmail() {
-            console.log("📧 Sending dynamic email...");
+            console.log("📧 Sending dynamic email with collected responses...");
             const data = this.answers;
+            
+            // Convert all responses to a formatted string for email
             let formattedAnswers = "";
-            for (var key in data) { if (data.hasOwnProperty(key)) formattedAnswers += key + ": " + data[key] + "\n"; }
-            var params = { full_name: data.fullName || "Not provided", email: data.email || "Not provided", phone: data.phone || "Not provided", scheduled_datetime: data.scheduledDateTime || "Not provided", all_answers: formattedAnswers };
-            emailjs.send("service_b9bppgb", "template_uix9cyx", params).then(() => console.log("✅ Dynamic email sent")).catch(e => console.error("❌ Email error:", e));
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    formattedAnswers += key + ": " + data[key] + "\n";
+                }
+            }
+            
+            // ===== EMAIL 1: TO PROSPECTIVE CLIENT (YOU) =====
+            var prospectiveClientParams = {
+                full_name: data.fullName || data.name || "Not provided",
+                email: data.email || "Not provided",
+                phone: data.phone || data.phoneNumber || "Not provided",
+                scheduled_datetime: data.scheduledDateTime || data.dateTime || "Not provided",
+                zoom_interest: data.zoomInterest || "Not provided",
+                all_answers: formattedAnswers,
+                full_json: JSON.stringify(data, null, 2),
+                submitted_at: new Date().toLocaleString()
+            };
+            
+            // ===== EMAIL 2: TO WEB PROSPECT (Confirmation) =====
+            var webProspectParams = {
+                full_name: data.fullName || data.name || "Valued Client",
+                email: data.email || "Not provided",
+                phone: data.phone || data.phoneNumber || "Not provided",
+                scheduled_datetime: data.scheduledDateTime || data.dateTime || "Not provided",
+                zoom_interest: data.zoomInterest || "Not provided",
+                message: "Thank you for completing pre-qualification! A loan officer will reach out to you shortly."
+            };
+            
+            // Send Email 1
+            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectiveClientParams)
+                .then(function() {
+                    console.log("✅ Dynamic email sent to prospective client");
+                })
+                .catch(function(error) {
+                    console.error("❌ Email error (prospective):", error);
+                });
+            
+            // Send Email 2 (Only if we have their email)
+            if (data.email) {
+                emailjs.send("service_b9bppgb", "template_8kx812d", webProspectParams)
+                    .then(function() {
+                        console.log("✅ Visitor confirmation email sent to web prospect");
+                    })
+                    .catch(function(error) {
+                        console.error("❌ Email error (visitor):", error);
+                    });
+            }
         }
     }
     window.PreQualificationController = PreQualificationController;
