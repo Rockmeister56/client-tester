@@ -331,21 +331,29 @@
         }
 
         startInterview() {
-            if (this.isActive) return;
-            
-            if (!window.preQualScript) {
-                console.error("❌ CRITICAL: preQualScript not found!");
-                return;
-            }
-            this.script = window.preQualScript;
-            
-            this.isActive = true;
-            this.currentStepIndex = 0;
-            this.answers = {};
-            
-            console.log("🎯 Starting Pre-Qual Interview (Conformed Version)");
-            this.speakCurrentStep();
-        }
+    if (this.isActive) return;
+    
+    if (!window.preQualScript) {
+        console.error("❌ CRITICAL: preQualScript not found!");
+        return;
+    }
+    this.script = window.preQualScript;
+    
+    this.isActive = true;
+    this.currentStepIndex = 0;
+    this.answers = {};
+    
+    // 🔥 NUCLEAR OPTION: Completely mute LemonSlice AI
+    if (window.mainWidget) {
+        window.mainWidget.setAttribute('muted', 'true');
+        window.mainWidget.setAttribute('suppress-audio', 'true');
+        window.mainWidget.setAttribute('suppress-ai', 'true');
+        console.log("🔇 LemonSlice AI forcefully muted");
+    }
+    
+    console.log("🎯 Starting Pre-Qual Interview (Conformed Version)");
+    this.speakCurrentStep();
+}
 
         handleUserInput(userText) {
             if (!this.isActive || !this.script) return;
@@ -392,19 +400,22 @@
             }
         }
 
-                finishInterview() {
-            this.isActive = false;
-            console.log("✅ Interview Complete.");
-            
-            // 🔥 RESTORE LEMONSLICE AI
-            if (window.mainWidget) {
-                window.mainWidget.removeAttribute('suppress-ai');
-                window.mainWidget.setAttribute('controlled-widget-state', 'inactive');
-            }
-            
-            this.speak("That is everything! I am generating your pre-qualification letter now.");
-            this.sendEmail();
-        }
+               finishInterview() {
+    this.isActive = false;
+    console.log("✅ Interview Complete.");
+    
+    // 🔥 RESTORE LEMONSLICE AI
+    if (window.mainWidget) {
+        window.mainWidget.removeAttribute('muted');
+        window.mainWidget.removeAttribute('suppress-audio');
+        window.mainWidget.removeAttribute('suppress-ai');
+        window.mainWidget.setAttribute('controlled-widget-state', 'inactive');
+        console.log("🔊 LemonSlice AI restored");
+    }
+    
+    this.speak("That is everything! I am generating your pre-qualification letter now.");
+    this.sendEmail();
+}
 
         speak(text) {
             if (!text) return;
