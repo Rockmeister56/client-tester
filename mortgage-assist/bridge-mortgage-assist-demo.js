@@ -159,23 +159,110 @@
         return widget;
     }
 
-    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT =====
+    // ===== DYNAMIC PRE-QUALIFICATION SCRIPT (From Supabase) =====
     window.preQualScript = {
         steps: [
-            { id: "loanType", type: "choice", text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?", question: "Tess: What type of loan are you looking for?", field: "loanType", validation: "text", options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"] },
-            { id: "monthlyIncome", type: "currency", text: "Tess: What is your total gross monthly income?", question: "Tess: What is your total gross monthly income?", field: "monthlyIncome", validation: "text", options: null },
-            { id: "employmentHistory", type: "choice", text: "Tess: How long have you been at your current employer?", question: "Tess: How long have you been at your current employer?", field: "employmentHistory", validation: "text", options: ["Less than 1 year","1-2 years","3-5 years","5+ years"] },
-            { id: "downPayment", type: "choice", text: "Tess: How much do you plan on putting down?", question: "Tess: How much do you plan on putting down?", field: "downPayment", validation: "text", options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"] },
-            { id: "creditScore", type: "choice", text: "Tess: What is your estimated credit score?", question: "Tess: What is your estimated credit score?", field: "creditScore", validation: "text", options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"] },
-            { id: "step_5", type: "message", text: "Tess: [Name], as you can see as your website mortgage assistant...", question: "Tess: [Name]...", field: "", validation: "text", options: null },
-            { id: "zoomInterest", type: "choice", text: "Tess: Would you be interested in a free Zoom meeting?", question: "Tess: Would you be interested in a free Zoom meeting?", field: "zoomInterest", validation: "text", options: ["Yes","No"] },
-            { id: "fullName", type: "text", text: "Tess: Perfect! Can I start with your full name?", question: "Tess: Perfect! Can I start with your full name?", field: "fullName", validation: "text", options: null },
-            { id: "scheduledDateTime", type: "text", text: "Tess: And when would be the best date and time for a Zoom meeting?", question: "Tess: And when would be the best date and time?", field: "scheduledDateTime", validation: "text", options: null },
-            { id: "email", type: "email", text: "Tess: Perfect! And what email address can I send your confirmation to?", question: "Tess: And what email address?", field: "email", validation: "text", options: null },
-            { id: "phone", type: "phone", text: "Tess: And may I get your phone number please?", question: "Tess: And may I get your phone number please?", field: "phone", validation: "text", options: null },
-            { id: "specialRequests", type: "text", text: "Tess: Do you have any special requests?", question: "Tess: Do you have any special requests?", field: "specialRequests", validation: "text", options: null },
-            { id: "step_12", type: "message", text: "Tess: Excellent! Your confirmation has been sent.", question: "Tess: Excellent! Your confirmation has been sent.", field: "", validation: "text", options: null }
+            { 
+                id: "loanType", 
+                type: "choice",
+                text: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                question: "Tess: What type of loan are you looking for? For example, FHA, VA, Conventional, or USDA?",
+                field: "loanType",
+                validation: "text",
+                options: ["FHA","VA (Veterans)","Conventional","USDA","Other/Not Sure"]
+            },
+            { 
+                id: "monthlyIncome", 
+                type: "currency",
+                text: "Tess: What is your total gross monthly income?",
+                question: "Tess: What is your total gross monthly income?",
+                field: "monthlyIncome",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "downPayment", 
+                type: "choice",
+                text: "Tess: How much do you plan on putting down for a down payment?",
+                question: "Tess: How much do you plan on putting down for a down payment?",
+                field: "downPayment",
+                validation: "text",
+                options: ["Less than 3%","3-5%","5-10%","10-20%","20%+"]
+            },
+            { 
+                id: "creditScore", 
+                type: "choice",
+                text: "Tess: What is your estimated credit score?",
+                question: "Tess: What is your estimated credit score?",
+                field: "creditScore",
+                validation: "text",
+                options: ["Excellent (740+)","Good (700-739)","Fair (620-699)","Challenged (below 620)","Not sure"]
+            },
+            { 
+                id: "zoomInterest", 
+                type: "choice",
+                text: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                question: "Tess: As you can see, I'm able to ask as many pre-qualification questions as needed to pre-qualify your web prospects and, moreover, convert them into pre-qualified leads. Not to mention generate up to five times more qualified leads than you're currently getting with a web form that gets a 70% abandonment rate.",
+                field: "zoomInterest",
+                validation: "text",
+                options: ["Yes","No"]
+            },
+            { 
+                id: "fullName", 
+                type: "text",
+                text: "Tess: Perfect! Can I start with your full name?",
+                question: "Tess: Perfect! Can I start with your full name?",
+                field: "fullName",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "scheduledDateTime", 
+                type: "text",
+                text: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                question: "Tess: And when would be the best date and time for a Zoom meeting? Do you have your calendar in front of you? Take your time.",
+                field: "scheduledDateTime",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "email", 
+                type: "email",
+                text: "Tess: Perfect! And what email address can I send your confirmation to?",
+                question: "Tess: Perfect! And what email address can I send your confirmation to?",
+                field: "email",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "phone", 
+                type: "phone",
+                text: "Tess: And may I get your phone number please?",
+                question: "Tess: And may I get your phone number please?",
+                field: "phone",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "specialRequests", 
+                type: "text",
+                text: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                question: "Tess: Do you have any special requests I can pass on to your conversion specialist?",
+                field: "specialRequests",
+                validation: "text",
+                options: null
+            },
+            { 
+                id: "step_10", 
+                type: "message",
+                text: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
+                question: "Tess: Excellent! Your confirmation has been sent with an example of what you'll receive from your web prospects as a pre-qualified lead, and Zoom information is included.",
+                field: "",
+                validation: "text",
+                options: null
+            },
         ],
+
         responses: {}, currentStepIndex: 0, active: false,
         start: function() { this.active = true; this.currentStepIndex = 0; this.responses = {}; return this.getCurrentQuestion(); },
         processResponse: async function(userInput) {
@@ -625,11 +712,34 @@
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); } else { initWidget(); }
     console.log('✅ Botemia Bridge v5.5 loaded for', window.BotemiaConfig.name);
     
-    // ===== CLIENT ANNOUNCEMENT =====
+    // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
+        // Send via opener (direct window communication)
+        if (window.opener) {
+            window.opener.postMessage({
+                type: 'BRIDGE_ACTIVE',
+                clientId: window.BotemiaConfig.id,
+                url: window.location.href
+            }, '*');
+        }
+        
+        // Send via Supabase Realtime (cross-domain)
         if (window.supabaseChannel) {
-            window.supabaseChannel.send({ type: 'broadcast', event: 'client_info', payload: { type: 'CLIENT_INFO', clientId: window.BotemiaConfig.id, url: window.location.href, timestamp: Date.now() } });
+            window.supabaseChannel.send({
+                type: 'broadcast',
+                event: 'client_info',
+                payload: {
+                    type: 'CLIENT_INFO',
+                    clientId: window.BotemiaConfig.id,
+                    url: window.location.href,
+                    timestamp: Date.now()
+                }
+            });
+            console.log('📢 Announced to TCS via Supabase Realtime');
+        } else {
+            console.log('⚠️ Supabase channel not ready yet');
         }
     }
+
     setTimeout(announceToTCS, 2000);
 })();
