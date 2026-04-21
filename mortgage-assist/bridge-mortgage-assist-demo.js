@@ -6,11 +6,10 @@
 (function() {
     "use strict";
 
-  // ===== GLOBAL VARIABLES =====
-let isPreQualificationActive = false;
-window.preQualController = null;
-let _dailyCallInstance = null;  // ← RENAMED (private-ish)
-window.dailyCallObject = null;  // ← Keep this as a getter-only property
+    // ===== GLOBAL VARIABLES =====
+    let isPreQualificationActive = false;
+    window.preQualController = null;
+    let dailyCallObject = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -317,7 +316,7 @@ window.dailyCallObject = null;  // ← Keep this as a getter-only property
     // 🍋 EXTRACTED: DAILY INITIALIZATION (FIXED)
     // ==========================================
     
-          async function initDaily() {
+       async function initDaily() {
         console.log("📞 initDaily: Starting process...");
         
         // 1. AGGRESSIVE WAIT: Ensure SDK is loaded
@@ -345,14 +344,8 @@ window.dailyCallObject = null;  // ← Keep this as a getter-only property
             const data = await response.json();
             
             if (data.room_url && data.token) {
-                _dailyCallInstance = DailyIframe.createCallObject({ lang: "en-us" });
-                
-                // Protect the window property
-                Object.defineProperty(window, 'dailyCallObject', {
-                    get: function() { return _dailyCallInstance; },
-                    set: function() { /* ignore */ },
-                    configurable: true
-                });
+                dailyCallObject = DailyIframe.createCallObject({ lang: "en-us" });
+                window.dailyCallObject = dailyCallObject;
                 
                 // Create hidden container if not exists
                 let container = document.getElementById("daily-container");
@@ -363,15 +356,15 @@ window.dailyCallObject = null;  // ← Keep this as a getter-only property
                     document.body.appendChild(container);
                 }
                 
-                if (_dailyCallInstance.iframe()) { 
-                    container.appendChild(_dailyCallInstance.iframe()); 
+                if (dailyCallObject.iframe()) { 
+                    container.appendChild(dailyCallObject.iframe()); 
                 }
                 
-                await _dailyCallInstance.join({ url: data.room_url, token: data.token });
+                await dailyCallObject.join({ url: data.room_url, token: data.token });
                 console.log("✅ Joined Daily room (Server Connection Active)");
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
-                _dailyCallInstance.on("app-message", (ev) => {
+                dailyCallObject.on("app-message", (ev) => {
                     
                     // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
@@ -393,27 +386,33 @@ window.dailyCallObject = null;  // ← Keep this as a getter-only property
                         }
                         
                         // ===== 🔥 NEW: FUZZY TRIGGER LOGIC =====
+                        // We check if ANY of these keywords appear in her sentence
                         const fuzzyTriggers = [
                             "ready to begin", 
                             "first question", 
                             "begin with the first", 
                             "start the interview",
-                            "YES_INITIATE_PREQUAL"
+                            "YES_INITIATE_PREQUAL" // Keep exact match as backup
                         ];
                         
                         const lowerText = tessText.toLowerCase();
+                        
+                        // Check if she contains ANY of the trigger phrases
                         const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
                         
                         if (hasTrigger) {
                             console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
+                            // Log WHICH specific keyword triggered it
                             const foundTrigger = fuzzyTriggers.find(trigger => lowerText.includes(trigger));
                             console.log("🔥 Triggered by keyword:", foundTrigger); 
                             
-                            if (!_dailyCallInstance) {
+                            // ✅ FIX: SAFETY GATE (Prevents crash if Daily isn't fully ready)
+                            if (!window.dailyCallObject) {
                                 console.warn("⚠️ Daily Call Object not ready. Aborting trigger.");
                                 return;
                             }
 
+                            // Delay to let Tess finish speaking naturally
                             setTimeout(function() {
                                 forcePreQualification();
                             }, 3500);
@@ -428,14 +427,17 @@ window.dailyCallObject = null;  // ← Keep this as a getter-only property
         }
     }
 
-    function setupUniversalListener() {
+        function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
         window.addEventListener("message", (event) => {
             if (!event.data || !event.data.type) return;
-            if (event.data.type === "START_PRE_QUAL") {
-                console.log("🎯 START_PRE_QUAL received!");
-                if (window.preQualController && !window.preQualController.isActive) window.preQualController.startInterview();
-            }
+            
+            // 🔥 DISABLED - This is causing the skip!
+            // if (event.data.type === "START_PRE_QUAL") {
+            //     console.log("🎯 START_PRE_QUAL received!");
+            //     if (window.preQualController && !window.preQualController.isActive) window.preQualController.startInterview();
+            // }
+            
             if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
                 if (window.preQualController && window.preQualController.isActive) window.preQualController.handleUserInput(event.data.text);
             }
