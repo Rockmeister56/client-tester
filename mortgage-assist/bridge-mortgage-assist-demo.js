@@ -389,12 +389,20 @@
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
                 console.log("✅ Joined Daily room (Server Connection Active)");
                 
-                // ===== 🎧 CLEAN AUDIO LISTENER =====
+                               // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
                     
                     // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
                         console.log("🚫 Silencing default AI - controller is active");
+                        return;
+                    }
+                    
+                    // 🔥 NEW: Handle USER transcriptions during interview
+                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "user_transcription") {
+                        const userText = ev.data.transcription || ev.data.text || "";
+                        console.log("👤 [DAILY] User said:", userText);
+                        window.preQualController.handleUserInput(userText);
                         return;
                     }
                     
@@ -411,29 +419,20 @@
                             });
                         }
                         
-                       const fuzzyTriggers = [
-                       "let's get started",           // What Tess actually says now
-                       "YES_INITIATE_PREQUAL"         // Keep as backup
-                       ];
+                        // ===== 🔥 DYNAMIC TRIGGER LOGIC =====
+                        const fuzzyTriggers = [
+                            "let's get started",
+                            "YES_INITIATE_PREQUAL"
+                        ];
                         
                         const lowerText = tessText.toLowerCase();
-                        
-                        // Check if she contains ANY of the trigger phrases
-                        const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger));
+                        const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
                         
                         if (hasTrigger) {
                             console.log("🎯 TRIGGER DETECTED (Fuzzy Match)! Starting pre-qualification...");
-                            // Log WHICH specific keyword triggered it
-                            const foundTrigger = fuzzyTriggers.find(trigger => lowerText.includes(trigger));
+                            const foundTrigger = fuzzyTriggers.find(trigger => lowerText.includes(trigger.toLowerCase()));
                             console.log("🔥 Triggered by keyword:", foundTrigger); 
                             
-                            // ✅ FIX: SAFETY GATE (Prevents crash if Daily isn't fully ready)
-                            if (!window.dailyCallObject) {
-                                console.warn("⚠️ Daily Call Object not ready. Aborting trigger.");
-                                return;
-                            }
-
-                            // Delay to let Tess finish speaking naturally
                             setTimeout(function() {
                                 forcePreQualification();
                             }, 3500);
