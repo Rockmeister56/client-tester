@@ -371,8 +371,34 @@
                 }
             });
             
-            tcsChannel.subscribe(function(status) { if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); });
+                      tcsChannel.subscribe(function(status) { 
+                if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); 
+            });
             window.supabaseChannel = tcsChannel;
+            
+            // Create health monitor channel (For Communication Monitor)
+            const healthChannel = sbClient.channel("health-monitor");
+            healthChannel.subscribe(function(status) {
+                if (status === "SUBSCRIBED") {
+                    console.log("🩺 Health monitor channel connected");
+                }
+            });
+            window.healthChannel = healthChannel;
+            
+            // Listen for test_ping
+            healthChannel.on("broadcast", { event: "test_ping" }, function(payload) {
+                console.log("📡 TEST_PING received, sending PONG...");
+                healthChannel.send({
+                    type: "broadcast",
+                    event: "test_pong",
+                    payload: {
+                        clientId: window.BotemiaConfig?.id || "unknown",
+                        timestamp: Date.now(),
+                        echoTimestamp: payload.payload.timestamp
+                    }
+                });
+                console.log("📤 test_pong sent");
+            });
         };
         
         document.head.appendChild(script);
@@ -714,39 +740,35 @@
     
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
-    // Helper function to send the announcement
-    const sendAnnouncement = () => {
-        if (window.supabaseChannel) {
-            window.supabaseChannel.send({
-                type: 'broadcast',
-                event: 'client_info',
-                payload: {
-                    type: 'CLIENT_INFO',
-                    clientId: window.BotemiaConfig.id,
-                    url: window.location.href,
-                    timestamp: Date.now()
-                }
-            });
-            console.log('📢 Announced to TCS via Supabase Realtime');
-            return true;
-        }
-        return false;
-    };
-
-    // Try immediately
-    if (sendAnnouncement()) return;
-
-    // If not ready, retry a few times over 3 seconds
-    console.log('⏳ Supabase channel not ready, retrying...');
-    let attempts = 0;
-    const interval = setInterval(() => {
-        attempts++;
-        if (sendAnnouncement() || attempts >= 6) { // 6 attempts * 500ms = 3 seconds
-            clearInterval(interval);
-            if (attempts >= 6) {
-                console.error('❌ Failed to announce to TCS after 3 seconds');
+        const sendAnnouncement = function() {
+            if (window.supabaseChannel) {
+                window.supabaseChannel.send({
+                    type: 'broadcast',
+                    event: 'client_info',
+                    payload: {
+                        type: 'CLIENT_INFO',
+                        clientId: window.BotemiaConfig.id,
+                        url: window.location.href,
+                        timestamp: Date.now()
+                    }
+                });
+                console.log('📢 Announced to TCS via Supabase Realtime');
+                return true;
             }
-        }
-    }, 500);
-}
+            return false;
+        };
+
+        if (sendAnnouncement()) return;
+        
+        console.log('⏳ Supabase channel not ready, retrying...');
+        let attempts = 0;
+        const interval = setInterval(function() {
+            attempts++;
+            if (sendAnnouncement() || attempts >= 6) {
+                clearInterval(interval);
+            }
+        }, 500);
+    }
+
+    setTimeout(announceToTCS, 4000);
 })();
