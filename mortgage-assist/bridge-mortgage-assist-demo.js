@@ -9,7 +9,6 @@
     // ===== GLOBAL VARIABLES =====
     let isPreQualificationActive = false;
     window.preQualController = null;
-    let dailyCallObject = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -249,18 +248,15 @@
     }
     window.PreQualificationController = PreQualificationController;
 
-        // =========================================
-    // 🍋 SUPABASE REALTIME SETUP (ASYNC SAFE)
+    // =========================================
+    // 🍋 SUPABASE REALTIME SETUP
     // =========================================
     (function() {
         const SUPABASE_URL = "https://fcgbusobfdwnpoqyuzoe.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk";
         const script = document.createElement("script");
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-        
-        // ✅ FIX: We only run Supabase code AFTER library is fully loaded
         script.onload = function() {
-            const { createClient } = supabase; // Safe to destructure here
             const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 realtime: {
                     params: {
@@ -268,17 +264,17 @@
                     }
                 }
             });
-            
             const tcsChannel = sbClient.channel("tess-commands");
             
-            tcsChannel.on("broadcast", { event: "command" }, function(payload) {
+                tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
                 
                 // ✅ CRITICAL FIX: Safety Gate
+                // Only start if Daily Call Object is ready (defined)
                 if (payload.payload.command === "START_PRE_QUAL") {
                     if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
                         console.warn("⚠️ Dashboard ignored: Daily not ready yet.");
-                        return;
+                        return; // STOP. Do not run forcePreQualification.
                     }
                     forcePreQualification();
                 }
@@ -287,7 +283,6 @@
             tcsChannel.subscribe(function(status) { if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); });
             window.supabaseChannel = tcsChannel;
         };
-        
         document.head.appendChild(script);
     })();
 
