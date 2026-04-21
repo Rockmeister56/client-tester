@@ -9,6 +9,7 @@
     // ===== GLOBAL VARIABLES =====
     let isPreQualificationActive = false;
     window.preQualController = null;
+    let dailyCallObject = null;
 
     // ===== EMBEDDED CLIENT CONFIGURATION =====
     window.BotemiaConfig = {
@@ -425,6 +426,7 @@
             console.error("❌ Daily init error:", e); 
         }
     }
+    window.initDaily = initDaily;
 
     function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
