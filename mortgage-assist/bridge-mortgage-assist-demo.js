@@ -274,15 +274,15 @@
             tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
                 
-                // ✅ CRITICAL FIX: Safety Gate
-                if (payload.payload.command === "START_PRE_QUAL") {
-                    if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
-                        console.warn("⚠️ Dashboard ignored: Daily not ready yet.");
-                        return;
-                    }
-                    forcePreQualification();
-                }
-            });
+                 // 🔥 COMPLETELY DISABLED - THIS IS THE SKIP TRIGGER
+    // if (payload.payload.command === "START_PRE_QUAL") {
+    //     if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
+    //         console.warn("⚠️ Dashboard ignored: Daily not ready yet.");
+    //         return;
+    //     }
+    //     forcePreQualification();
+    // }
+});
             
             tcsChannel.subscribe(function(status) { if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); });
             window.supabaseChannel = tcsChannel;
@@ -427,17 +427,14 @@
         }
     }
 
-        function setupUniversalListener() {
+    function setupUniversalListener() {
         console.log("👂 Universal Listener Activated.");
         window.addEventListener("message", (event) => {
             if (!event.data || !event.data.type) return;
-            
-            // 🔥 DISABLED - This is causing the skip!
-            // if (event.data.type === "START_PRE_QUAL") {
-            //     console.log("🎯 START_PRE_QUAL received!");
-            //     if (window.preQualController && !window.preQualController.isActive) window.preQualController.startInterview();
-            // }
-            
+            if (event.data.type === "START_PRE_QUAL") {
+                console.log("🎯 START_PRE_QUAL received!");
+                if (window.preQualController && !window.preQualController.isActive) window.preQualController.startInterview();
+            }
             if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
                 if (window.preQualController && window.preQualController.isActive) window.preQualController.handleUserInput(event.data.text);
             }
