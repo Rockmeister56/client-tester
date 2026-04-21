@@ -714,16 +714,8 @@
     
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
-        // Send via opener (direct window communication)
-        if (window.opener) {
-            window.opener.postMessage({
-                type: 'BRIDGE_ACTIVE',
-                clientId: window.BotemiaConfig.id,
-                url: window.location.href
-            }, '*');
-        }
-        
-        // Send via Supabase Realtime (cross-domain)
+    // Helper function to send the announcement
+    const sendAnnouncement = () => {
         if (window.supabaseChannel) {
             window.supabaseChannel.send({
                 type: 'broadcast',
@@ -736,10 +728,25 @@
                 }
             });
             console.log('📢 Announced to TCS via Supabase Realtime');
-        } else {
-            console.log('⚠️ Supabase channel not ready yet');
+            return true;
         }
-    }
+        return false;
+    };
 
-    setTimeout(announceToTCS, 2000);
+    // Try immediately
+    if (sendAnnouncement()) return;
+
+    // If not ready, retry a few times over 3 seconds
+    console.log('⏳ Supabase channel not ready, retrying...');
+    let attempts = 0;
+    const interval = setInterval(() => {
+        attempts++;
+        if (sendAnnouncement() || attempts >= 6) { // 6 attempts * 500ms = 3 seconds
+            clearInterval(interval);
+            if (attempts >= 6) {
+                console.error('❌ Failed to announce to TCS after 3 seconds');
+            }
+        }
+    }, 500);
+}
 })();
