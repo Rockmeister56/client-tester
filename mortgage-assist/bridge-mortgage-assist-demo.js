@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/21/2026, 9:51:53 PM
+// Generated: 4/21/2026, 11:12:27 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -185,6 +185,9 @@
             this.script = null;
             this.answers = {};
             this.currentStepIndex = 0;
+            this.currentField = null;
+            this.pendingValue = null;
+            this.interviewCompleted = false;
         }
 
         startInterview() {
@@ -206,47 +209,78 @@
         }
 
         handleUserInput(userText) {
-            if (!this.isActive || !this.script) return;
-
+            if (!this.isActive) return;
+            
             const lowerText = userText.toLowerCase();
-            const currentStep = this.script.steps[this.currentStepIndex];
             
-            if (currentStep.id === "confirmation" && (lowerText === "no" || lowerText === "no thank you")) {
-                console.log("🚪 User declined. Returning to Lemon Slice.");
-                this.isActive = false;
-                this.speak("No problem. What else can I help you with?");
-                return;
+            // Detect which field we're capturing based on Tess's last question
+            if (this.currentField) {
+                // Check if this is a confirmation ("yes" to "Is that correct?")
+                if (lowerText === "yes" || lowerText === "yes it is" || lowerText === "correct" || lowerText === "that's correct") {
+                    if (this.pendingValue) {
+                        this.answers[this.currentField] = this.pendingValue;
+                        console.log("✅ Confirmed:", this.currentField, "=", this.pendingValue);
+                    }
+                    this.pendingValue = null;
+                    this.currentField = null;
+                } else if (lowerText === "no" || lowerText.includes("redo") || lowerText.includes("repeat") || lowerText === "that's not correct") {
+                    console.log("🔄 User wants to redo:", this.currentField);
+                    this.pendingValue = null;
+                    // Keep currentField so we capture the next attempt
+                } else {
+                    // This is the actual value being provided
+                    this.pendingValue = userText;
+                    console.log("📝 Pending:", this.currentField, "=", userText);
+                }
+            } else {
+                // Store uncategorized responses
+                console.log("💾 Captured (uncategorized):", userText);
             }
             
-            if (currentStep.id === "confirmation" && lowerText === "yes") {
-                console.log("🔥 FIREWALL ACTIVATED: Seizing control from Lemon Slice.");
-                this.answers[currentStep.field] = userText;
-                this.currentStepIndex++;
-                this.speakCurrentStep();
-                return; 
-            }
+            // Store all responses in chronological order as backup
+            if (!this.answers.allResponses) this.answers.allResponses = [];
+            this.answers.allResponses.push({ 
+                text: userText, 
+                field: this.currentField || "unknown",
+                timestamp: Date.now() 
+            });
             
-            if (currentStep.field) {
-                this.answers[currentStep.field] = userText;
-                console.log("💾 Saved " + currentStep.field + ": " + userText);
+            // Check if we've collected all critical fields
+            if (this.answers.fullName && this.answers.email && this.answers.phone && !this.interviewCompleted) {
+                this.interviewCompleted = true;
+                console.log("🎉 All critical fields collected!");
+                // Give LemonSlice time to finish speaking before finishing
+                setTimeout(() => {
+                    this.finishInterview();
+                }, 5000);
             }
-            this.currentStepIndex++;
-
-            if (this.currentStepIndex >= this.script.steps.length) {
-                this.finishInterview();
-                return;
-            }
-
-            this.speakCurrentStep();
         }
 
-        speakCurrentStep() {
-            const step = this.script.steps[this.currentStepIndex];
-            if (step) {
-                const message = step.question || step.text;
-                this.speak(message);
-            } else {
-                console.error("❌ Step not found at index:", this.currentStepIndex);
+        detectFieldFromQuestion(tessText) {
+            const lowerText = tessText.toLowerCase();
+            
+            if (lowerText.includes("full name") || lowerText.includes("start with your")) {
+                this.currentField = "fullName";
+            } else if (lowerText.includes("email")) {
+                this.currentField = "email";
+            } else if (lowerText.includes("phone")) {
+                this.currentField = "phone";
+            } else if (lowerText.includes("date and time") || lowerText.includes("zoom meeting")) {
+                this.currentField = "scheduledDateTime";
+            } else if (lowerText.includes("type of loan") || lowerText.includes("fha")) {
+                this.currentField = "loanType";
+            } else if (lowerText.includes("monthly income") || lowerText.includes("gross monthly")) {
+                this.currentField = "monthlyIncome";
+            } else if (lowerText.includes("putting down") || lowerText.includes("down payment")) {
+                this.currentField = "downPayment";
+            } else if (lowerText.includes("credit score")) {
+                this.currentField = "creditScore";
+            } else if (lowerText.includes("special requests")) {
+                this.currentField = "specialRequests";
+            }
+            
+            if (this.currentField) {
+                console.log("🎯 Expecting answer for:", this.currentField);
             }
         }
 
@@ -292,6 +326,21 @@
         sendEmail() {
             console.log("📧 Sending dynamic email with collected responses...");
             const data = this.answers;
+            
+            // Use validated fields (they're already confirmed by user)
+            var prospectiveClientParams = {
+                full_name: data.fullName || "Not provided",
+                email: data.email || "Not provided",
+                phone: data.phone || "Not provided",
+                scheduled_datetime: data.scheduledDateTime || "Not provided",
+                loan_type: data.loanType || "Not provided",
+                monthly_income: data.monthlyIncome || "Not provided",
+                down_payment: data.downPayment || "Not provided",
+                credit_score: data.creditScore || "Not provided",
+                special_requests: data.specialRequests || "None",
+                all_responses: JSON.stringify(data.allResponses || []),
+                submitted_at: new Date().toLocaleString()
+            };
             
             let formattedAnswers = "";
             for (var key in data) {
@@ -497,6 +546,11 @@
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         console.log("🤖 [DAILY] Tess said:", tessText);
+                        
+                        // Track what question Tess is asking
+                        if (window.preQualController && window.preQualController.isActive) {
+                            window.preQualController.detectFieldFromQuestion(tessText);
+                        }
                         
                         // Broadcast to Supabase
                         if (window.supabaseChannel) {
