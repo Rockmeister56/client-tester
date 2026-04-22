@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/21/2026, 11:12:27 PM
+// Generated: 4/21/2026, 11:41:16 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -324,11 +324,59 @@
         }
 
         sendEmail() {
-            console.log("📧 Sending dynamic email with collected responses...");
+            console.log("📧 Sending emails...");
             const data = this.answers;
             
-            // Use validated fields (they're already confirmed by user)
-            var prospectiveClientParams = {
+            // Build formatted answers string
+            let formattedAnswers = "";
+            for (var key in data) {
+                if (data.hasOwnProperty(key) && key !== "allResponses" && key !== "interviewCompleted") {
+                    formattedAnswers += key + ": " + data[key] + "\n";
+                }
+            }
+            
+            // Build structured JSON for the template
+            const jsonForTemplate = {
+                "Pre-Qualification Summary": {
+                    "Loan Type": data.loanType || "Not provided",
+                    "Monthly Income": data.monthlyIncome || "Not provided",
+                    "Down Payment": data.downPayment || "Not provided",
+                    "Credit Score": data.creditScore || "Not provided",
+                    "Interested in Zoom": data.zoomInterest || "Not provided"
+                },
+                "Contact Information": {
+                    "Full Name": data.fullName || "Not provided",
+                    "Email": data.email || "Not provided",
+                    "Phone": data.phone || "Not provided",
+                    "Scheduled Date/Time": data.scheduledDateTime || "Not provided"
+                },
+                "Additional Info": {
+                    "Special Requests": data.specialRequests || "None"
+                },
+                "All Responses": data.allResponses || []
+            };
+            
+            // ===== EMAIL 1: TO PROSPECT (template_uix9cyx) =====
+            if (data.email) {
+                var prospectParams = {
+                    full_name: data.fullName || "Valued Client",
+                    email: data.email,
+                    phone: data.phone || "Not provided",
+                    scheduled_datetime: data.scheduledDateTime || "To be determined",
+                    full_json: JSON.stringify(jsonForTemplate, null, 2),
+                    submitted_at: new Date().toLocaleString()
+                };
+                
+                emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
+                    .then(() => console.log("✅ Prospect email sent to:", data.email))
+                    .catch(e => console.error("❌ Prospect email error:", e));
+            } else {
+                console.warn("⚠️ No prospect email provided, skipping prospect email");
+            }
+            
+            // ===== EMAIL 2: TO YOU (template_8kx812d) =====
+            var clientParams = {
+                to_email: "mobilewise.ai@gmail.com",
                 full_name: data.fullName || "Not provided",
                 email: data.email || "Not provided",
                 phone: data.phone || "Not provided",
@@ -337,55 +385,15 @@
                 monthly_income: data.monthlyIncome || "Not provided",
                 down_payment: data.downPayment || "Not provided",
                 credit_score: data.creditScore || "Not provided",
+                zoom_interest: data.zoomInterest || "Not provided",
                 special_requests: data.specialRequests || "None",
-                all_responses: JSON.stringify(data.allResponses || []),
-                submitted_at: new Date().toLocaleString()
-            };
-            
-            let formattedAnswers = "";
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    formattedAnswers += key + ": " + data[key] + "\n";
-                }
-            }
-            
-            var prospectiveClientParams = {
-                full_name: data.fullName || data.name || "Not provided",
-                email: data.email || "Not provided",
-                phone: data.phone || data.phoneNumber || "Not provided",
-                scheduled_datetime: data.scheduledDateTime || data.dateTime || "Not provided",
-                zoom_interest: data.zoomInterest || "Not provided",
                 all_answers: formattedAnswers,
-                full_json: JSON.stringify(data, null, 2),
                 submitted_at: new Date().toLocaleString()
             };
             
-            var webProspectParams = {
-                full_name: data.fullName || data.name || "Valued Client",
-                email: data.email || "Not provided",
-                phone: data.phone || data.phoneNumber || "Not provided",
-                scheduled_datetime: data.scheduledDateTime || data.dateTime || "Not provided",
-                zoom_interest: data.zoomInterest || "Not provided",
-                message: "Thank you for completing pre-qualification! A loan officer will reach out to you shortly."
-            };
-            
-            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectiveClientParams)
-                .then(function() {
-                    console.log("✅ Dynamic email sent to prospective client");
-                })
-                .catch(function(error) {
-                    console.error("❌ Email error (prospective):", error);
-                });
-            
-            if (data.email) {
-                emailjs.send("service_b9bppgb", "template_8kx812d", webProspectParams)
-                    .then(function() {
-                        console.log("✅ Visitor confirmation email sent to web prospect");
-                    })
-                    .catch(function(error) {
-                        console.error("❌ Email error (visitor):", error);
-                    });
-            }
+            emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
+                .then(() => console.log("✅ Client notification sent to mobilewise.ai@gmail.com"))
+                .catch(e => console.error("❌ Client email error:", e));
         }
     }
     window.PreQualificationController = PreQualificationController;
