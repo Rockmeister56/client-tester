@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/21/2026, 11:41:16 PM
+// Generated: 4/22/2026, 1:09:50 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -261,6 +261,8 @@
             
             if (lowerText.includes("full name") || lowerText.includes("start with your")) {
                 this.currentField = "fullName";
+            } else if (lowerText.includes("business name") || lowerText.includes("website")) {
+                this.currentField = "businessName";
             } else if (lowerText.includes("email")) {
                 this.currentField = "email";
             } else if (lowerText.includes("phone")) {
@@ -277,6 +279,9 @@
                 this.currentField = "creditScore";
             } else if (lowerText.includes("special requests")) {
                 this.currentField = "specialRequests";
+            } else if (lowerText.includes("anything else")) {
+                this.expectingClosingResponse = true;
+                console.log("🎯 Expecting closing response (Yes/No)");
             }
             
             if (this.currentField) {
@@ -346,6 +351,7 @@
                 },
                 "Contact Information": {
                     "Full Name": data.fullName || "Not provided",
+                    "Business/Website": data.businessName || "Not provided",
                     "Email": data.email || "Not provided",
                     "Phone": data.phone || "Not provided",
                     "Scheduled Date/Time": data.scheduledDateTime || "Not provided"
@@ -378,6 +384,7 @@
             var clientParams = {
                 to_email: "mobilewise.ai@gmail.com",
                 full_name: data.fullName || "Not provided",
+                business_name: data.businessName || "Not provided",
                 email: data.email || "Not provided",
                 phone: data.phone || "Not provided",
                 scheduled_datetime: data.scheduledDateTime || "Not provided",
@@ -594,6 +601,16 @@
                             setTimeout(function() {
                                 forcePreQualification();
                             }, 3500);
+                        }
+                        
+                        // ===== 🔥 EMAIL TRIGGER =====
+                        if (tessText.includes("EMAIL_SENT_NOW")) {
+                            console.log("📧 Email trigger detected!");
+                            if (window.preQualController && window.preQualController.isActive) {
+                                window.preQualController.sendEmail();
+                                window.preQualController.isActive = false;
+                                console.log("✅ Interview complete - email sent");
+                            }
                         }
                     }
                 });
