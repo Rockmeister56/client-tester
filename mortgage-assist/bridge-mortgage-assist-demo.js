@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/21/2026, 9:26:57 PM
+// Generated: 4/21/2026, 9:51:53 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -190,12 +190,6 @@
         startInterview() {
             if (this.isActive) return;
             
-            if (!window.preQualScript) {
-                console.error("❌ CRITICAL: preQualScript not found!");
-                return;
-            }
-            this.script = window.preQualScript;
-            
             this.isActive = true;
             this.currentStepIndex = 0;
             this.answers = {};
@@ -208,8 +202,7 @@
                 console.log("🔇 LemonSlice AI forcefully muted");
             }
             
-            console.log("🎯 Starting Pre-Qual Interview (Conformed Version)");
-            this.speakCurrentStep();
+            console.log("🎧 Listener Mode Activated - Waiting for LemonSlice questions");
         }
 
         handleUserInput(userText) {
@@ -413,13 +406,7 @@
     })();
 
     window.preQualController = new PreQualificationController();
-    if (window.preQualScript) {
-        window.preQualController.script = window.preQualScript;
-        console.log("✅ Controller created with", window.preQualScript.steps?.length, "steps");
-    } else {
-        console.error("❌ No preQualScript found!");
-    }
-
+    console.log("✅ Controller created (Listener Mode)");
     window.broadcastTessTranscript = function(text) {
         if (window.supabaseChannel) {
             window.supabaseChannel.send({ type: 'broadcast', event: 'tess_transcript', payload: { type: 'TESS_TRANSCRIPT', text: text, timestamp: Date.now() } });
@@ -633,30 +620,30 @@
 
     function forcePreQualification() {
         console.trace("🔍 [TRACE] forcePreQualification called from:");
-        console.log("🚀 forcePreQualification - Starting pre-qualification interview");
+        console.log("🚀 forcePreQualification - Activating Listener Mode");
         
-        // Prevent duplicate starts
         if (isPreQualificationActive) {
             console.log("⚠️ Pre-qualification already active, skipping");
             return;
         }
         
-        // Check if controller and script are ready
         if (!window.preQualController) {
             console.error("❌ preQualController not found");
             return;
         }
         
-        if (!window.preQualScript) {
-            console.error("❌ preQualScript not found");
-            return;
+        // Activate listener mode
+        window.preQualController.isActive = true;
+        window.preQualController.answers = {};
+        
+        // Send trigger to LemonSlice
+        if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+            window.mainWidget.sendMessage("START_INTERVIEW_NOW");
+            console.log("📤 Sent START_INTERVIEW_NOW to LemonSlice");
         }
         
-        // Set the script and start
-        window.preQualController.script = window.preQualScript;
-        window.preQualController.startInterview();
         isPreQualificationActive = true;
-        console.log("✅ Pre-qualification interview started");
+        console.log("✅ Listener Mode activated");
     }
     window.forcePreQualification = forcePreQualification;
 
@@ -892,4 +879,16 @@
     }
 
     setTimeout(announceToTCS, 4000);
+    // ===== HEALTH CHECK FOR TCS DASHBOARD =====
+    window.bridgeHealthCheck = function() {
+        return {
+            status: "active",
+            mode: "listener",
+            clientId: window.BotemiaConfig?.id,
+            readyForHandoff: !!window.mainWidget,
+            dailyConnected: !!window.dailyCallObject,
+            timestamp: Date.now()
+        };
+    };
+    console.log("🩺 Bridge health check available: window.bridgeHealthCheck()");
 })();
