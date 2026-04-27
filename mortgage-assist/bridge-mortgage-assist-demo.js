@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 12:45:50 PM
+// Generated: 4/27/2026, 12:54:07 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -437,7 +437,9 @@
             
             tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
-                const command = payload.payload?.command;
+                var cmd = payload.payload?.command;
+                var mod = payload.payload?.module;
+                var phrase = (payload.payload?.trigger_phrase || "").toLowerCase();
                 
                 // ===== EMAIL COMMAND =====
                 if (command === "SEND_EMAIL") {
