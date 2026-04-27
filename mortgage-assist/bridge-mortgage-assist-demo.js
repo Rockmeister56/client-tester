@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 5:25:03 AM
+// Generated: 4/27/2026, 10:25:00 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -597,6 +597,27 @@
                     console.log("📤 Test result sent to TCS:", result);
                 }
             });
+            
+            tcsChannel.subscribe(function(status) { 
+                if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); 
+            });
+            window.supabaseChannel = tcsChannel;
+            
+            // Health monitor channel
+            var healthChannel = sbClient.channel("health-monitor");
+            healthChannel.subscribe(function(status) {
+                if (status === "SUBSCRIBED") console.log("🩺 Health monitor channel connected");
+            });
+            window.healthChannel = healthChannel;
+            healthChannel.on("broadcast", { event: "test_ping" }, function(payload) {
+                healthChannel.send({
+                    type: "broadcast", event: "test_pong",
+                    payload: { clientId: window.BotemiaConfig?.id || "unknown", timestamp: Date.now(), echoTimestamp: payload.payload.timestamp }
+                });
+            });
+        }; // END script.onload
+        document.head.appendChild(script);
+    })(); // END Supabase IIFE
     // ===== ANALYTICS EVENT TRACKER =====
     function trackEvent(eventType, eventData = {}) {
         if (!window.supabaseChannel) return;
@@ -826,46 +847,6 @@
                 return;
             }
             
-                        // ===== 🔥 EMAIL TRIGGER DETECTION =====
-                        const emailConfig = window.BotemiaConfig?.modules?.emailConfig;
-                        const emailTriggers = emailConfig?.emailTriggers || [];
-                        
-                        if (emailTriggers.length > 0) {
-                            const emailMatch = emailTriggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
-                            if (emailMatch) {
-                                console.log("📧 Email trigger detected!");
-                                if (window.preQualController && window.preQualController.isActive) {
-                                    window.preQualController.sendEmail();
-                                    window.preQualController.isActive = false;
-                                    console.log("✅ Email sent via trigger");
-                                }
-                            }
-                        }
-
-                        // ===== 🔥 SMART SCREEN TRIGGER DETECTION =====
-                        const smartScreenConfig = window.BotemiaConfig?.modules?.smartScreen;
-                        const smartImages = smartScreenConfig?.images || [];
-                        
-                        for (const image of smartImages) {
-                            const triggers = image.triggerMatch || [];
-                            const screenMatch = triggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
-                            if (screenMatch) {
-                                console.log("📸 Smart Screen trigger matched:", image.name);
-                                // Broadcast to TCS for visual proof display
-                                if (window.supabaseChannel) {
-                                    window.supabaseChannel.send({
-                                        type: "broadcast",
-                                        event: "smart_screen_trigger",
-                                        payload: {
-                                            image: image,
-                                            trigger: tessText,
-                                            timestamp: Date.now()
-                                        }
-                                    });
-                                }
-                                break;
-                            }
-                        }
             // Handle transcript for interview answers
             if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
                 if (window.preQualController && window.preQualController.isActive) {
