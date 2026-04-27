@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 12:54:07 PM
+// Generated: 4/27/2026, 1:12:05 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -442,7 +442,7 @@
                 var phrase = (payload.payload?.trigger_phrase || "").toLowerCase();
                 
                 // ===== EMAIL COMMAND =====
-                if (command === "SEND_EMAIL") {
+                if (cmd === "SEND_EMAIL") {
                     console.log("📧 Email command received from TCS!");
                     if (window.preQualController && window.preQualController.isActive) {
                         window.preQualController.sendEmail();
@@ -463,7 +463,7 @@
                 }
                 
                 // ===== PHONE CONNECT COMMAND =====
-                if (command === "PHONE_CONNECT") {
+                if (cmd === "PHONE_CONNECT") {
                     console.log("📞 Phone connect command received from TCS!");
                     const phoneNumber = window.BotemiaConfig?.modules?.emailConfig?.supportPhone || "949-228-5263";
                     console.log("📞 Would initiate call to:", phoneNumber);
@@ -479,7 +479,7 @@
                 }
                 
                 // ===== SMART SCREEN COMMAND =====
-                if (command === "SHOW_SMART_SCREEN") {
+                if (cmd === "SHOW_SMART_SCREEN") {
                     console.log("📸 Smart Screen command received:", payload.payload);
                     if (typeof window.showSmartScreen === "function") {
                         window.showSmartScreen(payload.payload.trigger, payload.payload.image);
