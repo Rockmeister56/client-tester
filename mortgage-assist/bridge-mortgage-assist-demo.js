@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 10:25:00 AM
+// Generated: 4/27/2026, 11:54:53 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -212,6 +212,11 @@
 
         handleUserInput(userText) {
             if (!this.isActive) return;
+            
+            // Clean credit score values — strip $ and , if current field is creditScore
+            if (this.currentField === "creditScore") {
+                userText = userText.replace(/[$,]/g, "").trim();
+            }
             
             const lowerText = userText.toLowerCase();
             
@@ -433,15 +438,6 @@
             tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
                 const command = payload.payload?.command;
-                
-                // ===== START PRE-QUAL =====
-                if (command === "START_PRE_QUAL") {
-                    if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
-                        console.warn("⚠️ TCS ignored: Daily not ready yet.");
-                        return;
-                    }
-                    forcePreQualification();
-                }
                 
                 // ===== EMAIL COMMAND =====
                 if (command === "SEND_EMAIL") {
