@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/22/2026, 1:09:50 AM
+// Generated: 4/26/2026, 7:41:58 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -15,14 +15,16 @@
     window.BotemiaConfig = {
         "id": "mortgage-assist-demo",
         "name": "Mortgage Assist Demo",
-        "websiteUrl": "https://client-tester.netlify.app/mortgage-assist/",
+        "websiteUrl": "https://client-tester.netlify.app/mortgage-assist/?clientId=mortgage-assist-demo",
         "agentId": "agent_7b0776ef6b855de5",
         "modules": {
             "preQualification": {
                 "triggerPhrase": "let's get started",
                 "triggerPhraseLegacy": "let's get started"
             },
-            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Smart Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"Mortgage Rates, Pre-Qualification, First-Time Buyer, Refinance, FHA Loans","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}}
+            "emailConfig": {"loanOfficerEmail":"mobilewise.ai@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
+            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["So lets stop here"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.7)"}]}
         }
     };
 
@@ -303,6 +305,7 @@
             }
             
             this.speak("That is everything! I am generating your pre-qualification letter now.");
+        trackEvent('prequal_complete');
             this.sendEmail();
         }
 
@@ -329,6 +332,7 @@
         }
 
         sendEmail() {
+        trackEvent('lead_captured', { email: data.email });
             console.log("📧 Sending emails...");
             const data = this.answers;
             
@@ -380,9 +384,12 @@
                 console.warn("⚠️ No prospect email provided, skipping prospect email");
             }
             
-            // ===== EMAIL 2: TO YOU (template_8kx812d) =====
+            // ===== EMAIL 2: TO AGENCY/CLIENT (template_8kx812d) =====
+            // 🔥 DYNAMIC: Pulls from BotemiaConfig emailConfig
+            const clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            
             var clientParams = {
-                to_email: "mobilewise.ai@gmail.com",
+                to_email: clientEmail,
                 full_name: data.fullName || "Not provided",
                 business_name: data.businessName || "Not provided",
                 email: data.email || "Not provided",
@@ -399,7 +406,7 @@
             };
             
             emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
-                .then(() => console.log("✅ Client notification sent to mobilewise.ai@gmail.com"))
+                .then(() => console.log("✅ Client notification sent to:", clientEmail))
                 .catch(e => console.error("❌ Client email error:", e));
         }
     }
@@ -436,6 +443,34 @@
                 // }
             });
             
+                // ===== NEW: EMAIL COMMAND =====
+                if (payload.payload.command === "SEND_EMAIL") {
+                    console.log("📧 Email command received from TCS!");
+                    if (window.preQualController && window.preQualController.isActive) {
+                        window.preQualController.sendEmail();
+                        window.preQualController.isActive = false;
+                        console.log("✅ Email sent via TCS command");
+                    } else {
+                        console.warn("⚠️ Cannot send email - controller not active");
+                    }
+                }
+                
+                // ===== NEW: PHONE CONNECT COMMAND =====
+                if (payload.payload.command === "PHONE_CONNECT") {
+                    console.log("📞 Phone connect command received from TCS!");
+                    // 🔥 DYNAMIC: Pulls from BotemiaConfig emailConfig
+                    const phoneNumber = window.BotemiaConfig?.modules?.emailConfig?.supportPhone || "949-228-5263";
+                    console.log("📞 Initiating call to:", phoneNumber);
+                    window.open("tel:" + phoneNumber, "_blank");
+                }
+                
+                // ===== NEW: SMART SCREEN COMMAND =====
+                if (payload.payload.command === "SHOW_SMART_SCREEN") {
+                    console.log("📸 Smart Screen command received:", payload.payload);
+                    if (typeof window.showSmartScreen === "function") {
+                        window.showSmartScreen(payload.payload.trigger, payload.payload.image);
+                    }
+                }
             tcsChannel.subscribe(function(status) { 
                 if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); 
             });
@@ -468,6 +503,26 @@
         
         document.head.appendChild(script);
     })();
+
+    // ===== ANALYTICS EVENT TRACKER =====
+    function trackEvent(eventType, eventData = {}) {
+        if (!window.supabaseChannel) return;
+        
+        window.supabaseChannel.send({
+            type: 'broadcast',
+            event: 'analytics_event',
+            payload: {
+                client_id: window.BotemiaConfig?.id || 'unknown',
+                session_id: window.tessSessionId || 'unknown',
+                event_type: eventType,
+                event_data: eventData,
+                source_url: window.location.href,
+                referrer: document.referrer || 'direct',
+                timestamp: Date.now()
+            }
+        });
+        console.log('📊 Tracked: ' + eventType, eventData);
+    }
 
     window.preQualController = new PreQualificationController();
     console.log("✅ Controller created (Listener Mode)");
@@ -578,38 +633,57 @@
                         
                         // ===== 🔥 DYNAMIC TRIGGER LOGIC =====
                         const triggerPhrase = window.TRIGGER_PHRASE;
-                        if (!triggerPhrase) {
-                            console.warn("⚠️ No trigger phrase configured");
-                            return;
-                        }
-                        
-                        // Build fuzzy triggers dynamically
-                        const fuzzyTriggers = [
-                            triggerPhrase,
-                            triggerPhrase.toLowerCase(),
-                            "YES_INITIATE_PREQUAL"  // Legacy backup
-                        ].filter(t => t);
-                        
                         const lowerText = tessText.toLowerCase();
-                        const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
                         
-                        if (hasTrigger) {
-                            console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
-                            const foundTrigger = fuzzyTriggers.find(trigger => lowerText.includes(trigger.toLowerCase()));
-                            console.log("🔥 Triggered by:", foundTrigger);
-                            
-                            setTimeout(function() {
-                                forcePreQualification();
-                            }, 3500);
+                        // --- PRE-QUAL TRIGGER ---
+                        if (triggerPhrase) {
+                            const fuzzyTriggers = [
+                                triggerPhrase,
+                                triggerPhrase.toLowerCase(),
+                                "YES_INITIATE_PREQUAL"
+                            ].filter(t => t);
+                            const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
+                            if (hasTrigger) {
+                                console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
+                                console.log("🔥 Triggered by:", fuzzyTriggers.find(t => lowerText.includes(t.toLowerCase())));
+                                setTimeout(function() { forcePreQualification(); }, 3500);
+                            }
                         }
-                        
-                        // ===== 🔥 EMAIL TRIGGER =====
-                        if (tessText.includes("EMAIL_SENT_NOW")) {
-                            console.log("📧 Email trigger detected!");
-                            if (window.preQualController && window.preQualController.isActive) {
-                                window.preQualController.sendEmail();
-                                window.preQualController.isActive = false;
-                                console.log("✅ Interview complete - email sent");
+
+                        // --- EMAIL TRIGGER (Dynamic from config) ---
+                        const emailCfg = window.BotemiaConfig?.modules?.emailConfig;
+                        if (emailCfg?.emailTriggers?.length) {
+                            if (emailCfg.emailTriggers.some(t => lowerText.includes(t.toLowerCase()))) {
+                                console.log("📧 Email trigger detected!");
+                                if (window.preQualController?.isActive) {
+                                    window.preQualController.sendEmail();
+                                    window.preQualController.isActive = false;
+                                    console.log("✅ Email sent via trigger");
+                                }
+                            }
+                        }
+
+                        // --- SMART SCREEN TRIGGER (Dynamic from config) ---
+                        const smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                        for (const img of smartImages) {
+                            if ((img.triggerMatch || []).some(t => lowerText.includes(t.toLowerCase()))) {
+                                console.log("📸 Smart Screen matched:", img.name);
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast",
+                                        event: "smart_screen_trigger",
+                                        payload: { image: img, trigger: tessText, timestamp: Date.now() }
+                                    });
+                                }
+                                break;
+                            }
+                        }
+
+                        // --- PHONE TRIGGER (Dynamic from config) ---
+                        if (emailCfg?.phoneTriggers?.length) {
+                            if (emailCfg.phoneTriggers.some(t => lowerText.includes(t.toLowerCase()))) {
+                                console.log("📞 Phone trigger detected!");
+                                window.open("tel:" + (emailCfg.supportPhone || "949-228-5263"), "_blank");
                             }
                         }
                     }
@@ -659,6 +733,46 @@
                 return;
             }
             
+                        // ===== 🔥 EMAIL TRIGGER DETECTION =====
+                        const emailConfig = window.BotemiaConfig?.modules?.emailConfig;
+                        const emailTriggers = emailConfig?.emailTriggers || [];
+                        
+                        if (emailTriggers.length > 0) {
+                            const emailMatch = emailTriggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
+                            if (emailMatch) {
+                                console.log("📧 Email trigger detected!");
+                                if (window.preQualController && window.preQualController.isActive) {
+                                    window.preQualController.sendEmail();
+                                    window.preQualController.isActive = false;
+                                    console.log("✅ Email sent via trigger");
+                                }
+                            }
+                        }
+
+                        // ===== 🔥 SMART SCREEN TRIGGER DETECTION =====
+                        const smartScreenConfig = window.BotemiaConfig?.modules?.smartScreen;
+                        const smartImages = smartScreenConfig?.images || [];
+                        
+                        for (const image of smartImages) {
+                            const triggers = image.triggerMatch || [];
+                            const screenMatch = triggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
+                            if (screenMatch) {
+                                console.log("📸 Smart Screen trigger matched:", image.name);
+                                // Broadcast to TCS for visual proof display
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast",
+                                        event: "smart_screen_trigger",
+                                        payload: {
+                                            image: image,
+                                            trigger: tessText,
+                                            timestamp: Date.now()
+                                        }
+                                    });
+                                }
+                                break;
+                            }
+                        }
             // Handle transcript for interview answers
             if ((event.data.type === "transcript" || event.data.type === "ai_response") && event.data.text) {
                 if (window.preQualController && window.preQualController.isActive) {
@@ -718,6 +832,7 @@
         // Send trigger to LemonSlice
         if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
             window.mainWidget.sendMessage("START_INTERVIEW_NOW");
+        trackEvent('prequal_start');
             console.log("📤 Sent START_INTERVIEW_NOW to LemonSlice");
         }
         
@@ -739,6 +854,7 @@
             display: flex; align-items: center; justify-content: center; z-index: 99999;
         `;
 
+        trackEvent('splash_view');
         const card = document.createElement('div');
         card.className = 'splash-card';
         // Original: Direct style application (Safer than CSS variables)
@@ -849,6 +965,7 @@
         if (typeof initDaily === "function") { initDaily(); }
         window.activateTess = activateTess;
     }
+        trackEvent('activate_tess');
 
     function showPersistentAvatar() {
         const config = window.BotemiaConfig.modules?.splashScreen;
@@ -904,6 +1021,7 @@
         const config = window.BotemiaConfig.modules?.splashScreen;
         if (config?.persistentButton?.enabled) {
             showPersistentAvatar();
+        trackEvent('just_browsing');
         } else {
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) { window.mainWidget = createMainWidget(); document.body.appendChild(window.mainWidget); }
             window.mainWidget.style.display = 'block';
