@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 11:54:53 AM
+// Generated: 4/27/2026, 12:45:50 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -485,111 +485,133 @@
                 }
                 
                 // ===== TEST TRIGGER COMMAND (For TCS test buttons) =====
-                if (command === "test_trigger") {
-                    const module = payload.payload.module;
-                    const phrase = (payload.payload.trigger_phrase || "").toLowerCase();
-                    console.log("🧪 TCS Test: Simulating trigger for " + module + " with phrase: " + phrase);
+                if (cmd === "test_trigger") {
+                    console.log("🧪 TCS Test: " + mod + " - " + phrase);
+                    var result = { success: false, message: "No trigger matched" };
                     
-                    let result = { success: false, message: "No trigger matched" };
-                    
-                    // --- Test Email Triggers ---
-                    if (module === "email_trigger") {
-                        const emailTriggers = window.BotemiaConfig?.modules?.emailConfig?.emailTriggers || [];
-                        const matched = emailTriggers.some(t => t && phrase.includes(t.toLowerCase()));
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Email trigger would fire" : "❌ No email trigger matched the phrase"
-                        };
+                    // --- SMART SCREEN: Actually launch it ---
+                    if (mod === "smart_screen") {
+                        var images = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                        for (var i = 0; i < images.length; i++) {
+                            var imgTriggers = images[i].triggerMatch || [];
+                            for (var j = 0; j < imgTriggers.length; j++) {
+                                if (imgTriggers[j] && phrase.indexOf(imgTriggers[j].toLowerCase()) !== -1) {
+                                    result = { success: true, message: "✅ Smart Screen launched: " + images[i].name };
+                                    var overlay = document.createElement("div");
+                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                    overlay.id = "tcs-test-overlay";
+                                    overlay.onclick = function() { overlay.remove(); };
+                                    var imgEl = document.createElement("img");
+                                    imgEl.src = images[i].url;
+                                    imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                    overlay.appendChild(imgEl);
+                                    if (images[i].name) {
+                                        var caption = document.createElement("div");
+                                        caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
+                                        caption.textContent = images[i].name;
+                                        overlay.appendChild(caption);
+                                    }
+                                    document.body.appendChild(overlay);
+                                    break;
+                                }
+                            }
+                            if (result.success) break;
+                        }
+                        if (!result.success) result.message = "❌ No smart screen trigger matched";
                     }
                     
-                    // --- Test Phone Triggers ---
-                    if (module === "phone_connect") {
-                        const phoneTriggers = window.BotemiaConfig?.modules?.emailConfig?.phoneTriggers || [];
-                        const matched = phoneTriggers.some(t => t && phrase.includes(t.toLowerCase()));
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Phone trigger would fire" : "❌ No phone trigger matched the phrase"
-                        };
-                    }
-                    
-                    // --- Test Smart Screen Triggers ---
-                    if (module === "smart_screen") {
-                        const images = window.BotemiaConfig?.modules?.smartScreen?.images || [];
-                        let matched = false;
-                        for (const img of images) {
-                            if ((img.triggerMatch || []).some(t => t && phrase.includes(t.toLowerCase()))) {
-                                matched = true;
+                    // --- EMAIL: Actually send it ---
+                    if (mod === "email_trigger") {
+                        var emailTriggers = window.BotemiaConfig?.modules?.emailConfig?.emailTriggers || [];
+                        for (var e = 0; e < emailTriggers.length; e++) {
+                            if (emailTriggers[e] && phrase.indexOf(emailTriggers[e].toLowerCase()) !== -1) {
+                                result = { success: true, message: "✅ Email sent" };
+                                if (window.preQualController && window.preQualController.isActive) {
+                                    window.preQualController.sendEmail();
+                                    window.preQualController.isActive = false;
+                                }
                                 break;
                             }
                         }
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Smart Screen would display" : "❌ No smart screen trigger matched"
-                        };
+                        if (!result.success) result.message = "❌ No email trigger matched";
                     }
                     
-                    // --- Test Pre-Qual Trigger ---
-                    if (module === "pre_qual") {
-                        const pqTrigger = window.BotemiaConfig?.modules?.preQualification?.triggerPhrase || "";
-                        const matched = pqTrigger && phrase.includes(pqTrigger.toLowerCase());
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Pre-qual trigger would fire" : "❌ Pre-qual trigger not matched"
-                        };
-                    }
-                    
-                    // --- Test Website Info Triggers ---
-                    if (module === "website_info") {
-                        const webTriggers = window.BotemiaConfig?.modules?.websiteInfo?.triggers || [];
-                        const matched = webTriggers.some(t => t && phrase.includes(t.toLowerCase()));
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Website Info trigger would fire" : "❌ No website trigger matched"
-                        };
-                    }
-                    
-                    // --- Test Testimonials Triggers ---
-                    if (module === "testimonials") {
-                        const groups = window.BotemiaConfig?.modules?.testimonial?.groups || [];
-                        let matched = false;
-                        for (const g of groups) {
-                            if (g.triggerPhrase && phrase.includes(g.triggerPhrase.toLowerCase())) {
-                                matched = true;
+                    // --- PHONE: Actually dial ---
+                    if (mod === "phone_connect") {
+                        var phoneTriggers = window.BotemiaConfig?.modules?.emailConfig?.phoneTriggers || [];
+                        for (var p = 0; p < phoneTriggers.length; p++) {
+                            if (phoneTriggers[p] && phrase.indexOf(phoneTriggers[p].toLowerCase()) !== -1) {
+                                var pn = window.BotemiaConfig?.modules?.emailConfig?.supportPhone || "949-228-5263";
+                                result = { success: true, message: "✅ Dialing " + pn };
+                                window.open("tel:" + pn, "_blank");
                                 break;
                             }
                         }
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Testimonial would display" : "❌ No testimonial trigger matched"
-                        };
+                        if (!result.success) result.message = "❌ No phone trigger matched";
                     }
                     
-                    // --- Test Video Vault Triggers ---
-                    if (module === "video_vault") {
-                        const videos = window.BotemiaConfig?.modules?.videoVault?.videos || [];
-                        let matched = false;
-                        for (const v of videos) {
-                            if (v.triggerPhrase && phrase.includes(v.triggerPhrase.toLowerCase())) {
-                                matched = true;
+                    // --- PRE-QUAL: Actually start it ---
+                    if (mod === "pre_qual") {
+                        var pqTrigger = window.BotemiaConfig?.modules?.preQualification?.triggerPhrase || "";
+                        if (pqTrigger && phrase.indexOf(pqTrigger.toLowerCase()) !== -1) {
+                            result = { success: true, message: "✅ Pre-qual started" };
+                            if (window.preQualController && !window.preQualController.isActive) {
+                                forcePreQualification();
+                            }
+                        } else {
+                            result.message = "❌ Pre-qual trigger not matched";
+                        }
+                    }
+                    
+                    // --- WEBSITE INFO ---
+                    if (mod === "website_info") {
+                        var webTriggers = window.BotemiaConfig?.modules?.websiteInfo?.triggers || [];
+                        for (var w = 0; w < webTriggers.length; w++) {
+                            if (webTriggers[w] && phrase.indexOf(webTriggers[w].toLowerCase()) !== -1) {
+                                result = { success: true, message: "✅ Website Info trigger matched" };
                                 break;
                             }
                         }
-                        result = {
-                            success: matched,
-                            message: matched ? "✅ Video would play" : "❌ No video trigger matched"
-                        };
+                        if (!result.success) result.message = "❌ No website trigger matched";
+                    }
+                    
+                    // --- TESTIMONIALS ---
+                    if (mod === "testimonials") {
+                        var groups = window.BotemiaConfig?.modules?.testimonial?.groups || [];
+                        for (var g = 0; g < groups.length; g++) {
+                            if (groups[g].triggerPhrase && phrase.indexOf(groups[g].triggerPhrase.toLowerCase()) !== -1) {
+                                result = { success: true, message: "✅ Testimonial matched: " + groups[g].triggerPhrase };
+                                break;
+                            }
+                        }
+                        if (!result.success) result.message = "❌ No testimonial trigger matched";
+                    }
+                    
+                    // --- VIDEO VAULT ---
+                    if (mod === "video_vault") {
+                        var videos = window.BotemiaConfig?.modules?.videoVault?.videos || [];
+                        for (var v = 0; v < videos.length; v++) {
+                            if (videos[v].triggerPhrase && phrase.indexOf(videos[v].triggerPhrase.toLowerCase()) !== -1) {
+                                result = { success: true, message: "✅ Video matched: " + videos[v].triggerPhrase };
+                                break;
+                            }
+                        }
+                        if (!result.success) result.message = "❌ No video trigger matched";
                     }
                     
                     // Send result back to TCS
-                    window.supabaseChannel.send({
-                        type: "broadcast",
-                        event: "trigger_test_result",
-                        payload: {
-                            module: module,
-                            ...result,
-                            timestamp: Date.now()
-                        }
-                    });
+                    if (window.supabaseChannel) {
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "trigger_test_result",
+                            payload: {
+                                module: mod,
+                                success: result.success,
+                                message: result.message,
+                                timestamp: Date.now()
+                            }
+                        });
+                    }
                     console.log("📤 Test result sent to TCS:", result);
                 }
             });
@@ -725,14 +747,12 @@
                     
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
+                        const lowerText = tessText.toLowerCase();
+                        
+                        // Always log Tess transcriptions
                         console.log("🤖 [DAILY] Tess said:", tessText);
                         
-                        // Track what question Tess is asking
-                        if (window.preQualController && window.preQualController.isActive) {
-                            window.preQualController.detectFieldFromQuestion(tessText);
-                        }
-                        
-                        // Broadcast to Supabase
+                        // Always broadcast to Supabase
                         if (window.supabaseChannel) {
                             window.supabaseChannel.send({
                                 type: "broadcast",
@@ -741,60 +761,104 @@
                             });
                         }
                         
-                        // ===== 🔥 DYNAMIC TRIGGER LOGIC =====
-                        const triggerPhrase = window.TRIGGER_PHRASE;
-                        const lowerText = tessText.toLowerCase();
+                        // ===== INTERVIEW MODE: Controller is active =====
+                        if (window.preQualController && window.preQualController.isActive) {
+                            // Detect which question Tess is asking
+                            window.preQualController.detectFieldFromQuestion(tessText);
+                            
+                            // --- SMART SCREEN TRIGGER (during interview) ---
+                            var smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                            for (var si = 0; si < smartImages.length; si++) {
+                                if ((smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                    console.log("📸 Smart Screen matched during interview:", smartImages[si].name);
+                                    if (window.supabaseChannel) {
+                                        window.supabaseChannel.send({
+                                            type: "broadcast",
+                                            event: "smart_screen_trigger",
+                                            payload: { image: smartImages[si], trigger: tessText, timestamp: Date.now() }
+                                        });
+                                    }
+                                }
+                            }
+                            
+                            // --- EMAIL TRIGGER (during interview) ---
+                            var emailCfg2 = window.BotemiaConfig?.modules?.emailConfig;
+                            if (emailCfg2?.emailTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                console.log("📧 Email trigger detected during interview!");
+                            }
+                            
+                            // --- PHONE TRIGGER (during interview) ---
+                            if (emailCfg2?.phoneTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                console.log("📞 Phone trigger detected during interview!");
+                            }
+                            
+                            // --- TESTIMONIALS TRIGGER (during interview) ---
+                            var tGroups = window.BotemiaConfig?.modules?.testimonial?.groups || [];
+                            for (var tg = 0; tg < tGroups.length; tg++) {
+                                if (tGroups[tg].triggerPhrase && lowerText.indexOf(tGroups[tg].triggerPhrase.toLowerCase()) !== -1) {
+                                    console.log("🎬 Testimonial matched during interview:", tGroups[tg].triggerPhrase);
+                                }
+                            }
+                            
+                            // --- VIDEO VAULT TRIGGER (during interview) ---
+                            var vids = window.BotemiaConfig?.modules?.videoVault?.videos || [];
+                            for (var vi = 0; vi < vids.length; vi++) {
+                                if (vids[vi].triggerPhrase && lowerText.indexOf(vids[vi].triggerPhrase.toLowerCase()) !== -1) {
+                                    console.log("📹 Video Vault matched during interview:", vids[vi].triggerPhrase);
+                                }
+                            }
+                            
+                            // --- WEBSITE INFO TRIGGER (during interview) ---
+                            var wTriggers = window.BotemiaConfig?.modules?.websiteInfo?.triggers || [];
+                            if (wTriggers.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                console.log("🌐 Website Info trigger detected during interview!");
+                            }
+                            
+                            return;
+                        }
                         
+                        // ===== NORMAL MODE: No interview active =====
                         // --- PRE-QUAL TRIGGER ---
+                        var triggerPhrase = window.TRIGGER_PHRASE;
                         if (triggerPhrase) {
-                            const fuzzyTriggers = [
-                                triggerPhrase,
-                                triggerPhrase.toLowerCase(),
-                                "YES_INITIATE_PREQUAL"
-                            ].filter(t => t);
-                            const hasTrigger = fuzzyTriggers.some(trigger => lowerText.includes(trigger.toLowerCase()));
+                            var fuzzyTriggers = [triggerPhrase, triggerPhrase.toLowerCase(), "YES_INITIATE_PREQUAL"].filter(function(t) { return t; });
+                            var hasTrigger = fuzzyTriggers.some(function(trigger) { return lowerText.indexOf(trigger.toLowerCase()) !== -1; });
                             if (hasTrigger) {
                                 console.log("🎯 TRIGGER DETECTED! Starting pre-qualification...");
-                                console.log("🔥 Triggered by:", fuzzyTriggers.find(t => lowerText.includes(t.toLowerCase())));
                                 setTimeout(function() { forcePreQualification(); }, 3500);
                             }
                         }
-
-                        // --- EMAIL TRIGGER (Dynamic from config) ---
-                        const emailCfg = window.BotemiaConfig?.modules?.emailConfig;
-                        if (emailCfg?.emailTriggers?.length) {
-                            if (emailCfg.emailTriggers.some(t => lowerText.includes(t.toLowerCase()))) {
-                                console.log("📧 Email trigger detected!");
-                                if (window.preQualController?.isActive) {
-                                    window.preQualController.sendEmail();
-                                    window.preQualController.isActive = false;
-                                    console.log("✅ Email sent via trigger");
-                                }
+                        
+                        // --- EMAIL TRIGGER (normal mode) ---
+                        var emailCfg = window.BotemiaConfig?.modules?.emailConfig;
+                        if (emailCfg?.emailTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                            console.log("📧 Email trigger detected!");
+                            if (window.preQualController?.isActive) {
+                                window.preQualController.sendEmail();
+                                window.preQualController.isActive = false;
                             }
                         }
-
-                        // --- SMART SCREEN TRIGGER (Dynamic from config) ---
-                        const smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
-                        for (const img of smartImages) {
-                            if ((img.triggerMatch || []).some(t => lowerText.includes(t.toLowerCase()))) {
-                                console.log("📸 Smart Screen matched:", img.name);
+                        
+                        // --- SMART SCREEN TRIGGER (normal mode) ---
+                        var smartImages2 = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                        for (var si2 = 0; si2 < smartImages2.length; si2++) {
+                            if ((smartImages2[si2].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                console.log("📸 Smart Screen matched:", smartImages2[si2].name);
                                 if (window.supabaseChannel) {
                                     window.supabaseChannel.send({
                                         type: "broadcast",
                                         event: "smart_screen_trigger",
-                                        payload: { image: img, trigger: tessText, timestamp: Date.now() }
+                                        payload: { image: smartImages2[si2], trigger: tessText, timestamp: Date.now() }
                                     });
                                 }
                                 break;
                             }
                         }
-
-                        // --- PHONE TRIGGER (Dynamic from config) ---
-                        if (emailCfg?.phoneTriggers?.length) {
-                            if (emailCfg.phoneTriggers.some(t => lowerText.includes(t.toLowerCase()))) {
-                                console.log("📞 Phone trigger detected!");
-                                window.open("tel:" + (emailCfg.supportPhone || "949-228-5263"), "_blank");
-                            }
+                        
+                        // --- PHONE TRIGGER (normal mode) ---
+                        if (emailCfg?.phoneTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                            console.log("📞 Phone trigger detected!");
+                            window.open("tel:" + (emailCfg.supportPhone || "949-228-5263"), "_blank");
                         }
                     }
                 });
