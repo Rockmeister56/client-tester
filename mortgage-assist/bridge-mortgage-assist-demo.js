@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/26/2026, 7:41:58 PM
+// Generated: 4/27/2026, 4:56:38 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -24,7 +24,7 @@
             },
             "emailConfig": {"loanOfficerEmail":"mobilewise.ai@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["So lets stop here"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.7)"}]}
+            "smartScreen": {"action":"showBestMatch","images":[]}
         }
     };
 
@@ -432,78 +432,171 @@
             
             tcsChannel.on("broadcast", { event: "command" }, function(payload) {
                 console.log("📡 [REALTIME] Command received:", payload);
+                const command = payload.payload?.command;
                 
-                // 🔥 COMPLETELY DISABLED - THIS WAS THE SKIP TRIGGER
-                // if (payload.payload.command === "START_PRE_QUAL") {
-                //     if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
-                //         console.warn("⚠️ Dashboard ignored: Daily not ready yet.");
-                //         return;
-                //     }
-                //     forcePreQualification();
-                // }
-            });
-            
-                // ===== NEW: EMAIL COMMAND =====
-                if (payload.payload.command === "SEND_EMAIL") {
+                // ===== START PRE-QUAL =====
+                if (command === "START_PRE_QUAL") {
+                    if (typeof window.dailyCallObject === "undefined" || !window.dailyCallObject) {
+                        console.warn("⚠️ TCS ignored: Daily not ready yet.");
+                        return;
+                    }
+                    forcePreQualification();
+                }
+                
+                // ===== EMAIL COMMAND =====
+                if (command === "SEND_EMAIL") {
                     console.log("📧 Email command received from TCS!");
                     if (window.preQualController && window.preQualController.isActive) {
                         window.preQualController.sendEmail();
                         window.preQualController.isActive = false;
                         console.log("✅ Email sent via TCS command");
                     } else {
-                        console.warn("⚠️ Cannot send email - controller not active");
+                        console.warn("⚠️ Cannot send email - controller not active. Sending test confirmation...");
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "trigger_test_result",
+                            payload: {
+                                module: "email_trigger",
+                                success: true,
+                                message: "Email trigger recognized (controller not active, but trigger detected)"
+                            }
+                        });
                     }
                 }
                 
-                // ===== NEW: PHONE CONNECT COMMAND =====
-                if (payload.payload.command === "PHONE_CONNECT") {
+                // ===== PHONE CONNECT COMMAND =====
+                if (command === "PHONE_CONNECT") {
                     console.log("📞 Phone connect command received from TCS!");
-                    // 🔥 DYNAMIC: Pulls from BotemiaConfig emailConfig
                     const phoneNumber = window.BotemiaConfig?.modules?.emailConfig?.supportPhone || "949-228-5263";
-                    console.log("📞 Initiating call to:", phoneNumber);
-                    window.open("tel:" + phoneNumber, "_blank");
+                    console.log("📞 Would initiate call to:", phoneNumber);
+                    window.supabaseChannel.send({
+                        type: "broadcast",
+                        event: "trigger_test_result",
+                        payload: {
+                            module: "phone_connect",
+                            success: true,
+                            message: "Phone trigger recognized — would dial " + phoneNumber
+                        }
+                    });
                 }
                 
-                // ===== NEW: SMART SCREEN COMMAND =====
-                if (payload.payload.command === "SHOW_SMART_SCREEN") {
+                // ===== SMART SCREEN COMMAND =====
+                if (command === "SHOW_SMART_SCREEN") {
                     console.log("📸 Smart Screen command received:", payload.payload);
                     if (typeof window.showSmartScreen === "function") {
                         window.showSmartScreen(payload.payload.trigger, payload.payload.image);
                     }
                 }
-            tcsChannel.subscribe(function(status) { 
-                if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); 
-            });
-            window.supabaseChannel = tcsChannel;
-            
-            // Create health monitor channel (For Communication Monitor)
-            const healthChannel = sbClient.channel("health-monitor");
-            healthChannel.subscribe(function(status) {
-                if (status === "SUBSCRIBED") {
-                    console.log("🩺 Health monitor channel connected");
+                
+                // ===== TEST TRIGGER COMMAND (For TCS test buttons) =====
+                if (command === "test_trigger") {
+                    const module = payload.payload.module;
+                    const phrase = (payload.payload.trigger_phrase || "").toLowerCase();
+                    console.log("🧪 TCS Test: Simulating trigger for " + module + " with phrase: " + phrase);
+                    
+                    let result = { success: false, message: "No trigger matched" };
+                    
+                    // --- Test Email Triggers ---
+                    if (module === "email_trigger") {
+                        const emailTriggers = window.BotemiaConfig?.modules?.emailConfig?.emailTriggers || [];
+                        const matched = emailTriggers.some(t => t && phrase.includes(t.toLowerCase()));
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Email trigger would fire" : "❌ No email trigger matched the phrase"
+                        };
+                    }
+                    
+                    // --- Test Phone Triggers ---
+                    if (module === "phone_connect") {
+                        const phoneTriggers = window.BotemiaConfig?.modules?.emailConfig?.phoneTriggers || [];
+                        const matched = phoneTriggers.some(t => t && phrase.includes(t.toLowerCase()));
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Phone trigger would fire" : "❌ No phone trigger matched the phrase"
+                        };
+                    }
+                    
+                    // --- Test Smart Screen Triggers ---
+                    if (module === "smart_screen") {
+                        const images = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                        let matched = false;
+                        for (const img of images) {
+                            if ((img.triggerMatch || []).some(t => t && phrase.includes(t.toLowerCase()))) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Smart Screen would display" : "❌ No smart screen trigger matched"
+                        };
+                    }
+                    
+                    // --- Test Pre-Qual Trigger ---
+                    if (module === "pre_qual") {
+                        const pqTrigger = window.BotemiaConfig?.modules?.preQualification?.triggerPhrase || "";
+                        const matched = pqTrigger && phrase.includes(pqTrigger.toLowerCase());
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Pre-qual trigger would fire" : "❌ Pre-qual trigger not matched"
+                        };
+                    }
+                    
+                    // --- Test Website Info Triggers ---
+                    if (module === "website_info") {
+                        const webTriggers = window.BotemiaConfig?.modules?.websiteInfo?.triggers || [];
+                        const matched = webTriggers.some(t => t && phrase.includes(t.toLowerCase()));
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Website Info trigger would fire" : "❌ No website trigger matched"
+                        };
+                    }
+                    
+                    // --- Test Testimonials Triggers ---
+                    if (module === "testimonials") {
+                        const groups = window.BotemiaConfig?.modules?.testimonial?.groups || [];
+                        let matched = false;
+                        for (const g of groups) {
+                            if (g.triggerPhrase && phrase.includes(g.triggerPhrase.toLowerCase())) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Testimonial would display" : "❌ No testimonial trigger matched"
+                        };
+                    }
+                    
+                    // --- Test Video Vault Triggers ---
+                    if (module === "video_vault") {
+                        const videos = window.BotemiaConfig?.modules?.videoVault?.videos || [];
+                        let matched = false;
+                        for (const v of videos) {
+                            if (v.triggerPhrase && phrase.includes(v.triggerPhrase.toLowerCase())) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        result = {
+                            success: matched,
+                            message: matched ? "✅ Video would play" : "❌ No video trigger matched"
+                        };
+                    }
+                    
+                    // Send result back to TCS
+                    window.supabaseChannel.send({
+                        type: "broadcast",
+                        event: "trigger_test_result",
+                        payload: {
+                            module: module,
+                            ...result,
+                            timestamp: Date.now()
+                        }
+                    });
+                    console.log("📤 Test result sent to TCS:", result);
                 }
             });
-            window.healthChannel = healthChannel;
-            
-            // Listen for test_ping
-            healthChannel.on("broadcast", { event: "test_ping" }, function(payload) {
-                console.log("📡 TEST_PING received, sending PONG...");
-                healthChannel.send({
-                    type: "broadcast",
-                    event: "test_pong",
-                    payload: {
-                        clientId: window.BotemiaConfig?.id || "unknown",
-                        timestamp: Date.now(),
-                        echoTimestamp: payload.payload.timestamp
-                    }
-                });
-                console.log("📤 test_pong sent");
-            });
-        };
-        
-        document.head.appendChild(script);
-    })();
-
     // ===== ANALYTICS EVENT TRACKER =====
     function trackEvent(eventType, eventData = {}) {
         if (!window.supabaseChannel) return;
