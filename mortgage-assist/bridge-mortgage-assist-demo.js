@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 1:12:05 PM
+// Generated: 4/27/2026, 1:51:50 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -732,12 +732,6 @@
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
-                    
-                    // 🔥 SILENCE DEFAULT AI WHEN CONTROLLER IS ACTIVE
-                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "agent_transcription") {
-                        console.log("🚫 Silencing default AI - controller is active");
-                        return;
-                    }
                     
                     // 🔥 NEW: Handle USER transcriptions during interview
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "user_transcription") {
