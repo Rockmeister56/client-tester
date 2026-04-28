@@ -337,9 +337,10 @@
         }
 
         sendEmail() {
-        trackEvent('lead_captured', { email: data.email });
             console.log("📧 Sending emails...");
             const data = this.answers;
+
+            trackEvent('lead_captured', { email: data.email });
             
             // Build formatted answers string
             let formattedAnswers = "";
