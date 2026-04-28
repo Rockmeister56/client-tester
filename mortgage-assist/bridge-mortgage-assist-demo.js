@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/28/2026, 12:12:59 PM
+// Generated: 4/28/2026, 12:42:29 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -24,7 +24,7 @@
             },
             "emailConfig": {"loanOfficerEmail":"mobilewise.ai@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"Zoom High Conversion Meeting","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"white"},{"name":"Check your inbox","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/email-sent2.jpg","caption":"Check your inbox :)","link":"","triggerMatch":["Check your inbox now"],"imageSize":"auto","backgroundColor":"rgba(0,0,0,0.5)","backdropOpacity":"0.5","showTitle":true}]}
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"Zoom High Conversion Meeting","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"white"},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/email-sent2.jpg","link":"","name":"Check your inbox","caption":"Check your inbox :)","imageSize":"auto","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.5)"}]}
         }
     };
 
@@ -859,12 +859,28 @@
                         var emailCfg = window.BotemiaConfig?.modules?.emailConfig;
                         if (emailCfg?.emailTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                             console.log("📧 Email trigger detected!");
-                            if (window.preQualController?.isActive) {
-                                window.preQualController.sendEmail();
-                                window.preQualController.isActive = false;
+                            // Always send email if controller has data, otherwise send test email
+                            if (window.preQualController) {
+                                if (window.preQualController.isActive && Object.keys(window.preQualController.answers || {}).length > 0) {
+                                    window.preQualController.sendEmail();
+                                    window.preQualController.isActive = false;
+                                    console.log("✅ Email sent with interview data");
+                                } else {
+                                    // Test mode: send sample email to verify EmailJS works
+                                    console.log("📧 Sending test email (no interview active)...");
+                                    window.preQualController.answers = {
+                                        fullName: "Trigger Test",
+                                        email: emailCfg.clientEmail || "test@example.com",
+                                        phone: "555-0123",
+                                        loanType: "Test Trigger",
+                                        monthlyIncome: "N/A",
+                                        downPayment: "N/A",
+                                        creditScore: "N/A"
+                                    };
+                                    window.preQualController.sendEmail();
+                                }
                             }
                         }
-                        
                         // --- SMART SCREEN TRIGGER (normal mode) ---
                         var smartImages2 = window.BotemiaConfig?.modules?.smartScreen?.images || [];
                         for (var si2 = 0; si2 < smartImages2.length; si2++) {
