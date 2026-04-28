@@ -806,7 +806,12 @@
                             // --- EMAIL TRIGGER (during interview) ---
                             var emailCfg2 = window.BotemiaConfig?.modules?.emailConfig;
                             if (emailCfg2?.emailTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
-                                console.log("📧 Email trigger detected during interview!");
+                            console.log("📧 Email trigger detected during interview!");
+                            if (window.preQualController && window.preQualController.isActive) {
+                            window.preQualController.sendEmail();
+                            window.preQualController.isActive = false;
+                            console.log("✅ Email sent via trigger during interview");
+                                }
                             }
                             
                             // --- PHONE TRIGGER (during interview) ---
