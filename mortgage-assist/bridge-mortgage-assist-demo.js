@@ -625,7 +625,7 @@
 
                         
             // Listen for smart screen triggers and display overlay
-            tcsChannel.on("broadcast", { event: "smart_screen_trigger" }, function(payload) {
+            window.supabaseChannel.on("broadcast", { event: "smart_screen_trigger" }, function(payload) {
                 var img = payload.payload.image;
                 if (!img || !img.url) return;
                 var overlay = document.createElement("div");
