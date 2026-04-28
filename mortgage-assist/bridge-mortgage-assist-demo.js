@@ -788,21 +788,26 @@
                             var smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
                             for (var si = 0; si < smartImages.length; si++) {
                                 if ((smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
-                                    console.log("📸 Smart Screen matched during interview:", smartImages[si].name);
-                                    var overlay = document.createElement("div");
-                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
-                                    overlay.onclick = function() { overlay.remove(); };
-                                    var imgEl = document.createElement("img");
-                                    imgEl.src = smartImages[si].url;
-                                    imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
-                                    overlay.appendChild(imgEl);
-                                    if (smartImages[si].name) {
-                                        var caption = document.createElement("div");
-                                        caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
-                                        caption.textContent = smartImages[si].name;
-                                        overlay.appendChild(caption);
-                                    }
-                                    document.body.appendChild(overlay);
+                                var overlay = document.createElement("div");
+                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                var imgEl = document.createElement("img");
+                                imgEl.src = smartImages2[si2].url;
+                                imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                overlay.appendChild(imgEl);
+                                if (smartImages2[si2].name) {
+                                    var caption = document.createElement("div");
+                                    caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
+                                    caption.textContent = smartImages2[si2].name;
+                                    overlay.appendChild(caption);
+                                }
+                                var closeBtn = document.createElement("button");
+                                closeBtn.textContent = "✕ Close";
+                                closeBtn.style.cssText = "margin-top:15px;padding:10px 30px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;";
+                                closeBtn.onclick = function() { overlay.remove(); };
+                                overlay.appendChild(closeBtn);
+                                overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+                                document.body.appendChild(overlay);
+                                setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 10000);
                                     if (window.supabaseChannel) {
                                         window.supabaseChannel.send({
                                             type: "broadcast",
@@ -876,9 +881,8 @@
                         for (var si2 = 0; si2 < smartImages2.length; si2++) {
                             if ((smartImages2[si2].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                 console.log("📸 Smart Screen matched:", smartImages2[si2].name);
-                                var overlay = document.createElement("div");
-                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
-                                overlay.onclick = function() { overlay.remove(); };
+                                                                var overlay = document.createElement("div");
+                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                 var imgEl = document.createElement("img");
                                 imgEl.src = smartImages2[si2].url;
                                 imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
@@ -889,7 +893,14 @@
                                     caption.textContent = smartImages2[si2].name;
                                     overlay.appendChild(caption);
                                 }
+                                var closeBtn = document.createElement("button");
+                                closeBtn.textContent = "✕ Close";
+                                closeBtn.style.cssText = "margin-top:15px;padding:10px 30px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;";
+                                closeBtn.onclick = function() { overlay.remove(); };
+                                overlay.appendChild(closeBtn);
+                                overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
                                 document.body.appendChild(overlay);
+                                setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 10000);
                                 if (window.supabaseChannel) {
                                     window.supabaseChannel.send({
                                         type: "broadcast",
