@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/28/2026, 12:42:29 PM
+// Generated: 4/28/2026, 2:30:34 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -22,7 +22,7 @@
                 "triggerPhrase": "let's get started",
                 "triggerPhraseLegacy": "let's get started"
             },
-            "emailConfig": {"loanOfficerEmail":"mobilewise.ai@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
+            "emailConfig": {"loanOfficerEmail":"justaskai.4biz@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"Zoom High Conversion Meeting","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"white"},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/email-sent2.jpg","link":"","name":"Check your inbox","caption":"Check your inbox :)","imageSize":"auto","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.5)"}]}
         }
@@ -337,10 +337,9 @@
         }
 
         sendEmail() {
+        trackEvent('lead_captured', { email: data.email });
             console.log("📧 Sending emails...");
             const data = this.answers;
-
-            trackEvent('lead_captured', { email: data.email });
             
             // Build formatted answers string
             let formattedAnswers = "";
@@ -372,48 +371,49 @@
                 "All Responses": data.allResponses || []
             };
             
-            // ===== EMAIL 1: TO PROSPECT (template_uix9cyx) =====
+            // ===== EMAIL 1: TO LOAN BROKER PROSPECT (template_uix9cyx) =====
+            // This template shows them an example of the lead data + zoom confirmation
             if (data.email) {
                 var prospectParams = {
+                    to_email: data.email,
                     full_name: data.fullName || "Valued Client",
                     email: data.email,
                     phone: data.phone || "Not provided",
+                    business_name: data.businessName || "Not provided",
                     scheduled_datetime: data.scheduledDateTime || "To be determined",
+                    loan_type: data.loanType || "Not provided",
+                    monthly_income: data.monthlyIncome || "Not provided",
+                    down_payment: data.downPayment || "Not provided",
+                    credit_score: data.creditScore || "Not provided",
+                    special_requests: data.specialRequests || "None",
+                    all_answers: formattedAnswers,
                     full_json: JSON.stringify(jsonForTemplate, null, 2),
                     submitted_at: new Date().toLocaleString()
                 };
                 
                 emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
-                    .then(() => console.log("✅ Prospect email sent to:", data.email))
-                    .catch(e => console.error("❌ Prospect email error:", e));
+                    .then(function() { console.log("✅ Prospect email sent to: " + data.email); })
+                    .catch(function(e) { console.error("❌ Prospect email error:", e); });
             } else {
                 console.warn("⚠️ No prospect email provided, skipping prospect email");
             }
             
-            // ===== EMAIL 2: TO AGENCY/CLIENT (template_8kx812d) =====
-            // 🔥 DYNAMIC: Pulls from BotemiaConfig emailConfig
-            const clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            // ===== EMAIL 2: TO YOU/AGENCY — Just contact info for zoom meeting (template_8kx812d) =====
+            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             
             var clientParams = {
                 to_email: clientEmail,
                 full_name: data.fullName || "Not provided",
-                business_name: data.businessName || "Not provided",
                 email: data.email || "Not provided",
                 phone: data.phone || "Not provided",
                 scheduled_datetime: data.scheduledDateTime || "Not provided",
-                loan_type: data.loanType || "Not provided",
-                monthly_income: data.monthlyIncome || "Not provided",
-                down_payment: data.downPayment || "Not provided",
-                credit_score: data.creditScore || "Not provided",
-                zoom_interest: data.zoomInterest || "Not provided",
-                special_requests: data.specialRequests || "None",
-                all_answers: formattedAnswers,
+                message: data.specialRequests || "None",
                 submitted_at: new Date().toLocaleString()
             };
             
             emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
-                .then(() => console.log("✅ Client notification sent to:", clientEmail))
-                .catch(e => console.error("❌ Client email error:", e));
+                .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
+                .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
     }
     window.PreQualificationController = PreQualificationController;
