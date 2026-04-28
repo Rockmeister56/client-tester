@@ -622,6 +622,28 @@
                 if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); 
             });
             window.supabaseChannel = tcsChannel;
+
+                        
+            // Listen for smart screen triggers and display overlay
+            tcsChannel.on("broadcast", { event: "smart_screen_trigger" }, function(payload) {
+                var img = payload.payload.image;
+                if (!img || !img.url) return;
+                var overlay = document.createElement("div");
+                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                overlay.onclick = function() { overlay.remove(); };
+                var imgEl = document.createElement("img");
+                imgEl.src = img.url;
+                imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                overlay.appendChild(imgEl);
+                if (img.name) {
+                    var caption = document.createElement("div");
+                    caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
+                    caption.textContent = img.name;
+                    overlay.appendChild(caption);
+                }
+                document.body.appendChild(overlay);
+                console.log("📸 Smart Screen displayed:", img.name);
+            });
             
             // Health monitor channel
             var healthChannel = sbClient.channel("health-monitor");
