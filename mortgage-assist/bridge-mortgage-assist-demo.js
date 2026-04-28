@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/27/2026, 1:51:50 PM
+// Generated: 4/27/2026, 11:51:52 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -24,7 +24,7 @@
             },
             "emailConfig": {"loanOfficerEmail":"mobilewise.ai@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.7)"}]}
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"Zoom High Conversion Meeting","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"white"}]}
         }
     };
 
@@ -622,28 +622,6 @@
                 if (status === "SUBSCRIBED") console.log("✅ [REALTIME] Connected to Supabase"); 
             });
             window.supabaseChannel = tcsChannel;
-
-                        
-            // Listen for smart screen triggers and display overlay
-            window.supabaseChannel.on("broadcast", { event: "smart_screen_trigger" }, function(payload) {
-                var img = payload.payload.image;
-                if (!img || !img.url) return;
-                var overlay = document.createElement("div");
-                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
-                overlay.onclick = function() { overlay.remove(); };
-                var imgEl = document.createElement("img");
-                imgEl.src = img.url;
-                imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
-                overlay.appendChild(imgEl);
-                if (img.name) {
-                    var caption = document.createElement("div");
-                    caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
-                    caption.textContent = img.name;
-                    overlay.appendChild(caption);
-                }
-                document.body.appendChild(overlay);
-                console.log("📸 Smart Screen displayed:", img.name);
-            });
             
             // Health monitor channel
             var healthChannel = sbClient.channel("health-monitor");
@@ -788,26 +766,33 @@
                             var smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
                             for (var si = 0; si < smartImages.length; si++) {
                                 if ((smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
-                                var overlay = document.createElement("div");
-                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;";
-                                var imgEl = document.createElement("img");
-                                imgEl.src = smartImages2[si2].url;
-                                imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
-                                overlay.appendChild(imgEl);
-                                if (smartImages2[si2].name) {
-                                    var caption = document.createElement("div");
-                                    caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
-                                    caption.textContent = smartImages2[si2].name;
-                                    overlay.appendChild(caption);
-                                }
-                                var closeBtn = document.createElement("button");
-                                closeBtn.textContent = "✕ Close";
-                                closeBtn.style.cssText = "margin-top:15px;padding:10px 30px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;";
-                                closeBtn.onclick = function() { overlay.remove(); };
-                                overlay.appendChild(closeBtn);
-                                overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
-                                document.body.appendChild(overlay);
-                                setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 10000);
+                                    console.log("📸 Smart Screen matched during interview:", smartImages[si].name);
+                                    var overlay = document.createElement("div");
+                                    overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:90vw;";
+                                    var imgEl = document.createElement("img");
+                                    imgEl.src = smartImages[si].url;
+                                    imgEl.style.cssText = "max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                    overlay.appendChild(imgEl);
+                                    if (smartImages[si].name) {
+                                        var caption = document.createElement("div");
+                                        caption.style.cssText = "color:white;font-size:1.3rem;margin-top:15px;font-weight:600;";
+                                        caption.textContent = smartImages[si].name;
+                                        overlay.appendChild(caption);
+                                    }
+                                    var closeBtn = document.createElement("button");
+                                    closeBtn.textContent = "✕ Close";
+                                    closeBtn.style.cssText = "margin-top:12px;padding:8px 25px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:0.9rem;font-weight:600;cursor:pointer;";
+                                    closeBtn.onclick = function() { overlay.remove(); };
+                                    overlay.appendChild(closeBtn);
+                                    document.body.appendChild(overlay);
+                                    setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 10000);
+                                    if (window.supabaseChannel) {
+                                        window.supabaseChannel.send({
+                                            type: "broadcast",
+                                            event: "smart_screen_trigger",
+                                            payload: { image: smartImages[si], trigger: tessText, timestamp: Date.now() }
+                                        });
+                                    }
                                     if (window.supabaseChannel) {
                                         window.supabaseChannel.send({
                                             type: "broadcast",
@@ -881,26 +866,32 @@
                         for (var si2 = 0; si2 < smartImages2.length; si2++) {
                             if ((smartImages2[si2].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                 console.log("📸 Smart Screen matched:", smartImages2[si2].name);
-                                                                var overlay = document.createElement("div");
-                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                var overlay = document.createElement("div");
+                                overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:90vw;";
                                 var imgEl = document.createElement("img");
                                 imgEl.src = smartImages2[si2].url;
-                                imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                imgEl.style.cssText = "max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
                                 overlay.appendChild(imgEl);
                                 if (smartImages2[si2].name) {
                                     var caption = document.createElement("div");
-                                    caption.style.cssText = "color:white;font-size:1.5rem;margin-top:20px;font-weight:600;";
+                                    caption.style.cssText = "color:white;font-size:1.3rem;margin-top:15px;font-weight:600;";
                                     caption.textContent = smartImages2[si2].name;
                                     overlay.appendChild(caption);
                                 }
                                 var closeBtn = document.createElement("button");
                                 closeBtn.textContent = "✕ Close";
-                                closeBtn.style.cssText = "margin-top:15px;padding:10px 30px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;";
+                                closeBtn.style.cssText = "margin-top:12px;padding:8px 25px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:0.9rem;font-weight:600;cursor:pointer;";
                                 closeBtn.onclick = function() { overlay.remove(); };
                                 overlay.appendChild(closeBtn);
-                                overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
                                 document.body.appendChild(overlay);
                                 setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 10000);
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast",
+                                        event: "smart_screen_trigger",
+                                        payload: { image: smartImages2[si2], trigger: tessText, timestamp: Date.now() }
+                                    });
+                                }
                                 if (window.supabaseChannel) {
                                     window.supabaseChannel.send({
                                         type: "broadcast",
