@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/28/2026, 2:30:34 PM
+// Generated: 4/28/2026, 8:19:07 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -337,9 +337,10 @@
         }
 
         sendEmail() {
-        trackEvent('lead_captured', { email: data.email });
             console.log("📧 Sending emails...");
             const data = this.answers;
+            
+            trackEvent('lead_captured', { email: data.email });
             
             // Build formatted answers string
             let formattedAnswers = "";
