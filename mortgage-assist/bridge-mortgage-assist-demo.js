@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/29/2026, 12:50:36 AM
+// Generated: 4/29/2026, 12:31:17 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -355,13 +355,17 @@
             console.log("📧 Sending emails...");
             const data = this.answers;
             
-            trackEvent('lead_captured', { email: data.email });
-            
-            // Build formatted answers string
-            let formattedAnswers = "";
-            for (var key in data) {
-                if (data.hasOwnProperty(key) && key !== "allResponses" && key !== "interviewCompleted") {
-                    formattedAnswers += key + ": " + data[key] + "\n";
+            // Rebuild answers from allResponses as fallback (fixes field mapping)
+            if (data.allResponses && data.allResponses.length > 0) {
+                for (var i = 0; i < data.allResponses.length; i++) {
+                    var resp = data.allResponses[i];
+                    if (resp.field && resp.field !== "unknown" && resp.text && 
+                        resp.text.toLowerCase() !== "yes" && resp.text.toLowerCase() !== "no" &&
+                        resp.text.toLowerCase().indexOf("yes.") === -1 && resp.text.toLowerCase().indexOf("no.") === -1) {
+                        if (!data[resp.field] || data[resp.field] === "Not provided") {
+                            data[resp.field] = resp.text.replace(/\.$/g, "").trim();
+                        }
+                    }
                 }
             }
             
@@ -397,13 +401,11 @@
                     phone: data.phone || "Not provided",
                     business_name: data.businessName || "Not provided",
                     scheduled_datetime: data.scheduledDateTime || "To be determined",
-                    loan_type: data.loanType || "Not provided",
-                    monthly_income: data.monthlyIncome || "Not provided",
-                    down_payment: data.downPayment || "Not provided",
-                    credit_score: data.creditScore || "Not provided",
+                    loan_type: "See Full Example Below",
+                    annual_income: "See Full Example Below",
+                    down_payment: "See Full Example Below",
+                    credit_score: "See Full Example Below",
                     special_requests: data.specialRequests || "None",
-                    all_answers: formattedAnswers,
-                    full_json: JSON.stringify(jsonForTemplate, null, 2),
                     submitted_at: new Date().toLocaleString()
                 };
                 
@@ -413,7 +415,6 @@
             } else {
                 console.warn("⚠️ No prospect email provided, skipping prospect email");
             }
-            
             // ===== EMAIL 2: TO YOU/AGENCY — Just contact info for zoom meeting (template_8kx812d) =====
             var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             
