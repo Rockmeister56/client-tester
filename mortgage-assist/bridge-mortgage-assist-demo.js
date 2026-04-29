@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 4/28/2026, 8:19:07 PM
+// Generated: 4/28/2026, 11:21:52 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -24,7 +24,7 @@
             },
             "emailConfig": {"loanOfficerEmail":"justaskai.4biz@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"Zoom High Conversion Meeting","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"white"},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/email-sent2.jpg","link":"","name":"Check your inbox","caption":"Check your inbox :)","imageSize":"auto","showTitle":true,"triggerMatch":["Please check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.5)"}]}
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/zoom-invitation.jpg","link":"","name":"Zoom Invite","caption":"Zoom High Conversion Meeting","imageSize":"auto","showTitle":true,"triggerMatch":["So let's stop here"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":12},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/email-sent2.jpg","link":"","name":"Check your inbox","caption":"Check your inbox :)","imageSize":"auto","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"rgba(0,0,0,0.5)","displayDuration":5}]}
         }
     };
 
@@ -222,6 +222,19 @@
             
             // Detect which field we're capturing based on Tess's last question
             if (this.currentField) {
+                // Normalize email addresses before storing
+                if (this.currentField === "email" && userText) {
+                    userText = userText
+                        .replace(/\s+at\s+/g, "@")
+                        .replace(/\s+dot\s+/g, ".")
+                        .replace(/\s+/g, "");
+                }
+                
+                // Normalize phone numbers
+                if (this.currentField === "phone" && userText) {
+                    userText = userText.replace(/[^0-9\-()+]/g, "").trim();
+                }
+                
                 // Check if this is a confirmation ("yes" to "Is that correct?")
                 if (lowerText === "yes" || lowerText === "yes it is" || lowerText === "correct" || lowerText === "that's correct") {
                     if (this.pendingValue) {
