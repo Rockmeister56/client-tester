@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/1/2026, 10:03:06 AM
+// Generated: 5/2/2026, 12:52:15 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -19,12 +19,12 @@
         "agentId": "agent_7b0776ef6b855de5",
         "modules": {
             "preQualification": {
-                "triggerPhrase": "let's get started",
+                "triggerPhrase": "YES_INITIATE_PREQUAL",
                 "triggerPhraseLegacy": "let's get started"
             },
-            "emailConfig": {"loanOfficerEmail":"justaskai.4biz@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["I'll connect you now"]},
-            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-left","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"name":"high-conversion","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/high-conversion.jpg","caption":"","link":"","triggerMatch":["As a next-gen smart AI sales assistant"],"imageSize":"auto","backgroundColor":"white","backdropOpacity":"0.5","showTitle":true,"displayDuration":15},{"name":"pre-qualification-lead","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","caption":"","link":"","triggerMatch":["Check your inbox now"],"imageSize":"400px","backgroundColor":"white","backdropOpacity":"0.5","showTitle":true,"displayDuration":4},{"name":"form-abandonment","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/form-abandonment.jpg","caption":"","link":"","triggerMatch":["Here's the reality"],"imageSize":"400px","backgroundColor":"white","backdropOpacity":"0.5","showTitle":true,"displayDuration":5}]}
+            "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":[]},
+            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/high-conversion.jpg","link":"","name":"high-conversion","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["As a next-gen smart AI sales assistant"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":15},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/form-abandonment.jpg","link":"","name":"form-abandonment","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Here's the reality"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":5}]}
         }
     };
 
@@ -365,6 +365,19 @@
                         if (!data[resp.field] || data[resp.field] === "Not provided") {
                             data[resp.field] = resp.text.replace(/\.$/g, "").trim();
                         }
+                    }
+                }
+            }
+            
+            // 🔥 FALLBACK: If email is still missing, scan all responses for @ symbol
+            if (!data.email && data.allResponses) {
+                for (var j = data.allResponses.length - 1; j >= 0; j--) {
+                    var r = data.allResponses[j];
+                    if (r.text && r.text.indexOf("@") !== -1 &&
+                        r.text.toLowerCase() !== "yes" && r.text.toLowerCase() !== "no") {
+                        data.email = r.text.replace(/\.$/g, "").trim();
+                        console.log("📧 Email recovered from allResponses:", data.email);
+                        break;
                     }
                 }
             }
