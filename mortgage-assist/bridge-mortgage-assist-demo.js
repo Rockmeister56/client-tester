@@ -280,6 +280,17 @@
 
         detectFieldFromQuestion(tessText) {
             const lowerText = tessText.toLowerCase();
+                                    var heardMatch = tessText.match(/I heard\s+["']?([^"'.]+)["']?\.?\s+Is that correct/i);
+                        if (heardMatch && heardMatch[1]) {
+                            var heardValue = heardMatch[1].trim();
+                            if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
+                                window._tessHeardEmail = heardValue;
+                                console.log("📧 Captured email from Tess:", heardValue);
+                            } else if (heardValue.length > 1 && !heardValue.match(/^\d/)) {
+                                window._tessHeardName = heardValue;
+                                console.log("👤 Captured name from Tess:", heardValue);
+                            }
+                        }
             
             if (lowerText.includes("full name") || lowerText.includes("start with your")) {
                 this.currentField = "fullName";
@@ -351,67 +362,61 @@
             }
         }
 
-          sendEmail() {
+                 sendEmail() {
             console.log("📧 Sending emails...");
-            const data = this.answers || {};
-            let prospectEmail = data.email;
-            let prospectName = data.fullName || "Valued Client";
+            const data = this.answers;
             
-            // === SAFETY NET: Scan conversation history ===
-            // We look for any phrase starting with "I heard" that contains "at" or "@"
-            if (!prospectEmail || prospectEmail === "Not provided" || prospectEmail.indexOf("@") === -1) {
-                console.log("⚠️ Primary email missing in answers, scanning conversation history...");
-                if (window.botResponses && window.botResponses.length > 0) {
-                    for (var i = 0; i < window.botResponses.length; i++) {
-                        var text = window.botResponses[i];
-                        // Look for "I heard" AND ("at" OR "@")
-                        if (text.toLowerCase().indexOf("i heard") !== -1 && 
-                           (text.toLowerCase().indexOf(" at ") !== -1 || text.indexOf("@") !== -1)) {
-                            
-                            console.log("🔍 Potential email phrase found:", text);
-                            
-                            // Extract the text after "I heard"
-                            var possibleEmail = text.split("I heard")[1].split("Is that correct")[0];
-                            
-                            // Clean it up: Handle "at", "dot", and trim spaces
-                            prospectEmail = possibleEmail
-                                .replace(/\bat\b/gi, "@")     // Change "at" to "@"
-                                .replace(/\bdot\b/gi, ".")    // Change "dot" to "."
-                                .replace(/\s+/g, "")         // Remove ALL spaces (fixes "user at domain . com")
-                                .replace(/\.com$/g, ".com")   // Ensure clean ending
-                                .trim();
-                                
-                            console.log("🔍 Cleaned email:", prospectEmail);
-                            break; // Stop looking once found
-                        }
-                    }
-                }
+            // Normalize email if it came from Tess's speech
+            if (data.email && data.email.indexOf("@") === -1) {
+                data.email = data.email
+                    .replace(/\s+at\s+/g, "@")
+                    .replace(/\s+dot\s+/g, ".")
+                    .replace(/\s+/g, "")
+                    .replace(/\.+$/g, "");
             }
             
-            // Final Fallback: If still missing, use agency email
-            if (!prospectEmail || prospectEmail.indexOf("@") === -1) {
-                console.warn("⚠️ No valid email found, using agency fallback.");
-                prospectEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            // Fallback: if email is missing, use clientEmail
+            if (!data.email || data.email === "Not provided") {
+                var cfgEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail;
+                if (cfgEmail) data.email = cfgEmail;
             }
             
-            // ===== EMAIL 1: TO LOAN BROKER PROSPECT (template_uix9cyx) =====
-            var prospectParams = {
-                to_email: prospectEmail,
-                full_name: prospectName,
-                email: prospectEmail,
-                submitted_at: new Date().toLocaleString()
-            };
+            trackEvent('lead_captured', { email: data.email });
             
-            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
-                .then(function() { console.log("✅ Prospect email sent to: " + prospectEmail); })
-                .catch(function(e) { console.error("❌ Prospect email error:", e); });
+            // ===== EMAIL 1: TO LOAN BROKER PROSPECT =====
+            if (data.email) {
+                var prospectParams = {
+                    to_email: data.email,
+                    full_name: data.fullName || "Valued Client",
+                    email: data.email,
+                    phone: data.phone || "Not provided",
+                    business_name: data.businessName || "Not provided",
+                    scheduled_datetime: data.scheduledDateTime || "To be determined",
+                    loan_type: "See Full Example Below",
+                    annual_income: "See Full Example Below",
+                    down_payment: "See Full Example Below",
+                    credit_score: "See Full Example Below",
+                    special_requests: data.specialRequests || "None",
+                    submitted_at: new Date().toLocaleString()
+                };
+                
+                emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
+                    .then(function() { console.log("✅ Prospect email sent to: " + data.email); })
+                    .catch(function(e) { console.error("❌ Prospect email error:", e); });
+            } else {
+                console.warn("⚠️ No prospect email provided, skipping prospect email");
+            }
             
-            // ===== EMAIL 2: TO AGENCY (template_8kx812d) =====
+            // ===== EMAIL 2: TO YOU/AGENCY =====
             var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            
             var clientParams = {
                 to_email: clientEmail,
-                full_name: prospectName,
-                email: prospectEmail, 
+                full_name: data.fullName || "Not provided",
+                email: data.email || "Not provided",
+                phone: data.phone || "Not provided",
+                scheduled_datetime: data.scheduledDateTime || "Not provided",
+                message: data.specialRequests || "None",
                 submitted_at: new Date().toLocaleString()
             };
             
@@ -749,6 +754,17 @@
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
+                                                var heardMatch = tessText.match(/I heard\s+["']?([^"'.]+)["']?\.?\s+Is that correct/i);
+                        if (heardMatch && heardMatch[1]) {
+                            var heardValue = heardMatch[1].trim();
+                            if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
+                                window._tessHeardEmail = heardValue;
+                                console.log("📧 Captured email from Tess:", heardValue);
+                            } else if (heardValue.length > 1 && !heardValue.match(/^\d/)) {
+                                window._tessHeardName = heardValue;
+                                console.log("👤 Captured name from Tess:", heardValue);
+                            }
+                        }
                         
                         // Always log Tess transcriptions
                         console.log("🤖 [DAILY] Tess said:", tessText);
@@ -860,32 +876,36 @@
                             }
                         }
                         
+                                               
                         // --- EMAIL TRIGGER (normal mode) ---
                         var emailCfg = window.BotemiaConfig?.modules?.emailConfig;
                         if (emailCfg?.emailTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                             console.log("📧 Email trigger detected!");
-                            // Always send email if controller has data, otherwise send test email
+                            
+                            // Populate answers from Tess's "I heard" confirmations
                             if (window.preQualController) {
-                                if (window.preQualController.isActive && Object.keys(window.preQualController.answers || {}).length > 0) {
-                                    window.preQualController.sendEmail();
-                                    window.preQualController.isActive = false;
-                                    console.log("✅ Email sent with interview data");
-                                } else {
-                                    // Test mode: send sample email to verify EmailJS works
-                                    console.log("📧 Sending test email (no interview active)...");
-                                    window.preQualController.answers = {
-                                        fullName: "Trigger Test",
-                                        email: emailCfg.clientEmail || "test@example.com",
-                                        phone: "555-0123",
-                                        loanType: "Test Trigger",
-                                        monthlyIncome: "N/A",
-                                        downPayment: "N/A",
-                                        creditScore: "N/A"
-                                    };
-                                    window.preQualController.sendEmail();
-                                }
+                                if (!window._tessHeardName) window._tessHeardName = "";
+                                if (!window._tessHeardEmail) window._tessHeardEmail = "";
+                                
+                                // Normalize email: convert "at" → "@", "dot" → ".", remove spaces
+                                var prospectEmail = window._tessHeardEmail
+                                    .replace(/\s+at\s+/g, "@")
+                                    .replace(/\s+dot\s+/g, ".")
+                                    .replace(/\s+/g, "")
+                                    .replace(/\.+$/g, "");
+                                
+                                window.preQualController.answers.fullName = window._tessHeardName || "Valued Client";
+                                window.preQualController.answers.email = prospectEmail || emailCfg.clientEmail;
+                                window.preQualController.answers.phone = "Not provided";
+                                window.preQualController.answers.businessName = "Not provided";
+                                window.preQualController.answers.scheduledDateTime = "Not provided";
+                                window.preQualController.answers.specialRequests = "None";
+                                
+                                console.log("📧 Sending email to:", prospectEmail || emailCfg.clientEmail);
+                                window.preQualController.sendEmail();
                             }
                         }
+                        
                         // --- SMART SCREEN TRIGGER (normal mode) ---
                         var smartImages2 = window.BotemiaConfig?.modules?.smartScreen?.images || [];
                         for (var si2 = 0; si2 < smartImages2.length; si2++) {
