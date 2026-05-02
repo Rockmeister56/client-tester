@@ -351,7 +351,7 @@
             }
         }
 
-        sendEmail() {
+         sendEmail() {
             console.log("📧 Sending emails...");
             const data = this.answers;
             
@@ -362,22 +362,17 @@
                     if (resp.field && resp.field !== "unknown" && resp.text && 
                         resp.text.toLowerCase() !== "yes" && resp.text.toLowerCase() !== "no" &&
                         resp.text.toLowerCase().indexOf("yes.") === -1 && resp.text.toLowerCase().indexOf("no.") === -1) {
+                        
                         if (!data[resp.field] || data[resp.field] === "Not provided") {
-                            data[resp.field] = resp.text.replace(/\.$/g, "").trim();
+                            
+                            // === FIX: Convert spoken email words to symbols BEFORE saving ===
+                            let cleanedText = resp.text
+                                .replace(/\bat\b/gi, "@")    // Replace "at" with "@"
+                                .replace(/\bdot\b/gi, ".")   // Replace "dot" with "."
+                                .trim();
+
+                            data[resp.field] = cleanedText.replace(/\.$/g, "").trim();
                         }
-                    }
-                }
-            }
-            
-            // 🔥 FALLBACK: If email is still missing, scan all responses for @ symbol
-            if (!data.email && data.allResponses) {
-                for (var j = data.allResponses.length - 1; j >= 0; j--) {
-                    var r = data.allResponses[j];
-                    if (r.text && r.text.indexOf("@") !== -1 &&
-                        r.text.toLowerCase() !== "yes" && r.text.toLowerCase() !== "no") {
-                        data.email = r.text.replace(/\.$/g, "").trim();
-                        console.log("📧 Email recovered from allResponses:", data.email);
-                        break;
                     }
                 }
             }
