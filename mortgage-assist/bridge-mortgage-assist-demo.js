@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/2/2026, 12:52:15 AM
+// Generated: 5/2/2026, 2:10:54 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -280,7 +280,9 @@
 
         detectFieldFromQuestion(tessText) {
             const lowerText = tessText.toLowerCase();
-                                    var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
+            
+                        // Capture "I heard X. Is that correct?" patterns from Tess
+                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
@@ -291,7 +293,6 @@
                                 console.log("👤 Captured name from Tess:", heardValue);
                             }
                         }
-            
             if (lowerText.includes("full name") || lowerText.includes("start with your")) {
                 this.currentField = "fullName";
             } else if (lowerText.includes("business name") || lowerText.includes("website")) {
@@ -362,7 +363,7 @@
             }
         }
 
-                 sendEmail() {
+        sendEmail() {
             console.log("📧 Sending emails...");
             const data = this.answers;
             
@@ -425,6 +426,7 @@
                 .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
     }
+
     window.PreQualificationController = PreQualificationController;
 
     // =========================================
@@ -754,7 +756,9 @@
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
-                                                var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
+                        
+                        // Capture "I heard X. Is that correct?" patterns from Tess
+                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
@@ -765,7 +769,6 @@
                                 console.log("👤 Captured name from Tess:", heardValue);
                             }
                         }
-                        
                         // Always log Tess transcriptions
                         console.log("🤖 [DAILY] Tess said:", tessText);
                         
@@ -876,7 +879,6 @@
                             }
                         }
                         
-                                               
                         // --- EMAIL TRIGGER (normal mode) ---
                         var emailCfg = window.BotemiaConfig?.modules?.emailConfig;
                         if (emailCfg?.emailTriggers?.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
@@ -905,7 +907,6 @@
                                 window.preQualController.sendEmail();
                             }
                         }
-
                         // --- SMART SCREEN TRIGGER (normal mode) ---
                         var smartImages2 = window.BotemiaConfig?.modules?.smartScreen?.images || [];
                         for (var si2 = 0; si2 < smartImages2.length; si2++) {
