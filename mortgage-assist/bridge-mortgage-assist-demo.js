@@ -280,7 +280,7 @@
 
         detectFieldFromQuestion(tessText) {
             const lowerText = tessText.toLowerCase();
-                                    var heardMatch = tessText.match(/I heard\s+["']?([^"'.]+)["']?\.?\s+Is that correct/i);
+                                    var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
@@ -754,7 +754,7 @@
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
-                                                var heardMatch = tessText.match(/I heard\s+["']?([^"'.]+)["']?\.?\s+Is that correct/i);
+                                                var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
@@ -905,7 +905,7 @@
                                 window.preQualController.sendEmail();
                             }
                         }
-                        
+
                         // --- SMART SCREEN TRIGGER (normal mode) ---
                         var smartImages2 = window.BotemiaConfig?.modules?.smartScreen?.images || [];
                         for (var si2 = 0; si2 < smartImages2.length; si2++) {
