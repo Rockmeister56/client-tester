@@ -386,7 +386,21 @@
                 prospectEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             }
             
-            // ===== EMAIL 1: TO PROSPECT =====
+            // ===== EMAIL 1: TO AGENCY (Corrected Template ID) =====
+            // VERIFY THIS ID IN YOUR EMAILJS DASHBOARD: template_8kx812d
+            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            var clientParams = {
+                to_email: clientEmail,
+                full_name: prospectName,
+                email: prospectEmail, 
+                submitted_at: new Date().toLocaleString()
+            };
+            
+            emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
+                .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
+                .catch(function(e) { console.error("❌ Agency email error:", e); });
+            
+            // ===== EMAIL 2: TO PROSPECT =====
             var prospectParams = {
                 to_email: prospectEmail,
                 full_name: prospectName,
@@ -397,19 +411,6 @@
             emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
                 .then(function() { console.log("✅ Prospect email sent to: " + prospectEmail); })
                 .catch(function(e) { console.error("❌ Prospect email error:", e); });
-            
-            // ===== EMAIL 2: TO AGENCY =====
-            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
-            var clientParams = {
-                to_email: clientEmail,
-                full_name: prospectName,
-                email: prospectEmail, // Send the PROSPECT email, not the agency email
-                submitted_at: new Date().toLocaleString()
-            };
-            
-            emailjs.send("service_b9bppgb", "template_8k812d", clientParams)
-                .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
-                .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
     }
     window.PreQualificationController = PreQualificationController;
