@@ -351,92 +351,63 @@
             }
         }
 
-         sendEmail() {
+                 sendEmail() {
             console.log("📧 Sending emails...");
-            const data = this.answers;
+            const data = this.answers || {};
+            let prospectEmail = data.email;
+            let prospectName = data.fullName || "Valued Client";
             
-            // Rebuild answers from allResponses as fallback (fixes field mapping)
-            if (data.allResponses && data.allResponses.length > 0) {
-                for (var i = 0; i < data.allResponses.length; i++) {
-                    var resp = data.allResponses[i];
-                    if (resp.field && resp.field !== "unknown" && resp.text && 
-                        resp.text.toLowerCase() !== "yes" && resp.text.toLowerCase() !== "no" &&
-                        resp.text.toLowerCase().indexOf("yes.") === -1 && resp.text.toLowerCase().indexOf("no.") === -1) {
-                        
-                        if (!data[resp.field] || data[resp.field] === "Not provided") {
-                            
-                            // === FIX: Convert spoken email words to symbols BEFORE saving ===
-                            let cleanedText = resp.text
-                                .replace(/\bat\b/gi, "@")    // Replace "at" with "@"
-                                .replace(/\bdot\b/gi, ".")   // Replace "dot" with "."
+            // === SAFETY NET: If answers are empty, scan entire conversation history ===
+            if (!prospectEmail || prospectEmail === "Not provided" || prospectEmail.indexOf("@") === -1) {
+                console.log("⚠️ Primary email missing in answers, scanning conversation history...");
+                if (window.botResponses && window.botResponses.length > 0) {
+                    for (var i = 0; i < window.botResponses.length; i++) {
+                        var text = window.botResponses[i];
+                        // Look for phrases like "I heard [email]" or "email address is [email]"
+                        if (text.toLowerCase().indexOf("i heard") !== -1 && text.toLowerCase().indexOf("gmail") !== -1) {
+                            // Extract the text after "I heard"
+                            var possibleEmail = text.split("I heard")[1].split("Is that correct")[0];
+                            // Clean it up
+                            prospectEmail = possibleEmail
+                                .replace(/\bat\b/gi, "@")
+                                .replace(/\bdot\b/gi, ".")
+                                .replace(/\.$/g, "")
                                 .trim();
-
-                            data[resp.field] = cleanedText.replace(/\.$/g, "").trim();
+                            console.log("🔍 Found potential email in history:", prospectEmail);
+                            break; // Stop looking once found
                         }
                     }
                 }
             }
             
-            // Build structured JSON for the template
-            const jsonForTemplate = {
-                "Pre-Qualification Summary": {
-                    "Loan Type": data.loanType || "Not provided",
-                    "Monthly Income": data.monthlyIncome || "Not provided",
-                    "Down Payment": data.downPayment || "Not provided",
-                    "Credit Score": data.creditScore || "Not provided",
-                    "Interested in Zoom": data.zoomInterest || "Not provided"
-                },
-                "Contact Information": {
-                    "Full Name": data.fullName || "Not provided",
-                    "Business/Website": data.businessName || "Not provided",
-                    "Email": data.email || "Not provided",
-                    "Phone": data.phone || "Not provided",
-                    "Scheduled Date/Time": data.scheduledDateTime || "Not provided"
-                },
-                "Additional Info": {
-                    "Special Requests": data.specialRequests || "None"
-                },
-                "All Responses": data.allResponses || []
-            };
-            
-            // ===== EMAIL 1: TO LOAN BROKER PROSPECT (template_uix9cyx) =====
-            // This template shows them an example of the lead data + zoom confirmation
-            if (data.email) {
-                var prospectParams = {
-                    to_email: data.email,
-                    full_name: data.fullName || "Valued Client",
-                    email: data.email,
-                    phone: data.phone || "Not provided",
-                    business_name: data.businessName || "Not provided",
-                    scheduled_datetime: data.scheduledDateTime || "To be determined",
-                    loan_type: "See Full Example Below",
-                    annual_income: "See Full Example Below",
-                    down_payment: "See Full Example Below",
-                    credit_score: "See Full Example Below",
-                    special_requests: data.specialRequests || "None",
-                    submitted_at: new Date().toLocaleString()
-                };
-                
-                emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
-                    .then(function() { console.log("✅ Prospect email sent to: " + data.email); })
-                    .catch(function(e) { console.error("❌ Prospect email error:", e); });
-            } else {
-                console.warn("⚠️ No prospect email provided, skipping prospect email");
+            // Final Fallback: If still missing, use agency email
+            if (!prospectEmail || prospectEmail.indexOf("@") === -1) {
+                console.warn("⚠️ No valid email found, using agency fallback.");
+                prospectEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             }
-            // ===== EMAIL 2: TO YOU/AGENCY — Just contact info for zoom meeting (template_8kx812d) =====
-            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             
-            var clientParams = {
-                to_email: clientEmail,
-                full_name: data.fullName || "Not provided",
-                email: data.email || "Not provided",
-                phone: data.phone || "Not provided",
-                scheduled_datetime: data.scheduledDateTime || "Not provided",
-                message: data.specialRequests || "None",
+            // ===== EMAIL 1: TO PROSPECT =====
+            var prospectParams = {
+                to_email: prospectEmail,
+                full_name: prospectName,
+                email: prospectEmail,
                 submitted_at: new Date().toLocaleString()
             };
             
-            emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
+            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
+                .then(function() { console.log("✅ Prospect email sent to: " + prospectEmail); })
+                .catch(function(e) { console.error("❌ Prospect email error:", e); });
+            
+            // ===== EMAIL 2: TO AGENCY =====
+            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            var clientParams = {
+                to_email: clientEmail,
+                full_name: prospectName,
+                email: prospectEmail, // Send the PROSPECT email, not the agency email
+                submitted_at: new Date().toLocaleString()
+            };
+            
+            emailjs.send("service_b9bppgb", "template_8k812d", clientParams)
                 .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
                 .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
