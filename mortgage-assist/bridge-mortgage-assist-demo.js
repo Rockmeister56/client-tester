@@ -351,29 +351,37 @@
             }
         }
 
-                 sendEmail() {
+          sendEmail() {
             console.log("📧 Sending emails...");
             const data = this.answers || {};
             let prospectEmail = data.email;
             let prospectName = data.fullName || "Valued Client";
             
-            // === SAFETY NET: If answers are empty, scan entire conversation history ===
+            // === SAFETY NET: Scan conversation history ===
+            // We look for any phrase starting with "I heard" that contains "at" or "@"
             if (!prospectEmail || prospectEmail === "Not provided" || prospectEmail.indexOf("@") === -1) {
                 console.log("⚠️ Primary email missing in answers, scanning conversation history...");
                 if (window.botResponses && window.botResponses.length > 0) {
                     for (var i = 0; i < window.botResponses.length; i++) {
                         var text = window.botResponses[i];
-                        // Look for phrases like "I heard [email]" or "email address is [email]"
-                        if (text.toLowerCase().indexOf("i heard") !== -1 && text.toLowerCase().indexOf("gmail") !== -1) {
+                        // Look for "I heard" AND ("at" OR "@")
+                        if (text.toLowerCase().indexOf("i heard") !== -1 && 
+                           (text.toLowerCase().indexOf(" at ") !== -1 || text.indexOf("@") !== -1)) {
+                            
+                            console.log("🔍 Potential email phrase found:", text);
+                            
                             // Extract the text after "I heard"
                             var possibleEmail = text.split("I heard")[1].split("Is that correct")[0];
-                            // Clean it up
+                            
+                            // Clean it up: Handle "at", "dot", and trim spaces
                             prospectEmail = possibleEmail
-                                .replace(/\bat\b/gi, "@")
-                                .replace(/\bdot\b/gi, ".")
-                                .replace(/\.$/g, "")
+                                .replace(/\bat\b/gi, "@")     // Change "at" to "@"
+                                .replace(/\bdot\b/gi, ".")    // Change "dot" to "."
+                                .replace(/\s+/g, "")         // Remove ALL spaces (fixes "user at domain . com")
+                                .replace(/\.com$/g, ".com")   // Ensure clean ending
                                 .trim();
-                            console.log("🔍 Found potential email in history:", prospectEmail);
+                                
+                            console.log("🔍 Cleaned email:", prospectEmail);
                             break; // Stop looking once found
                         }
                     }
@@ -386,8 +394,19 @@
                 prospectEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             }
             
-            // ===== EMAIL 1: TO AGENCY (Corrected Template ID) =====
-            // VERIFY THIS ID IN YOUR EMAILJS DASHBOARD: template_8kx812d
+            // ===== EMAIL 1: TO LOAN BROKER PROSPECT (template_uix9cyx) =====
+            var prospectParams = {
+                to_email: prospectEmail,
+                full_name: prospectName,
+                email: prospectEmail,
+                submitted_at: new Date().toLocaleString()
+            };
+            
+            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
+                .then(function() { console.log("✅ Prospect email sent to: " + prospectEmail); })
+                .catch(function(e) { console.error("❌ Prospect email error:", e); });
+            
+            // ===== EMAIL 2: TO AGENCY (template_8kx812d) =====
             var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             var clientParams = {
                 to_email: clientEmail,
@@ -399,18 +418,6 @@
             emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
                 .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
                 .catch(function(e) { console.error("❌ Agency email error:", e); });
-            
-            // ===== EMAIL 2: TO PROSPECT =====
-            var prospectParams = {
-                to_email: prospectEmail,
-                full_name: prospectName,
-                email: prospectEmail,
-                submitted_at: new Date().toLocaleString()
-            };
-            
-            emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
-                .then(function() { console.log("✅ Prospect email sent to: " + prospectEmail); })
-                .catch(function(e) { console.error("❌ Prospect email error:", e); });
         }
     }
     window.PreQualificationController = PreQualificationController;
