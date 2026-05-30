@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/2/2026, 2:10:54 AM
+// Generated: 5/29/2026, 9:17:28 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -19,12 +19,15 @@
         "agentId": "agent_7b0776ef6b855de5",
         "modules": {
             "preQualification": {
-                "triggerPhrase": "YES_INITIATE_PREQUAL",
+                "triggerPhrase": "So let's start with your full name please",
                 "triggerPhraseLegacy": "let's get started"
             },
             "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":[]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/high-conversion.jpg","link":"","name":"high-conversion","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["As a next-gen smart AI sales assistant"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":15},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/form-abandonment.jpg","link":"","name":"form-abandonment","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Here's the reality"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":5}]}
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/high-conversion.jpg","link":"","name":"high-conversion","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["As a next-gen smart AI sales assistant"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":15},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/form-abandonment.jpg","link":"","name":"form-abandonment","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Here's the reality"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":5}]},
+            "testimonial": {"groups":[]},
+            "videoVault": {"videos":[]},
+            "websiteInfo": {"triggers":["here is our no risk performance plan","Here is the web info on interest rates","Your wish is my command"],"links":[{"title":"AI Performance Plan","url":"https://aitvnetwork.netlify.app/ai-performance-plan","triggerPhrase":"here is our no risk performance plan"},{"title":"Mortgage Rates Demo","url":"https://aitvnetwork.netlify.app/latest-rates","triggerPhrase":"Here is the web info on interest rates"},{"title":"Mobile Report Demo","url":"https://aitvnetwork.netlify.app/prospects/pdf-viewer-demo","triggerPhrase":"Your wish is my command"}]}
         }
     };
 
@@ -101,7 +104,8 @@
 
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
-        let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
+        let clientId = window.BotemiaConfig?.id;
+        if (!clientId) { console.error("❌ CRITICAL: BotemiaConfig ID missing!"); return null; }
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
         const sessionId = 'session-' + crypto.randomUUID();
@@ -426,7 +430,6 @@
                 .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
     }
-
     window.PreQualificationController = PreQualificationController;
 
     // =========================================
@@ -512,12 +515,12 @@
                                 if (imgTriggers[j] && phrase.indexOf(imgTriggers[j].toLowerCase()) !== -1) {
                                     result = { success: true, message: "✅ Smart Screen launched: " + images[i].name };
                                     var overlay = document.createElement("div");
-                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                    overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:95vw;";
                                     overlay.id = "tcs-test-overlay";
                                     overlay.onclick = function() { overlay.remove(); };
                                     var imgEl = document.createElement("img");
                                     imgEl.src = images[i].url;
-                                    imgEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                    imgEl.style.cssText = "width:100%;max-height:80vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
                                     overlay.appendChild(imgEl);
                                     if (images[i].name) {
                                         var caption = document.createElement("div");
@@ -526,6 +529,12 @@
                                         overlay.appendChild(caption);
                                     }
                                     document.body.appendChild(overlay);
+                                    if (window.supabaseChannel) {
+                                        window.supabaseChannel.send({
+                                            type: "broadcast", event: "trigger_test_result",
+                                            payload: { module: mod, success: result.success, message: result.message, timestamp: Date.now() }
+                                        });
+                                    }
                                     break;
                                 }
                             }
@@ -544,6 +553,12 @@
                                     window.preQualController.sendEmail();
                                     window.preQualController.isActive = false;
                                 }
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast", event: "trigger_test_result",
+                                        payload: { module: mod, success: result.success, message: result.message, timestamp: Date.now() }
+                                    });
+                                }
                                 break;
                             }
                         }
@@ -558,6 +573,12 @@
                                 var pn = window.BotemiaConfig?.modules?.emailConfig?.supportPhone || "949-228-5263";
                                 result = { success: true, message: "✅ Dialing " + pn };
                                 window.open("tel:" + pn, "_blank");
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast", event: "trigger_test_result",
+                                        payload: { module: mod, success: result.success, message: result.message, timestamp: Date.now() }
+                                    });
+                                }
                                 break;
                             }
                         }
@@ -579,54 +600,126 @@
                     
                     // --- WEBSITE INFO ---
                     if (mod === "website_info") {
-                        var webTriggers = window.BotemiaConfig?.modules?.websiteInfo?.triggers || [];
-                        for (var w = 0; w < webTriggers.length; w++) {
-                            if (webTriggers[w] && phrase.indexOf(webTriggers[w].toLowerCase()) !== -1) {
-                                result = { success: true, message: "✅ Website Info trigger matched" };
+                        var webInfo = window.BotemiaConfig?.modules?.websiteInfo;
+                        var webLinks = webInfo?.links || [];
+                        for (var w = 0; w < webLinks.length; w++) {
+                            if (webLinks[w].triggerPhrase && phrase.indexOf(webLinks[w].triggerPhrase.toLowerCase()) !== -1) {
+                                result = { success: true, message: "✅ Website Info: " + webLinks[w].title };
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast", event: "trigger_test_result",
+                                        payload: { module: mod, success: true, message: "✅ Website Info: " + webLinks[w].title, timestamp: Date.now() }
+                                    });
+                                }
+                                // Show the link overlay
+                                var webOverlay = document.createElement("div");
+                                webOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;padding:0;border-radius:16px;max-width:90vw;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;";
+                                var webHeader = document.createElement("div");
+                                webHeader.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:rgba(0,0,0,0.5);border-bottom:1px solid #f8c400;";
+                                var webTitle = document.createElement("span");
+                                webTitle.style.cssText = "color:#f8c400;font-size:1.1rem;font-weight:600;";
+                                webTitle.textContent = webLinks[w].title;
+                                webHeader.appendChild(webTitle);
+                                var webClose = document.createElement("button");
+                                webClose.textContent = "✕";
+                                webClose.style.cssText = "background:#f44336;color:white;border:none;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;";
+                                webClose.onclick = function() { webOverlay.remove(); };
+                                webHeader.appendChild(webClose);
+                                webOverlay.appendChild(webHeader);
+                                var webFrame = document.createElement("iframe");
+                                webFrame.src = webLinks[w].url;
+                                webFrame.style.cssText = "width:800px;max-width:90vw;height:75vh;border:none;";
+                                webOverlay.appendChild(webFrame);
+                                document.body.appendChild(webOverlay);
+                                if (window.supabaseChannel) {
+                                    window.supabaseChannel.send({
+                                        type: "broadcast", event: "trigger_test_result",
+                                        payload: { module: mod, success: result.success, message: result.message, timestamp: Date.now() }
+                                    });
+                                }
                                 break;
                             }
                         }
-                        if (!result.success) result.message = "❌ No website trigger matched";
+                        if (!result.success) result.message = "❌ No website info trigger matched";
                     }
-                    
                     // --- TESTIMONIALS ---
                     if (mod === "testimonials") {
                         var groups = window.BotemiaConfig?.modules?.testimonial?.groups || [];
+                        var matchedGroup = null;
                         for (var g = 0; g < groups.length; g++) {
                             if (groups[g].triggerPhrase && phrase.indexOf(groups[g].triggerPhrase.toLowerCase()) !== -1) {
-                                result = { success: true, message: "✅ Testimonial matched: " + groups[g].triggerPhrase };
+                                matchedGroup = groups[g];
                                 break;
                             }
                         }
-                        if (!result.success) result.message = "❌ No testimonial trigger matched";
+                        if (matchedGroup) {
+                            result = { success: true, message: "✅ Testimonial playing: " + matchedGroup.triggerPhrase };
+                            // Play the first video in the matched group
+                            if (matchedGroup.videos && matchedGroup.videos.length > 0) {
+                                var videoUrl = matchedGroup.videos[0];
+                                var videoOverlay = document.createElement("div");
+                                videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                videoOverlay.onclick = function() { videoOverlay.remove(); };
+                                var videoEl = document.createElement("video");
+                                videoEl.src = videoUrl;
+                                videoEl.controls = true;
+                                videoEl.autoplay = true;
+                                videoEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                videoOverlay.appendChild(videoEl);
+                                if (matchedGroup.name) {
+                                    var vidCaption = document.createElement("div");
+                                    vidCaption.style.cssText = "color:white;font-size:1.3rem;margin-top:15px;font-weight:600;";
+                                    vidCaption.textContent = matchedGroup.name;
+                                var closeBtn = document.createElement("button");
+                                closeBtn.textContent = "✕ Close";
+                                closeBtn.style.cssText = "margin-top:12px;padding:8px 25px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:0.9rem;font-weight:600;cursor:pointer;";
+                                closeBtn.onclick = function() { videoOverlay.remove(); };
+                                videoOverlay.appendChild(closeBtn);
+                                    videoOverlay.appendChild(vidCaption);
+                                }
+                                document.body.appendChild(videoOverlay);
+                            }
+                        } else {
+                            result.message = "❌ No testimonial trigger matched";
+                        }
                     }
-                    
                     // --- VIDEO VAULT ---
                     if (mod === "video_vault") {
                         var videos = window.BotemiaConfig?.modules?.videoVault?.videos || [];
+                        var matchedVideo = null;
                         for (var v = 0; v < videos.length; v++) {
                             if (videos[v].triggerPhrase && phrase.indexOf(videos[v].triggerPhrase.toLowerCase()) !== -1) {
-                                result = { success: true, message: "✅ Video matched: " + videos[v].triggerPhrase };
+                                matchedVideo = videos[v];
                                 break;
                             }
                         }
-                        if (!result.success) result.message = "❌ No video trigger matched";
-                    }
-                    
-                    // Send result back to TCS
-                    if (window.supabaseChannel) {
-                        window.supabaseChannel.send({
-                            type: "broadcast",
-                            event: "trigger_test_result",
-                            payload: {
-                                module: mod,
-                                success: result.success,
-                                message: result.message,
-                                timestamp: Date.now()
+                        if (matchedVideo) {
+                            result = { success: true, message: "✅ Video playing: " + matchedVideo.triggerPhrase };
+                            var videoOverlay = document.createElement("div");
+                            videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                            videoOverlay.onclick = function() { videoOverlay.remove(); };
+                            var videoEl = document.createElement("video");
+                            videoEl.src = matchedVideo.url;
+                            videoEl.controls = true;
+                            videoEl.autoplay = true;
+                            videoEl.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                            videoOverlay.appendChild(videoEl);
+                            if (matchedVideo.name) {
+                                var vidCaption = document.createElement("div");
+                                vidCaption.style.cssText = "color:white;font-size:1.3rem;margin-top:15px;font-weight:600;";
+                                vidCaption.textContent = matchedVideo.name;
+                                var closeBtn = document.createElement("button");
+                                closeBtn.textContent = "✕ Close";
+                                closeBtn.style.cssText = "margin-top:12px;padding:8px 25px;background:#f8c400;color:#0a0f1e;border:none;border-radius:30px;font-size:0.9rem;font-weight:600;cursor:pointer;";
+                                closeBtn.onclick = function() { videoOverlay.remove(); };
+                                videoOverlay.appendChild(closeBtn);
+                                videoOverlay.appendChild(vidCaption);
                             }
-                        });
+                            document.body.appendChild(videoOverlay);
+                        } else {
+                            result.message = "❌ No video trigger matched";
+                        }
                     }
-                    console.log("📤 Test result sent to TCS:", result);
                 }
             });
             
@@ -650,26 +743,37 @@
         }; // END script.onload
         document.head.appendChild(script);
     })(); // END Supabase IIFE
-    // ===== ANALYTICS EVENT TRACKER =====
     function trackEvent(eventType, eventData = {}) {
-        if (!window.supabaseChannel) return;
+        const payload = {
+            client_id: window.BotemiaConfig?.id || 'unknown',
+            session_id: window.tessSessionId || 'unknown',
+            event_type: eventType,
+            event_data: eventData,
+            source_url: window.location.href,
+            referrer: document.referrer || 'direct',
+            timestamp: Date.now()
+        };
         
-        window.supabaseChannel.send({
-            type: 'broadcast',
-            event: 'analytics_event',
-            payload: {
-                client_id: window.BotemiaConfig?.id || 'unknown',
-                session_id: window.tessSessionId || 'unknown',
-                event_type: eventType,
-                event_data: eventData,
-                source_url: window.location.href,
-                referrer: document.referrer || 'direct',
-                timestamp: Date.now()
-            }
-        });
+        // 1. Send to Edge Function → writes to analytics_events table
+        fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/analytics-ingest", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk"
+            },
+            body: JSON.stringify(payload)
+        }).then(r => r.json()).then(d => console.log("📊 Stored:", eventType, d)).catch(e => console.error("Track error:", e));
+        
+        // 2. Also broadcast via Realtime for dashboard live updates
+        if (window.supabaseChannel) {
+            window.supabaseChannel.send({
+                type: 'broadcast',
+                event: 'analytics_event',
+                payload: payload
+            });
+        }
         console.log('📊 Tracked: ' + eventType, eventData);
     }
-
     window.preQualController = new PreQualificationController();
     console.log("✅ Controller created (Listener Mode)");
     window.broadcastTessTranscript = function(text) {
@@ -718,7 +822,9 @@
             const response = await fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/create-daily-room", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({})
+                body: JSON.stringify({ 
+                    agent_id: "agent_7b0776ef6b855de5"
+                })
             });
             const data = await response.json();
             
@@ -744,6 +850,13 @@
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
+                    
+                    // 🔥 BLOCK USER TRANSCRIPTIONS from triggering modules
+                    if (ev?.data?.type === "user_transcription") {
+                        const userText = ev.data.transcription || ev.data.text || "";
+                        console.log("👤 [DAILY] User said (ignored):", userText);
+                        return;
+                    }
                     
                     // 🔥 NEW: Handle USER transcriptions during interview
                     if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "user_transcription") {
@@ -835,6 +948,14 @@
                                     window.preQualController.sendEmail();
                                     window.preQualController.isActive = false;
                                     console.log("✅ Email sent via trigger during interview");
+                            
+                                    // Show confirmation overlay after email sent
+                                    var confirmOverlay = document.createElement("div");
+                                    confirmOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:30px 40px;border-radius:16px;border:2px solid #f8c400;";
+                                    confirmOverlay.innerHTML = '<div style="color:#f8c400;font-size:1.5rem;margin-bottom:10px;">📧</div><div style="color:white;font-size:1.3rem;font-weight:600;text-align:center;">Email confirmation sent!</div><div style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-top:8px;">Check your inbox</div>';
+                                    confirmOverlay.onclick = function() { confirmOverlay.remove(); };
+                                    document.body.appendChild(confirmOverlay);
+                                    setTimeout(function() { if (confirmOverlay.parentNode) confirmOverlay.remove(); }, 5000);
                                 }
                             }
                             // --- PHONE TRIGGER (during interview) ---
@@ -954,6 +1075,77 @@
                             console.log("📞 Phone trigger detected!");
                             window.open("tel:" + (emailCfg.supportPhone || "949-228-5263"), "_blank");
                         }
+                        
+                        // --- WEBSITE INFO TRIGGER (normal mode) ---
+                        var webInfo = window.BotemiaConfig?.modules?.websiteInfo;
+                        if (webInfo?.links && webInfo.links.length > 0) {
+                            for (var wi = 0; wi < webInfo.links.length; wi++) {
+                                var link = webInfo.links[wi];
+                                if (link.triggerPhrase && lowerText.indexOf(link.triggerPhrase.toLowerCase()) !== -1) {
+                                    console.log("🌐 Website Info matched:", link.title);
+                                    var webOverlay = document.createElement("div");
+                                    webOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;padding:0;border-radius:16px;max-width:90vw;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;";
+                                    var webHeader = document.createElement("div");
+                                    webHeader.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:rgba(0,0,0,0.5);border-bottom:1px solid #f8c400;";
+                                    var webTitle = document.createElement("span");
+                                    webTitle.style.cssText = "color:#f8c400;font-size:1.1rem;font-weight:600;";
+                                    webTitle.textContent = link.title;
+                                    webHeader.appendChild(webTitle);
+                                    var webClose = document.createElement("button");
+                                    webClose.textContent = "✕";
+                                    webClose.style.cssText = "background:#f44336;color:white;border:none;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;";
+                                    webClose.onclick = function() { webOverlay.remove(); };
+                                    webHeader.appendChild(webClose);
+                                    webOverlay.appendChild(webHeader);
+                                    var webFrame = document.createElement("iframe");
+                                    webFrame.src = link.url;
+                                    webFrame.style.cssText = "width:800px;max-width:90vw;height:75vh;border:none;";
+                                    webOverlay.appendChild(webFrame);
+                                    document.body.appendChild(webOverlay);
+                                    break;
+                                }
+                            }
+                        }
+                        // --- TESTIMONIALS TRIGGER (normal mode) ---
+                        var testimonialGroups = window.BotemiaConfig?.modules?.testimonial?.groups || [];
+                        for (var tg = 0; tg < testimonialGroups.length; tg++) {
+                            if (testimonialGroups[tg].triggerPhrase && lowerText.indexOf(testimonialGroups[tg].triggerPhrase.toLowerCase()) !== -1) {
+                                console.log("🎬 Testimonial matched:", testimonialGroups[tg].triggerPhrase);
+                                if (testimonialGroups[tg].videos && testimonialGroups[tg].videos.length > 0) {
+                                    var tVideoUrl = testimonialGroups[tg].videos[0];
+                                    var tOverlay = document.createElement("div");
+                                    tOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                    tOverlay.onclick = function() { tOverlay.remove(); };
+                                    var tVideo = document.createElement("video");
+                                    tVideo.src = tVideoUrl;
+                                    tVideo.controls = true;
+                                    tVideo.autoplay = true;
+                                    tVideo.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                    tOverlay.appendChild(tVideo);
+                                   setTimeout(function() { document.body.appendChild(tOverlay); }, 5000);
+                                }
+                                break;
+                            }
+                        }
+                        
+                        // --- VIDEO VAULT TRIGGER (normal mode) ---
+                        var videoVault = window.BotemiaConfig?.modules?.videoVault?.videos || [];
+                        for (var vi = 0; vi < videoVault.length; vi++) {
+                            if (videoVault[vi].triggerPhrase && lowerText.indexOf(videoVault[vi].triggerPhrase.toLowerCase()) !== -1) {
+                                console.log("📹 Video Vault matched:", videoVault[vi].triggerPhrase);
+                                var vOverlay = document.createElement("div");
+                                vOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                vOverlay.onclick = function() { vOverlay.remove(); };
+                                var vVideo = document.createElement("video");
+                                vVideo.src = videoVault[vi].url;
+                                vVideo.controls = true;
+                                vVideo.autoplay = true;
+                                vVideo.style.cssText = "max-width:90%;max-height:80vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+                                vOverlay.appendChild(vVideo);
+                                setTimeout(function() { document.body.appendChild(vOverlay); }, 5000);
+                                break;
+                            }
+                        }
                     }
                 });
             } else {
@@ -1022,7 +1214,8 @@
     function createMainWidget() {
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
-        let clientId = window.BotemiaConfig?.id || "mortgage-assist-demo";
+        let clientId = window.BotemiaConfig?.id;
+        if (!clientId) { console.error("❌ CRITICAL: BotemiaConfig ID missing!"); return null; }
         widget.setAttribute('client-id', clientId);
         widget.clientId = clientId;
         const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
@@ -1071,7 +1264,12 @@
 
     function showSplash() {
         const config = window.BotemiaConfig.modules?.splashScreen;
-        if (!config || !config.enabled) return;
+        if (!config || !config.enabled) {
+            // Splash disabled — activate Tess directly
+            console.log("✅ Splash disabled — activating Tess directly");
+            activateTess();
+            return;
+        }
 
         const overlay = document.createElement('div');
         overlay.className = 'splash-overlay';
@@ -1085,7 +1283,6 @@
         trackEvent('splash_view');
         const card = document.createElement('div');
         card.className = 'splash-card';
-        // Original: Direct style application (Safer than CSS variables)
         card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
 
         let cardHTML = `
@@ -1128,7 +1325,6 @@
                 const tickerContent = document.createElement('div');
                 tickerContent.className = 'ticker-content';
                 
-                // Duplicate keywords for seamless looping
                 const allKeywords = [...keywords, ...keywords];
                 
                 allKeywords.forEach(keyword => {
@@ -1153,18 +1349,15 @@
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
     }
 
-    // ===== ACTIVATE TESS FUNCTION =====
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
         
-        // Remove splash widget
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = '';
             if (splashWidget.parentNode) splashWidget.parentNode.removeChild(splashWidget);
         }
         
-        // Remove overlay
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
 
@@ -1180,13 +1373,46 @@
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
                 try {
-                    if (window.mainWidget && typeof window.mainWidget.micOn === 'function') {
-                        await window.mainWidget.micOn();
+                    if (window.mainWidget) {
+                        // Start the room first, then send greeting
+                        await window.mainWidget.micOn?.();
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        if (typeof window.mainWidget.sendMessage === 'function') {
+                            var prospectName = localStorage.getItem("prospectName") || "";
+                            var greeting = prospectName ? "Hi " + prospectName + ", I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report." : "Hi, I'm Tess from AdSpend Audit Group. Thanks for checking out your free PPC audit report.";
+                            await window.mainWidget.sendMessage(greeting);
+                            console.log("✅ Tess primed with greeting");
+                        }
+                            // Keyboard shortcut: Ctrl+X to stop Tess
+                            document.addEventListener("keydown", function(e) {
+                                if (e.ctrlKey && !e.shiftKey && (e.key === "x" || e.key === "X")) {
+                                    e.preventDefault();
+                                    if (window.mainWidget) {
+                                        window.mainWidget.setAttribute("controlled-widget-state", "hidden");
+                                        window.mainWidget.micOff?.();
+                                        window.mainWidget.mute?.();
+                                        window.mainWidget.style.display = "none";
+                                    }
+                                    console.log("⏹️ Tess hidden via Ctrl+X");
+                                }
+                            });
                         await window.mainWidget.unmute?.();
                     }
                 } catch(e) {
                     console.error("❌ Mic activation failed:", e);
                 }
+                
+                // Nuclear Shadow DOM unmute
+                try {
+                    var shadow = window.mainWidget.shadowRoot;
+                    if (shadow) {
+                        var v = shadow.querySelector("video");
+                        var a = shadow.querySelector("audio");
+                        if (v) { v.muted = false; v.volume = 1.0; }
+                        if (a) { a.muted = false; a.volume = 1.0; }
+                    }
+                    console.log("🔊 Tess force unmuted via Shadow DOM");
+                } catch(e) { console.warn("Shadow unmute error:", e); }
             }, 3000);
         }, 100);
         
