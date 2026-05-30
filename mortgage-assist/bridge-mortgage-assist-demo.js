@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/29/2026, 9:17:28 PM
+// Generated: 5/30/2026, 6:06:40 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -22,7 +22,7 @@
                 "triggerPhrase": "So let's start with your full name please",
                 "triggerPhraseLegacy": "let's get started"
             },
-            "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":[]},
+            "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a conversion expert on the phone"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/high-conversion.jpg","link":"","name":"high-conversion","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["As a next-gen smart AI sales assistant"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":15},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/form-abandonment.jpg","link":"","name":"form-abandonment","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Here's the reality"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":5}]},
             "testimonial": {"groups":[]},
@@ -754,7 +754,7 @@
             timestamp: Date.now()
         };
         
-        // 1. Send to Edge Function → writes to analytics_events table
+        // Send to Edge Function (writes to analytics_events table)
         fetch("https://fcgbusobfdwnpoqyuzoe.supabase.co/functions/v1/analytics-ingest", {
             method: "POST",
             headers: { 
@@ -762,9 +762,9 @@
                 "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk"
             },
             body: JSON.stringify(payload)
-        }).then(r => r.json()).then(d => console.log("📊 Stored:", eventType, d)).catch(e => console.error("Track error:", e));
+        }).then(r => r.json()).then(d => console.log("📊 Stored:", eventType, d.success ? "✅" : "❌")).catch(e => console.error("Track error:", e));
         
-        // 2. Also broadcast via Realtime for dashboard live updates
+        // Also broadcast via Realtime for dashboard live updates
         if (window.supabaseChannel) {
             window.supabaseChannel.send({
                 type: 'broadcast',
@@ -774,6 +774,7 @@
         }
         console.log('📊 Tracked: ' + eventType, eventData);
     }
+
     window.preQualController = new PreQualificationController();
     console.log("✅ Controller created (Listener Mode)");
     window.broadcastTessTranscript = function(text) {
