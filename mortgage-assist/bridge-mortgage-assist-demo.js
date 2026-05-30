@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/30/2026, 7:02:22 AM
+// Generated: 5/30/2026, 2:33:30 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -371,6 +371,11 @@
             console.log("📧 Sending emails...");
             const data = this.answers;
             
+            // Capture name from Tess if not already set
+            if ((!data.fullName || data.fullName === "Not provided") && window._tessHeardName) {
+                data.fullName = window._tessHeardName;
+            }
+            
             // Normalize email if it came from Tess's speech
             if (data.email && data.email.indexOf("@") === -1) {
                 data.email = data.email
@@ -380,14 +385,21 @@
                     .replace(/\.+$/g, "");
             }
             
-            // Fallback: if email is missing, use clientEmail
-            if (!data.email || data.email === "Not provided") {
-                var cfgEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail;
-                if (cfgEmail) data.email = cfgEmail;
+            // First try to grab email that Tess heard and confirmed
+            if (!data.email || data.email === "Not provided" || data.email.indexOf("@") === -1) {
+                if (window._tessHeardEmail && window._tessHeardEmail.indexOf("@") !== -1) {
+                    data.email = window._tessHeardEmail;
+                } else if (window._tessHeardEmail) {
+                    data.email = window._tessHeardEmail
+                        .replace(/\s+at\s+/g, "@")
+                        .replace(/\s+dot\s+/g, ".")
+                        .replace(/\s+/g, "")
+                        .replace(/\.+$/g, "");
+                } else {
+                    var cfgEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail;
+                    if (cfgEmail) data.email = cfgEmail;
+                }
             }
-            
-            trackEvent('lead_captured', { email: data.email });
-            
             // ===== EMAIL 1: TO LOAN BROKER PROSPECT =====
             if (data.email) {
                 var prospectParams = {
@@ -413,7 +425,7 @@
             }
             
             // ===== EMAIL 2: TO YOU/AGENCY =====
-            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+            var clientEmail = window.BotemiaConfig?.modules?.emailConfig?.loanOfficerEmail || window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
             
             var clientParams = {
                 to_email: clientEmail,
