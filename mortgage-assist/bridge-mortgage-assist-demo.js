@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/30/2026, 6:06:40 AM
+// Generated: 5/30/2026, 7:02:22 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -585,30 +585,30 @@
                         if (!result.success) result.message = "❌ No phone trigger matched";
                     }
                     
-                   // --- PRE-QUAL: Actually start it ---
-if (mod === "pre_qual") {
-    var pqTrigger = window.BotemiaConfig?.modules?.preQualification?.triggerPhrase || "";
-    if (pqTrigger && phrase.indexOf(pqTrigger.toLowerCase()) !== -1) {
-        result = { success: true, message: "✅ Pre-qual started" };
-        if (window.preQualController && !window.preQualController.isActive) {
-            forcePreQualification();
-        }
-        if (window.supabaseChannel) {
-            window.supabaseChannel.send({
-                type: "broadcast", event: "trigger_test_result",
-                payload: { module: mod, success: true, message: "✅ Pre-qual interview started", timestamp: Date.now() }
-            });
-        }
-    } else {
-        result.message = "❌ Pre-qual trigger not matched";
-        if (window.supabaseChannel) {
-            window.supabaseChannel.send({
-                type: "broadcast", event: "trigger_test_result",
-                payload: { module: mod, success: false, message: result.message, timestamp: Date.now() }
-            });
-        }
-    }
-}
+                    // --- PRE-QUAL: Actually start it ---
+                    if (mod === "pre_qual") {
+                        var pqTrigger = window.BotemiaConfig?.modules?.preQualification?.triggerPhrase || "";
+                        if (pqTrigger && phrase.indexOf(pqTrigger.toLowerCase()) !== -1) {
+                            result = { success: true, message: "✅ Pre-qual started" };
+                            if (window.preQualController && !window.preQualController.isActive) {
+                                forcePreQualification();
+                            }
+                            if (window.supabaseChannel) {
+                                window.supabaseChannel.send({
+                                    type: "broadcast", event: "trigger_test_result",
+                                    payload: { module: mod, success: true, message: "✅ Pre-qual interview started", timestamp: Date.now() }
+                                });
+                            }
+                        } else {
+                            result.message = "❌ Pre-qual trigger not matched";
+                            if (window.supabaseChannel) {
+                                window.supabaseChannel.send({
+                                    type: "broadcast", event: "trigger_test_result",
+                                    payload: { module: mod, success: false, message: result.message, timestamp: Date.now() }
+                                });
+                            }
+                        }
+                    }
                     
                     // --- WEBSITE INFO ---
                     if (mod === "website_info") {
