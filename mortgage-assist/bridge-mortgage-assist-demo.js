@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/30/2026, 2:33:30 PM
+// Generated: 5/30/2026, 3:46:54 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -417,7 +417,7 @@
                     submitted_at: new Date().toLocaleString()
                 };
                 
-                emailjs.send("service_b9bppgb", "template_uix9cyx", prospectParams)
+                emailjs.send("service_b9bppgb", "template_8kx812d", prospectParams)
                     .then(function() { console.log("✅ Prospect email sent to: " + data.email); })
                     .catch(function(e) { console.error("❌ Prospect email error:", e); });
             } else {
@@ -437,7 +437,7 @@
                 submitted_at: new Date().toLocaleString()
             };
             
-            emailjs.send("service_b9bppgb", "template_8kx812d", clientParams)
+            emailjs.send("service_b9bppgb", "template_uix9cyx", clientParams)
                 .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
                 .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
@@ -484,6 +484,44 @@
                                 module: "email_trigger",
                                 success: true,
                                 message: "Email trigger recognized (controller not active, but trigger detected)"
+                            }
+                        });
+                    }
+                }
+                
+                // ===== SEND TEST EMAIL COMMAND =====
+                if (cmd === "SEND_TEST_EMAIL") {
+                    console.log("📧 Test email command received from TCS!");
+                    
+                    // Populate sample answers
+                    if (window.preQualController) {
+                        window.preQualController.answers = {
+                            fullName: "Test Prospect",
+                            email: payload.payload?.test_email || "test@example.com",
+                            phone: "555-0123",
+                            businessName: "Test Business",
+                            scheduledDateTime: "Tomorrow 2pm",
+                            specialRequests: "TCS Test Email"
+                        };
+                        window.preQualController.sendEmail();
+                        
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "trigger_test_result",
+                            payload: {
+                                module: "email_trigger",
+                                success: true,
+                                message: "✅ Test email sent to prospect & agency"
+                            }
+                        });
+                    } else {
+                        window.supabaseChannel.send({
+                            type: "broadcast",
+                            event: "trigger_test_result",
+                            payload: {
+                                module: "email_trigger",
+                                success: false,
+                                message: "❌ Controller not available"
                             }
                         });
                     }
