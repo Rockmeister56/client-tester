@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 5/30/2026, 4:43:22 PM
+// Generated: 5/31/2026, 4:10:09 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -625,7 +625,9 @@
                                 // Show phone number overlay for desktop users
                                 var phoneOverlay = document.createElement("div");
                                 phoneOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.97);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;border-radius:20px;border:2px solid #f8c400;text-align:center;";
-                                phoneOverlay.innerHTML = '<div style="font-size:3rem;margin-bottom:15px;">📞</div><div style="color:white;font-size:1.4rem;font-weight:700;margin-bottom:8px;">Call Your Conversion Expert</div><div style="color:#f8c400;font-size:2rem;font-weight:700;margin-bottom:20px;">' + pn + '</div><div style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:20px;">We are ready to help you right now</div><button onclick="this.parentElement.remove()" style="background:#f8c400;color:#0a0f1e;border:none;padding:12px 30px;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;">✕ Close</button>';
+                                var phoneTitle = window.BotemiaConfig?.modules?.emailConfig?.phoneOverlayTitle || "Call Your Conversion Expert";
+                                var phoneSubtitle = window.BotemiaConfig?.modules?.emailConfig?.phoneOverlaySubtitle || "We're ready to help you right now";
+                                phoneOverlay.innerHTML = '<div style="font-size:3rem;margin-bottom:15px;">📞</div><div style="color:white;font-size:1.4rem;font-weight:700;margin-bottom:8px;">' + phoneTitle + '</div><div style="color:#f8c400;font-size:2rem;font-weight:700;margin-bottom:20px;">' + pn + '</div><div style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:20px;">' + phoneSubtitle + '</div><button onclick="this.parentElement.remove()" style="background:#f8c400;color:#0a0f1e;border:none;padding:12px 30px;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;">✕ Close</button>';
                                 phoneOverlay.onclick = function(e) { if (e.target === phoneOverlay) phoneOverlay.remove(); };
                                 document.body.appendChild(phoneOverlay);
                                 window.open("tel:" + pn, "_blank");
