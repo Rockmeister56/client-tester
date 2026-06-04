@@ -1,10 +1,22 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 6/3/2026, 8:40:34 PM
+// Generated: 6/3/2026, 11:29:39 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
 (function() {
     "use strict";
+
+    // ===== MODE DETECTION: SALES vs REVIEW =====
+    const urlParams = new URLSearchParams(window.location.search);
+    const bridgeMode = urlParams.get('mode') || 'sales';
+    const reviewerName = urlParams.get('name') || 'Valued Customer';
+    
+    if (bridgeMode === 'review') {
+        initReviewMode(reviewerName);
+        return;
+    }
+    
+    console.log('✅ Botemia Bridge v5.8 loaded for', window.BotemiaConfig.name);
 
     // ===== GLOBAL VARIABLES =====
     let isPreQualificationActive = false;
@@ -1571,19 +1583,6 @@
     } else {
         initWidget();
     }
-    // ===== MODE DETECTION: SALES vs REVIEW =====
-    const urlParams = new URLSearchParams(window.location.search);
-    const bridgeMode = urlParams.get('mode') || 'sales';
-    const reviewerName = urlParams.get('name') || 'Valued Customer';
-    
-    if (bridgeMode === 'review') {
-        initReviewMode(reviewerName);
-    } else {
-        initSalesMode();
-    }
-    
-    console.log('✅ Botemia Bridge v5.8 loaded for', window.BotemiaConfig.name);
-
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
         const sendAnnouncement = function() {
