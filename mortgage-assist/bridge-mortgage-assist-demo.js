@@ -1,37 +1,10 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 6/3/2026, 11:51:09 PM
+// Generated: 6/4/2026, 12:50:15 AM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
 (function() {
     "use strict";
-
-    // ===== MODE DETECTION: SALES vs REVIEW =====
-    const urlParams = new URLSearchParams(window.location.search);
-    const bridgeMode = urlParams.get('mode') || 'sales';
-    const reviewerName = urlParams.get('name') || 'Valued Customer';
-    
-    if (bridgeMode === 'review') {
-        console.log("🔄 Waiting for BotemiaConfig...");
-        let reviewAttempts = 0;
-        const reviewChecker = setInterval(function() {
-            reviewAttempts++;
-            if (window.BotemiaConfig && window.BotemiaConfig.modules) {
-                clearInterval(reviewChecker);
-                console.log("✅ Config ready, starting review mode");
-                initReviewMode(reviewerName);
-            }
-            if (reviewAttempts > 50) {
-                clearInterval(reviewChecker);
-                console.error("❌ BotemiaConfig never loaded. Running review mode with defaults.");
-                window.BotemiaConfig = window.BotemiaConfig || { modules: {} };
-                initReviewMode(reviewerName);
-            }
-        }, 100);
-        return;
-    }
-    
-    console.log('✅ Botemia Bridge v5.8 loaded for', window.BotemiaConfig.name);
 
     // ===== GLOBAL VARIABLES =====
     let isPreQualificationActive = false;
@@ -1591,13 +1564,10 @@
         document.head.appendChild(script);
         setTimeout(() => { showSplash(); }, 100);
     }
-    if (bridgeMode === 'review') {
-        // Review mode already handled above — do nothing else
-    } else if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initWidget);
-    } else {
-        initWidget();
-    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initWidget); }
+    else { initWidget(); }
+    console.log('✅ Botemia Bridge v5.8 loaded for', window.BotemiaConfig.name);
+
     // ===== CLIENT ANNOUNCEMENT FUNCTION =====
     function announceToTCS() {
         const sendAnnouncement = function() {
@@ -1643,189 +1613,4 @@
         };
     };
     console.log("🩺 Bridge health check available: window.bridgeHealthCheck()");
-    // ==========================================
-    // REVIEW MODE — Thank You & Testimonial
-    // ==========================================
-    function initReviewMode(firstName) {
-        console.log("🎬 Review Mode activated for:", firstName);
-        
-        const reviewConfig = window.BotemiaConfig.modules?.reviewSystem || {};
-        const companyName = reviewConfig.companyName || window.BotemiaConfig.name || "Our Team";
-        const questions = [
-            `Did ${companyName} meet your expectations?`,
-            `What was the best part about working with ${companyName}?`,
-            `Would you recommend ${companyName} to friends or family?`
-        ];
-        let currentQ = 0;
-        let recordings = [];
-        let mediaRecorder = null;
-        let stream = null;
-        let chunks = [];
-        
-        // Build thank-you splash
-        const body = document.body;
-        body.style.cssText = "margin:0;font-family:system-ui,sans-serif;background:" + (reviewConfig.websiteBg ? `url(${reviewConfig.websiteBg}) center/cover no-repeat fixed` : "linear-gradient(135deg,#1a3a5c,#2d5a3d,#5a4a2d)") + ";color:white;min-height:100vh;";
-        
-        body.innerHTML = `
-            <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;">
-                <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);"></div>
-                <div style="position:relative;z-index:1;background:rgba(18,28,46,0.85);border-radius:24px;padding:35px 25px;width:516px;max-width:95vw;text-align:center;border:2px solid rgba(248,196,0,0.3);backdrop-filter:blur(10px);">
-                    ${reviewConfig.logoUrl ? `<img src="${reviewConfig.logoUrl}" style="max-width:350px;max-height:97px;width:auto;height:auto;object-fit:contain;margin-bottom:20px;">` : ""}
-                    <div style="font-size:1.5rem;font-weight:700;margin-bottom:4px;color:#f8c400;">${reviewConfig.splashTitle || "A Special Thank You"}</div>
-                    <div style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">${reviewConfig.splashSubtitle || "We appreciate your trust in us"}</div>
-                    <div id="reviewAvatar" style="width:180px;height:180px;margin:0 auto 20px;border-radius:50%;overflow:hidden;background:#000;border:3px solid rgba(248,196,0,0.4);box-shadow:0 0 30px rgba(248,196,0,0.15);">
-                        ${reviewConfig.tessSilentVideo ? `<video src="${reviewConfig.tessSilentVideo}" muted loop autoplay playsinline style="width:100%;height:100%;object-fit:cover;"></video>` : `<div style="color:rgba(255,255,255,0.3);padding-top:75px;">Tess</div>`}
-                    </div>
-                    <button id="btnListen" onclick="window._reviewActivate()" style="padding:16px 40px;border-radius:${reviewConfig.buttonBorderRadius || "50px"};font-weight:600;font-size:1rem;cursor:pointer;border:none;background:${reviewConfig.buttonGradient || "linear-gradient(135deg,#f8c400,#e6a800)"};color:${reviewConfig.buttonTextColor || "#0a0f1e"};box-shadow:0 8px 30px rgba(248,196,0,0.3);letter-spacing:0.5px;">${reviewConfig.buttonText || "🎧 Listen to Your Personal Thank You"}</button>
-                </div>
-            </div>
-            <div id="reviewOverlay" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);padding:20px;"></div>
-            <div style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.25);font-size:0.7rem;z-index:300;">Powered by MobileWise AI</div>
-        `;
-        
-        // Activate Tess
-        window._reviewActivate = async function() {
-            document.getElementById("btnListen").textContent = "🎧 Connecting...";
-            document.getElementById("btnListen").disabled = true;
-            
-            // Init Daily room
-            if (typeof initDaily === "function") {
-                await initDaily();
-            }
-            
-            // Show satisfaction check
-            showReviewOverlay(`
-                <h2 style="font-size:1.3rem;margin-bottom:12px;">Hi ${firstName}! 👋</h2>
-                <p style="color:rgba(255,255,255,0.6);margin-bottom:20px;">We wanted to thank you sincerely for your trust. We're hoping you're 100% satisfied with your experience?</p>
-                <button class="rw-btn rw-btn-green" onclick="window._reviewSatisfied(true)">😊 Yes, I'm very satisfied!</button>
-                <button class="rw-btn rw-btn-red" onclick="window._reviewSatisfied(false)">😔 No, I had some issues</button>
-            `);
-            
-            if (dailyCallObject && typeof dailyCallObject.sendAppMessage === "function") {
-                dailyCallObject.sendAppMessage({event:"chat-msg", message:`Hi ${firstName}! We just wanted to reach out personally and thank you sincerely for your trust in ${companyName}. We're hoping you're 100% satisfied with your experience?`, name:"Tess"}, "*");
-            }
-        };
-        
-        // Satisfaction response
-        window._reviewSatisfied = function(satisfied) {
-            if (!satisfied) {
-                showReviewOverlay(`
-                    <div style="background:rgba(244,67,54,0.1);border:1px solid rgba(244,67,54,0.3);border-radius:12px;padding:20px;text-align:center;">
-                        <h2>😔 We're Sorry, ${firstName}</h2>
-                        <p style="margin:12px 0;">We want to make this right. A representative will reach out shortly.</p>
-                    </div>
-                    <button class="rw-btn rw-btn-outline" onclick="document.getElementById('reviewOverlay').style.display='none'" style="margin-top:12px;">Close</button>
-                `);
-                trackEvent("review_complaint");
-                // Notify client
-                if (reviewConfig.notifyEmail && typeof emailjs !== "undefined") {
-                    emailjs.send("service_b9bppgb","template_8kx812d",{to_email:reviewConfig.notifyEmail,full_name:firstName,email:reviewConfig.notifyEmail,message:`⚠️ ${firstName} was NOT satisfied and needs follow-up.`}).catch(()=>{});
-                }
-                return;
-            }
-            
-            showReviewOverlay(`
-                <h2>That's Wonderful, ${firstName}! 🎉</h2>
-                <p style="color:rgba(255,255,255,0.6);margin-bottom:20px;">Would you be willing to share your experience with other valued customers?</p>
-                <button class="rw-btn rw-btn-gold" onclick="window._startRecording()">🎤 Yes, I'd Love To!</button>
-                <button class="rw-btn rw-btn-outline" onclick="window._reviewThanks()">🙏 No Thanks</button>
-            `);
-            
-            if (dailyCallObject && typeof dailyCallObject.sendAppMessage === "function") {
-                dailyCallObject.sendAppMessage({event:"chat-msg", message:`That's wonderful, ${firstName}! Would you be willing to share your experience with other valued customers? We'd really appreciate it.`, name:"Tess"}, "*");
-            }
-        };
-        
-        // Start camera + recording
-        window._startRecording = async function() {
-            try { stream = await navigator.mediaDevices.getUserMedia({video:true,audio:true}); } catch(e) { stream = null; }
-            currentQ = 0;
-            recordings = [];
-            _showQuestion();
-        };
-        
-        function _showQuestion() {
-            if (currentQ >= questions.length) { _finishAll(); return; }
-            
-            showReviewOverlay(`
-                <h2><span style="display:inline-block;width:12px;height:12px;background:#f44336;border-radius:50%;animation:pulse 1s infinite;margin-right:8px;"></span>Recording</h2>
-                <p style="color:rgba(255,255,255,0.6);margin-bottom:12px;">Q${currentQ+1}: ${questions[currentQ]}</p>
-                <div style="width:100%;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-bottom:12px;border:2px solid rgba(255,255,255,0.1);">
-                    ${stream ? `<video id="reviewVideo" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>` : `<p style="color:rgba(255,255,255,0.5);padding-top:25%;">📷 Audio Only</p>`}
-                </div>
-                <div style="display:flex;justify-content:center;gap:6px;margin:10px 0;" id="reviewDots">${questions.map((_,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${i<currentQ?'#00c853':i===currentQ?'#f8c400':'rgba(255,255,255,0.2)'};${i===currentQ?'animation:pulse 1s infinite;':''}"></div>`).join('')}</div>
-                <button class="rw-btn rw-btn-red" id="btnStopRec" onclick="window._stopRec()">⏹ Stop Recording</button>
-                <div id="acceptRedo" style="display:none;margin-top:12px;">
-                    <button class="rw-btn rw-btn-green" onclick="window._acceptRec()">✅ Accept</button>
-                    <button class="rw-btn rw-btn-outline" onclick="window._redoRec()">🔄 Redo</button>
-                </div>
-            `);
-            
-            if (stream) {
-                const vid = document.getElementById("reviewVideo");
-                if (vid) { vid.srcObject = stream; vid.play(); }
-            }
-            
-            chunks = [];
-            if (stream) {
-                mediaRecorder = new MediaRecorder(stream, {mimeType:"video/webm"});
-                mediaRecorder.ondataavailable = e => chunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    recordings.push({question:questions[currentQ], blob:new Blob(chunks,{type:"video/webm"})});
-                    document.getElementById("btnStopRec").style.display = "none";
-                    document.getElementById("acceptRedo").style.display = "block";
-                };
-                mediaRecorder.start();
-            }
-            
-            if (dailyCallObject && typeof dailyCallObject.sendAppMessage === "function") {
-                dailyCallObject.sendAppMessage({event:"chat-msg", message:questions[currentQ], name:"Tess"}, "*");
-            }
-        }
-        
-        window._stopRec = function() { if (mediaRecorder && mediaRecorder.state==="recording") mediaRecorder.stop(); };
-        window._acceptRec = function() { currentQ++; _showQuestion(); };
-        window._redoRec = function() { recordings.pop(); _showQuestion(); };
-        
-        function _finishAll() {
-            showReviewOverlay(`
-                <div style="font-size:3.5rem;margin-bottom:12px;">🎉</div>
-                <h2>Thank You, ${firstName}!</h2>
-                <p style="color:rgba(255,255,255,0.6);margin-bottom:16px;">Your testimonial means the world to us.</p>
-                ${reviewConfig.incentive ? `<div style="background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.3);border-radius:12px;padding:16px;margin-bottom:16px;"><span>🎁</span> ${reviewConfig.incentive}</div>` : ""}
-                <button class="rw-btn rw-btn-green" onclick="window._publish()">✅ Publish My Testimonial</button>
-            `);
-            trackEvent("testimonial_completed", {videos:recordings.length});
-            
-            if (dailyCallObject && typeof dailyCallObject.sendAppMessage === "function") {
-                dailyCallObject.sendAppMessage({event:"chat-msg", message:`${firstName}, thank you so much for sharing that. Your words are going to help so many people. We're truly grateful for you!`, name:"Tess"}, "*");
-            }
-        }
-        
-        window._reviewThanks = function() {
-            showReviewOverlay(`<div style="font-size:3.5rem;margin-bottom:12px;">🙏</div><h2>Thank You, ${firstName}!</h2><p style="color:rgba(255,255,255,0.6);">We truly appreciate your trust.</p><button class="rw-btn rw-btn-outline" onclick="document.getElementById('reviewOverlay').style.display='none'" style="margin-top:12px;">Close</button>`);
-        };
-        
-        window._publish = function() {
-            showReviewOverlay(`<div style="font-size:3.5rem;margin-bottom:12px;">🚀</div><h2>Published!</h2><p style="color:rgba(255,255,255,0.6);">Your testimonial is being shared. Thank you!</p><button class="rw-btn rw-btn-outline" onclick="document.getElementById('reviewOverlay').style.display='none'" style="margin-top:12px;">Close</button>`);
-            trackEvent("testimonial_published", {videos:recordings.length});
-            if (reviewConfig.notifyEmail && typeof emailjs !== "undefined") {
-                emailjs.send("service_b9bppgb","template_8kx812d",{to_email:reviewConfig.notifyEmail,full_name:firstName,email:reviewConfig.notifyEmail,message:`🎉 ${firstName} completed a testimonial! (${recordings.length} videos)`}).catch(()=>{});
-            }
-        };
-        
-        function showReviewOverlay(html) {
-            const overlay = document.getElementById("reviewOverlay");
-            overlay.innerHTML = `<div style="background:rgba(18,28,46,0.95);border-radius:20px;padding:30px;max-width:500px;width:100%;text-align:center;border:1px solid rgba(255,255,255,0.1);">${html}</div>`;
-            overlay.style.display = "flex";
-        }
-        
-        // Inject button styles
-        const rwStyle = document.createElement("style");
-        rwStyle.textContent = ".rw-btn{display:inline-block;padding:14px 28px;border-radius:50px;font-weight:600;font-size:0.95rem;cursor:pointer;border:none;transition:all 0.2s;margin:6px;}.rw-btn-gold{background:#f8c400;color:#0a0f1e;}.rw-btn-green{background:#00c853;color:#0a0f1e;}.rw-btn-red{background:#f44336;color:white;}.rw-btn-outline{background:transparent;border:2px solid rgba(255,255,255,0.3);color:white;}.rw-btn-gold:hover,.rw-btn-green:hover{transform:translateY(-2px);}@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}";
-        document.head.appendChild(rwStyle);
-        
-        trackEvent("review_page_view");
-    }
-    
 })();
