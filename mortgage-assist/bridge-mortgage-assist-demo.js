@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 6/3/2026, 11:29:39 PM
+// Generated: 6/3/2026, 11:42:54 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -12,7 +12,13 @@
     const reviewerName = urlParams.get('name') || 'Valued Customer';
     
     if (bridgeMode === 'review') {
-        initReviewMode(reviewerName);
+        // Wait for config to be ready, then start review mode
+        const reviewChecker = setInterval(function() {
+            if (window.BotemiaConfig && window.BotemiaConfig.modules) {
+                clearInterval(reviewChecker);
+                initReviewMode(reviewerName);
+            }
+        }, 100);
         return;
     }
     
