@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 6/4/2026, 12:50:15 AM
+// Generated: 7/3/2026, 1:28:57 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -22,12 +22,13 @@
                 "triggerPhrase": "So let's start with your full name please",
                 "triggerPhraseLegacy": "let's get started"
             },
-            "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a conversion expert on the phone"]},
+            "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a loan expert on the phone"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/high-conversion.jpg","link":"","name":"high-conversion","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["As a next-gen smart AI sales assistant"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":15},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/form-abandonment.jpg","link":"","name":"form-abandonment","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Here's the reality"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":5}]},
-            "testimonial": {"groups":[]},
-            "videoVault": {"videos":[]},
-            "websiteInfo": {"triggers":["here is our no risk performance plan","Here is the web info on interest rates","Your wish is my command"],"links":[{"title":"AI Performance Plan","url":"https://aitvnetwork.netlify.app/ai-performance-plan","triggerPhrase":"here is our no risk performance plan"},{"title":"Mortgage Rates Demo","url":"https://aitvnetwork.netlify.app/latest-rates","triggerPhrase":"Here is the web info on interest rates"},{"title":"Mobile Report Demo","url":"https://aitvnetwork.netlify.app/prospects/pdf-viewer-demo","triggerPhrase":"Your wish is my command"}]}
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
+            "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
+            "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me show you what you can qualify for","defaultRate":7.25,"defaultTerm":30},
+            "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
 
@@ -246,6 +247,12 @@
                     if (this.pendingValue) {
                         this.answers[this.currentField] = this.pendingValue;
                         console.log("✅ Confirmed:", this.currentField, "=", this.pendingValue);
+                        // 🏠 If calculator is open, auto-populate the matching field
+                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","interestRate"];
+                        if (calcFields.indexOf(this.currentField) !== -1 && typeof window.populateCalcField === "function") {
+                            var populated = window.populateCalcField(this.currentField, this.pendingValue);
+                            if (populated) console.log("🏠 Calculator field populated:", this.currentField);
+                        }
                     }
                     this.pendingValue = null;
                     this.currentField = null;
@@ -311,10 +318,16 @@
                 this.currentField = "loanType";
             } else if (lowerText.includes("monthly income") || lowerText.includes("gross monthly")) {
                 this.currentField = "monthlyIncome";
-            } else if (lowerText.includes("putting down") || lowerText.includes("down payment")) {
+            } else if (lowerText.includes("annual income") || lowerText.includes("annual salary") || lowerText.includes("earn per year") || lowerText.includes("make per year")) {
+                this.currentField = "annualIncome";
+            } else if (lowerText.includes("putting down") || lowerText.includes("down payment") || lowerText.includes("how much down")) {
                 this.currentField = "downPayment";
             } else if (lowerText.includes("credit score")) {
                 this.currentField = "creditScore";
+            } else if (lowerText.includes("loan term") || lowerText.includes("how many years") || lowerText.includes("15 or 30") || lowerText.includes("prefer a 15") || lowerText.includes("prefer a 30")) {
+                this.currentField = "loanTerm";
+            } else if (lowerText.includes("interest rate") || lowerText.includes("current rate") || lowerText.includes("rate in mind")) {
+                this.currentField = "interestRate";
             } else if (lowerText.includes("special requests")) {
                 this.currentField = "specialRequests";
             } else if (lowerText.includes("anything else")) {
@@ -402,19 +415,26 @@
             }
             // ===== EMAIL 1: TO LOAN BROKER PROSPECT =====
             if (data.email) {
+                var calcData = window._calcResults || {};
                 var prospectParams = {
-                    to_email: data.email,
-                    full_name: data.fullName || "Valued Client",
-                    email: data.email,
-                    phone: data.phone || "Not provided",
-                    business_name: data.businessName || "Not provided",
-                    scheduled_datetime: data.scheduledDateTime || "To be determined",
-                    loan_type: "See Full Example Below",
-                    annual_income: "See Full Example Below",
-                    down_payment: "See Full Example Below",
-                    credit_score: "See Full Example Below",
-                    special_requests: data.specialRequests || "None",
-                    submitted_at: new Date().toLocaleString()
+                    to_email:             data.email,
+                    full_name:            data.fullName || "Valued Client",
+                    email:                data.email,
+                    phone:                data.phone || "Not provided",
+                    business_name:        data.businessName || "Not provided",
+                    scheduled_datetime:   data.scheduledDateTime || "To be determined",
+                    submitted_at:         new Date().toLocaleString(),
+                    calc_annual_income:   calcData.income     || "Not provided",
+                    calc_down_payment:    calcData.down       || "Not provided",
+                    calc_credit_score:    calcData.credit     || "Not provided",
+                    calc_loan_term:       calcData.term       || "Not provided",
+                    calc_interest_rate:   calcData.rate       || "Not provided",
+                    calc_home_price:      calcData.homePrice  || "Not provided",
+                    calc_monthly_payment: calcData.monthly    || "Not provided",
+                    calc_loan_amount:     calcData.loanAmount || "Not provided",
+                    calc_dti:             calcData.dti        || "Not provided",
+                    calc_verdict:         calcData.verdict    || "",
+                    special_requests:     data.specialRequests || "None"
                 };
                 
                 emailjs.send("service_b9bppgb", "template_8kx812d", prospectParams)
@@ -443,6 +463,237 @@
         }
     }
     window.PreQualificationController = PreQualificationController;
+
+    // 🏠 MORTGAGE CALCULATOR MODULE
+    window.showMortgageCalculator = function() {
+        var existing = document.getElementById("mortgage-calc-overlay");
+        if (existing) { existing.remove(); return; }
+        var ov = document.createElement("div");
+        ov.id = "mortgage-calc-overlay";
+        ov.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;border-radius:20px;width:380px;max-width:95vw;max-height:90vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;font-family:sans-serif;";
+        var hdr = document.createElement("div");
+        hdr.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:18px 20px;background:linear-gradient(135deg,#1e3a5f,#0a1a2f);border-bottom:1px solid rgba(248,196,0,0.3);";
+        var hLeft = document.createElement("div");
+        hLeft.style.cssText = "display:flex;align-items:center;gap:10px;";
+        hLeft.innerHTML = "<span style=\"font-size:1.4rem;\">🏠</span><div><div style=\"color:#f8c400;font-size:1rem;font-weight:700;\">Mortgage Calculator</div><div style=\"color:rgba(255,255,255,0.5);font-size:0.72rem;\">See what you can afford</div></div>";
+        var xBtn = document.createElement("button");
+        xBtn.textContent = "✕";
+        xBtn.style.cssText = "background:rgba(255,255,255,0.1);border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;";
+        xBtn.onclick = function() { document.getElementById("mortgage-calc-overlay").remove(); };
+        hdr.appendChild(hLeft); hdr.appendChild(xBtn); ov.appendChild(hdr);
+        var body = document.createElement("div");
+        body.style.cssText = "padding:20px;overflow-y:auto;";
+        function mcField(labelText, inputId, inputType, inputVal, extraAttr, isSelect, options) {
+            var wrap = document.createElement("div");
+            var lbl = document.createElement("label");
+            lbl.style.cssText = "color:rgba(255,255,255,0.6);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;";
+            lbl.textContent = labelText;
+            wrap.appendChild(lbl);
+            var el;
+            if (isSelect) {
+                el = document.createElement("select");
+                el.style.cssText = "width:100%;padding:10px 14px;background:rgba(10,15,30,0.9);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:0.9rem;box-sizing:border-box;";
+                options.forEach(function(o) {
+                    var opt = document.createElement("option");
+                    opt.value = o.v; opt.textContent = o.t;
+                    if (o.sel) opt.selected = true;
+                    el.appendChild(opt);
+                });
+                el.onchange = window.calcMortgage;
+            } else {
+                el = document.createElement("input");
+                el.type = inputType || "text";
+                el.value = inputVal || "";
+                el.style.cssText = "width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;";
+                if (extraAttr) { el.step = extraAttr; }
+                el.oninput = window.calcMortgage;
+            }
+            el.id = inputId;
+            wrap.appendChild(el);
+            return wrap;
+        }
+        var grid = document.createElement("div");
+        grid.style.cssText = "display:grid;gap:14px;";
+        grid.appendChild(mcField("💰 Annual Income","mc-income","number","85000",null,false,null));
+        grid.appendChild(mcField("🏦 Down Payment ($)","mc-down","number","40000",null,false,null));
+        grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
+            {v:"0.5",t:"Excellent (760+)"},
+            {v:"0.25",t:"Good (700-759)",sel:true},
+            {v:"0",t:"Fair (640-699)"},
+            {v:"-0.5",t:"Poor (580-639)"}
+        ]));
+        var row = document.createElement("div");
+        row.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
+        row.appendChild(mcField("📅 Loan Term","mc-term",null,null,null,true,[
+            {v:"30",t:"30 Years",sel:true},
+            {v:"20",t:"20 Years"},
+            {v:"15",t:"15 Years"}
+        ]));
+        row.appendChild(mcField("📈 Rate %","mc-rate","number","7.25","0.05",false,null));
+        grid.appendChild(row);
+        body.appendChild(grid);
+        var res = document.createElement("div");
+        res.id = "mc-results";
+        res.style.cssText = "margin-top:18px;background:linear-gradient(135deg,rgba(248,196,0,0.12),rgba(248,196,0,0.04));border:1px solid rgba(248,196,0,0.3);border-radius:14px;padding:16px;";
+        res.innerHTML = [
+            "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;\">",
+            "<div style=\"text-align:center;\"><div style=\"color:rgba(255,255,255,0.5);font-size:0.7rem;text-transform:uppercase;margin-bottom:4px;\">Home Price</div><div id=\"mc-home-price\" style=\"color:#f8c400;font-size:1.3rem;font-weight:700;\">—</div></div>",
+            "<div style=\"text-align:center;\"><div style=\"color:rgba(255,255,255,0.5);font-size:0.7rem;text-transform:uppercase;margin-bottom:4px;\">Monthly Payment</div><div id=\"mc-monthly\" style=\"color:#34a853;font-size:1.3rem;font-weight:700;\">—</div></div></div>",
+            "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:12px;\">",
+            "<div style=\"text-align:center;\"><div style=\"color:rgba(255,255,255,0.5);font-size:0.7rem;text-transform:uppercase;margin-bottom:4px;\">Loan Amount</div><div id=\"mc-loan\" style=\"color:white;font-size:1rem;font-weight:600;\">—</div></div>",
+            "<div style=\"text-align:center;\"><div style=\"color:rgba(255,255,255,0.5);font-size:0.7rem;text-transform:uppercase;margin-bottom:4px;\">Est. DTI</div><div id=\"mc-dti\" style=\"color:white;font-size:1rem;font-weight:600;\">—</div></div></div>",
+            "<div id=\"mc-verdict\" style=\"margin-top:12px;text-align:center;font-size:0.8rem;color:rgba(255,255,255,0.6);border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;\"></div>"
+        ].join("");
+        body.appendChild(res);
+        var ctaBtn = document.createElement("button");
+        ctaBtn.textContent = "🚀 Start Full Pre-Qualification →";
+        ctaBtn.style.cssText = "width:100%;margin-top:14px;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;";
+        ctaBtn.onclick = function() {
+            var o = document.getElementById("mortgage-calc-overlay"); if(o)o.remove();
+            if(window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+                window.mainWidget.sendMessage(window.TRIGGER_PHRASE || "let's get started");
+            }
+        };
+        body.appendChild(ctaBtn);
+        var disc = document.createElement("div");
+        disc.style.cssText = "text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem;margin-top:8px;";
+        disc.textContent = "Results are estimates. Actual qualification depends on full credit review.";
+        body.appendChild(disc);
+        ov.appendChild(body); document.body.appendChild(ov);
+        window.calcMortgage();
+    };
+
+    // 🎙️ SPOKEN NUMBER PARSER
+    window.parseSpokenNumber = function(text) {
+        var t = text.toLowerCase().trim();
+        // Direct numeric string
+        var direct = parseFloat(t.replace(/[^0-9.]/g, ""));
+        if (!isNaN(direct) && direct > 0) return direct;
+        // Word-to-number map
+        var words = {
+            "zero":0,"one":1,"two":2,"three":3,"four":4,"five":5,
+            "six":6,"seven":7,"eight":8,"nine":9,"ten":10,
+            "eleven":11,"twelve":12,"thirteen":13,"fourteen":14,"fifteen":15,
+            "sixteen":16,"seventeen":17,"eighteen":18,"nineteen":19,"twenty":20,
+            "thirty":30,"forty":40,"fifty":50,"sixty":60,"seventy":70,
+            "eighty":80,"ninety":90,"hundred":100,"thousand":1000,"million":1000000
+        };
+        // Handle "point" for decimals e.g. "seven point two five"
+        if (t.indexOf("point") !== -1) {
+            var parts = t.split("point");
+            var intPart = window.parseSpokenNumber(parts[0].trim());
+            var decStr = parts[1].trim().split(/\s+/).map(function(w){return words[w]!==undefined?words[w]:w;}).join("");
+            return parseFloat(intPart + "." + decStr);
+        }
+        // Build number from words
+        var tokens = t.split(/[\s,]+/);
+        var result = 0; var current = 0;
+        tokens.forEach(function(token) {
+            var val = words[token];
+            if (val === undefined) { val = parseFloat(token); }
+            if (isNaN(val)) return;
+            if (val === 100) { current = current > 0 ? current * 100 : 100; }
+            else if (val >= 1000) { result += (current > 0 ? current : 1) * val; current = 0; }
+            else { current += val; }
+        });
+        return result + current || null;
+    };
+
+    // 🎙️ POPULATE CALCULATOR FIELD FROM VOICE INPUT
+    window.populateCalcField = function(fieldName, spokenValue) {
+        var calcOpen = !!document.getElementById("mortgage-calc-overlay");
+        if (!calcOpen) return false;
+        var val = null;
+        var lower = spokenValue.toLowerCase().trim();
+        if (fieldName === "annualIncome" || fieldName === "monthlyIncome") {
+            var num = window.parseSpokenNumber(spokenValue);
+            if (num) {
+                // If monthly, convert to annual
+                if (fieldName === "monthlyIncome") num = num * 12;
+                var el = document.getElementById("mc-income");
+                if (el) { el.value = Math.round(num); window.calcMortgage(); }
+                return true;
+            }
+        } else if (fieldName === "downPayment") {
+            var num = window.parseSpokenNumber(spokenValue);
+            if (num) {
+                var el = document.getElementById("mc-down");
+                if (el) { el.value = Math.round(num); window.calcMortgage(); }
+                return true;
+            }
+        } else if (fieldName === "creditScore") {
+            var sel = document.getElementById("mc-credit");
+            if (sel) {
+                if (lower.includes("excellent") || lower.includes("760")) { sel.value = "0.5"; }
+                else if (lower.includes("good") || lower.includes("700") || lower.includes("720") || lower.includes("740")) { sel.value = "0.25"; }
+                else if (lower.includes("fair") || lower.includes("640") || lower.includes("660") || lower.includes("680")) { sel.value = "0"; }
+                else if (lower.includes("poor") || lower.includes("580") || lower.includes("600") || lower.includes("620")) { sel.value = "-0.5"; }
+                else {
+                    var scoreNum = window.parseSpokenNumber(spokenValue);
+                    if (scoreNum >= 760) sel.value = "0.5";
+                    else if (scoreNum >= 700) sel.value = "0.25";
+                    else if (scoreNum >= 640) sel.value = "0";
+                    else if (scoreNum >= 580) sel.value = "-0.5";
+                }
+                window.calcMortgage();
+                return true;
+            }
+        } else if (fieldName === "loanTerm") {
+            var sel = document.getElementById("mc-term");
+            if (sel) {
+                if (lower.includes("15")) { sel.value = "15"; }
+                else if (lower.includes("20")) { sel.value = "20"; }
+                else { sel.value = "30"; }
+                window.calcMortgage();
+                return true;
+            }
+        } else if (fieldName === "interestRate") {
+            var num = window.parseSpokenNumber(spokenValue);
+            if (num && num < 30) {
+                var el = document.getElementById("mc-rate");
+                if (el) { el.value = num.toFixed(2); window.calcMortgage(); }
+                return true;
+            }
+        }
+        return false;
+    };
+
+    window.calcMortgage = function() {
+        var income=parseFloat(document.getElementById("mc-income")?.value)||0;
+        var down=parseFloat(document.getElementById("mc-down")?.value)||0;
+        var creditAdj=parseFloat(document.getElementById("mc-credit")?.value)||0;
+        var term=parseInt(document.getElementById("mc-term")?.value)||30;
+        var rate=parseFloat(document.getElementById("mc-rate")?.value)-creditAdj;
+        if(!income)return;
+        var mr=rate/100/12,n=term*12,gm=income/12,mp=gm*0.28;
+        var maxLoan=mr>0?mp*(1-Math.pow(1+mr,-n))/mr:mp*n;
+        var maxHome=maxLoan+down;
+        var pmt=mr>0?maxLoan*(mr*Math.pow(1+mr,n))/(Math.pow(1+mr,n)-1):maxLoan/n;
+        var dti=gm>0?((pmt/gm)*100).toFixed(1):0;
+        var fmt=function(v){return "$"+Math.round(v).toLocaleString();};
+        var hp=document.getElementById("mc-home-price");if(hp)hp.textContent=fmt(maxHome*0.9)+"\u2013"+fmt(maxHome);
+        var mp2=document.getElementById("mc-monthly");if(mp2)mp2.textContent=fmt(pmt)+"/mo";
+        var la=document.getElementById("mc-loan");if(la)la.textContent=fmt(maxLoan);
+        var de=document.getElementById("mc-dti");if(de){de.textContent=dti+"%";de.style.color=parseFloat(dti)<=28?"#34a853":parseFloat(dti)<=36?"#f8c400":"#f44336";}
+        var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\u2705 Higher DTI \u2014 let's talk through your options.";
+        // 💾 Save results for email
+        var creditLabels={"0.5":"Excellent (760+)","0.25":"Good (700-759)","0":"Fair (640-699)","-0.5":"Poor (580-639)"};
+        var creditSel=document.getElementById("mc-credit");
+        var termSel=document.getElementById("mc-term");
+        window._calcResults = {
+            income:     document.getElementById("mc-income")?.value ? "$"+parseInt(document.getElementById("mc-income").value).toLocaleString() : "Not provided",
+            down:       document.getElementById("mc-down")?.value   ? "$"+parseInt(document.getElementById("mc-down").value).toLocaleString()   : "Not provided",
+            credit:     creditSel ? (creditLabels[creditSel.value] || creditSel.options[creditSel.selectedIndex]?.text || "Not provided") : "Not provided",
+            term:       termSel ? termSel.value+" Years" : "30 Years",
+            rate:       document.getElementById("mc-rate")?.value ? document.getElementById("mc-rate").value+"%" : "Not provided",
+            homePrice:  document.getElementById("mc-home-price")?.textContent || "Not provided",
+            monthly:    document.getElementById("mc-monthly")?.textContent   || "Not provided",
+            loanAmount: document.getElementById("mc-loan")?.textContent      || "Not provided",
+            dti:        document.getElementById("mc-dti")?.textContent       || "Not provided",
+            verdict:    document.getElementById("mc-verdict")?.textContent   || ""
+        };
+        console.log("💾 Calc results saved:", window._calcResults);
+    };
 
     // =========================================
     // 🍋 SUPABASE REALTIME SETUP (ASYNC SAFE)
@@ -1218,6 +1469,13 @@
                             }
                         }
                     }
+
+                        // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
+                        var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
+                        if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
+                            console.log("🏠 Mortgage Calculator trigger!");
+                            if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
+                        }
                 });
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
