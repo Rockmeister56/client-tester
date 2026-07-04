@@ -1263,16 +1263,22 @@
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
-                            if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
-                                window._tessHeardEmail = heardValue;
-                                console.log("📧 Captured email from Tess:", heardValue);
-                            } else if (window._calcModeActive && window.preQualController) {
-                                // During calculator mode — route to pendingValue for field population
-                                window.preQualController.pendingValue = heardValue;
-                                console.log("🏠 Calc pending value from Tess:", heardValue);
-                            } else if (heardValue.length > 1 && !heardValue.match(/^\d/)) {
-                                window._tessHeardName = heardValue;
-                                console.log("👤 Captured name from Tess:", heardValue);
+                            // Skip short/vague captures like "yes", "no", "that" etc.
+                            var skipWords = ["yes","no","that","it","okay","ok","sure","right","correct","you said"];
+                            var isSkip = skipWords.some(function(w){ return heardValue.toLowerCase() === w || heardValue.toLowerCase().startsWith(w+" "); });
+                            if (!isSkip && heardValue.length > 3) {
+                                if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
+                                    window._tessHeardEmail = heardValue;
+                                    console.log("📧 Captured email from Tess:", heardValue);
+                                } else if (window._calcModeActive && window.preQualController) {
+                                    window.preQualController.pendingValue = heardValue;
+                                    console.log("🏠 Calc pending value from Tess:", heardValue);
+                                } else if (!heardValue.match(/^\d/)) {
+                                    window._tessHeardName = heardValue;
+                                    console.log("👤 Captured name from Tess:", heardValue);
+                                }
+                            } else {
+                                console.log("🚫 Skipped vague heard value:", heardValue);
                             }
                         }
 
