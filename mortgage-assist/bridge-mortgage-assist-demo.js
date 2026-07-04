@@ -503,6 +503,11 @@
     window.showMortgageCalculator = function() {
         var existing = document.getElementById("mortgage-calc-backdrop");
         if (existing) { existing.remove(); return; }
+        // 🏠 Activate calculator capture mode immediately
+        window._calcModeActive = true;
+        window._lastCalcField = null;
+        window._pendingHeardValue = null;
+        console.log("🏠 Calculator opened — _calcModeActive = true");
         // Full-screen backdrop with blur
         var backdrop = document.createElement("div");
         backdrop.id = "mortgage-calc-backdrop";
@@ -519,7 +524,7 @@
         var xBtn = document.createElement("button");
         xBtn.textContent = "✕";
         xBtn.style.cssText = "background:rgba(255,255,255,0.1);border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;";
-        xBtn.onclick = function() { var bd=document.getElementById("mortgage-calc-backdrop"); if(bd)bd.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); } };
+        xBtn.onclick = function() { var bd=document.getElementById("mortgage-calc-backdrop"); if(bd)bd.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); } window._calcModeActive=false; window._lastCalcField=null; console.log("🏠 Calculator closed"); };
         hdr.appendChild(hLeft); hdr.appendChild(xBtn); ov.appendChild(hdr);
         var body = document.createElement("div");
         body.style.cssText = "padding:20px;overflow-y:auto;";
@@ -1444,6 +1449,10 @@
                         }
                         
                         // ===== NORMAL MODE: No interview active =====
+                        // If calculator is open, still detect fields from Tess questions
+                        if (window._calcModeActive && window.preQualController) {
+                            window.preQualController.detectFieldFromQuestion(tessText);
+                        }
                         // --- PRE-QUAL TRIGGER ---
                         var triggerPhrase = window.TRIGGER_PHRASE;
                         if (triggerPhrase) {
