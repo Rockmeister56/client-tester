@@ -459,11 +459,16 @@
 
     // 🏠 MORTGAGE CALCULATOR MODULE
     window.showMortgageCalculator = function() {
-        var existing = document.getElementById("mortgage-calc-overlay");
+        var existing = document.getElementById("mortgage-calc-backdrop");
         if (existing) { existing.remove(); return; }
+        // Full-screen backdrop with blur
+        var backdrop = document.createElement("div");
+        backdrop.id = "mortgage-calc-backdrop";
+        backdrop.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999997;display:flex;align-items:center;justify-content:center;";
+        backdrop.onclick = function(e) { if(e.target===backdrop) backdrop.remove(); };
         var ov = document.createElement("div");
         ov.id = "mortgage-calc-overlay";
-        ov.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;border-radius:20px;width:380px;max-width:95vw;max-height:90vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;font-family:sans-serif;";
+        ov.style.cssText = "background:rgba(10,15,30,0.98);display:flex;flex-direction:column;border-radius:20px;width:380px;max-width:95vw;max-height:90vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;font-family:sans-serif;";
         var hdr = document.createElement("div");
         hdr.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:18px 20px;background:linear-gradient(135deg,#1e3a5f,#0a1a2f);border-bottom:1px solid rgba(248,196,0,0.3);";
         var hLeft = document.createElement("div");
@@ -472,7 +477,7 @@
         var xBtn = document.createElement("button");
         xBtn.textContent = "✕";
         xBtn.style.cssText = "background:rgba(255,255,255,0.1);border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;";
-        xBtn.onclick = function() { document.getElementById("mortgage-calc-overlay").remove(); };
+        xBtn.onclick = function() { var bd=document.getElementById("mortgage-calc-backdrop"); if(bd)bd.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); } };
         hdr.appendChild(hLeft); hdr.appendChild(xBtn); ov.appendChild(hdr);
         var body = document.createElement("div");
         body.style.cssText = "padding:20px;overflow-y:auto;";
@@ -542,7 +547,7 @@
         ctaBtn.textContent = "🚀 Start Full Pre-Qualification →";
         ctaBtn.style.cssText = "width:100%;margin-top:14px;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;";
         ctaBtn.onclick = function() {
-            var o = document.getElementById("mortgage-calc-overlay"); if(o)o.remove();
+            var o = document.getElementById("mortgage-calc-backdrop"); if(o)o.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); }
             if(window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                 window.mainWidget.sendMessage(window.TRIGGER_PHRASE || "let's get started");
             }
@@ -552,7 +557,7 @@
         disc.style.cssText = "text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem;margin-top:8px;";
         disc.textContent = "Results are estimates. Actual qualification depends on full credit review.";
         body.appendChild(disc);
-        ov.appendChild(body); document.body.appendChild(ov);
+        ov.appendChild(body); backdrop.appendChild(ov); document.body.appendChild(backdrop);
         window.calcMortgage();
     };
 
@@ -792,7 +797,7 @@
                                 if (imgTriggers[j] && phrase.indexOf(imgTriggers[j].toLowerCase()) !== -1) {
                                     result = { success: true, message: "✅ Smart Screen launched: " + images[i].name };
                                     var overlay = document.createElement("div");
-                                    overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:95vw;";
+                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
                                     overlay.id = "tcs-test-overlay";
                                     overlay.onclick = function() { overlay.remove(); };
                                     var imgEl = document.createElement("img");
@@ -910,7 +915,7 @@
                                 }
                                 // Show the link overlay
                                 var webOverlay = document.createElement("div");
-                                webOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;padding:0;border-radius:16px;max-width:90vw;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;";
+                                webOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;";
                                 var webHeader = document.createElement("div");
                                 webHeader.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:rgba(0,0,0,0.5);border-bottom:1px solid #f8c400;";
                                 var webTitle = document.createElement("span");
@@ -955,7 +960,7 @@
                             if (matchedGroup.videos && matchedGroup.videos.length > 0) {
                                 var videoUrl = matchedGroup.videos[0];
                                 var videoOverlay = document.createElement("div");
-                                videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                 videoOverlay.onclick = function() { videoOverlay.remove(); };
                                 var videoEl = document.createElement("video");
                                 videoEl.src = videoUrl;
@@ -993,7 +998,7 @@
                         if (matchedVideo) {
                             result = { success: true, message: "✅ Video playing: " + matchedVideo.triggerPhrase };
                             var videoOverlay = document.createElement("div");
-                            videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                            videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                             videoOverlay.onclick = function() { videoOverlay.remove(); };
                             var videoEl = document.createElement("video");
                             videoEl.src = matchedVideo.url;
@@ -1224,7 +1229,7 @@
                                 if ((smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                     console.log("📸 Smart Screen matched during interview:", smartImages[si].name);
                                     var overlay = document.createElement("div");
-                                    overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:90vw;";
+                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
                                     var imgEl = document.createElement("img");
                                     imgEl.src = smartImages[si].url;
                                     imgEl.style.cssText = "max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
@@ -1353,7 +1358,7 @@
                             if ((smartImages2[si2].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                 console.log("📸 Smart Screen matched:", smartImages2[si2].name);
                                 var overlay = document.createElement("div");
-                                overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:90vw;";
+                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
                                 var imgEl = document.createElement("img");
                                 imgEl.src = smartImages2[si2].url;
                                 imgEl.style.cssText = "max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
@@ -1403,7 +1408,7 @@
                                 if (link.triggerPhrase && lowerText.indexOf(link.triggerPhrase.toLowerCase()) !== -1) {
                                     console.log("🌐 Website Info matched:", link.title);
                                     var webOverlay = document.createElement("div");
-                                    webOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;padding:0;border-radius:16px;max-width:90vw;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;";
+                                    webOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;";
                                     var webHeader = document.createElement("div");
                                     webHeader.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:rgba(0,0,0,0.5);border-bottom:1px solid #f8c400;";
                                     var webTitle = document.createElement("span");
@@ -1433,7 +1438,7 @@
                                 if (testimonialGroups[tg].videos && testimonialGroups[tg].videos.length > 0) {
                                     var tVideoUrl = testimonialGroups[tg].videos[0];
                                     var tOverlay = document.createElement("div");
-                                    tOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                    tOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                     tOverlay.onclick = function() { tOverlay.remove(); };
                                     var tVideo = document.createElement("video");
                                     tVideo.src = tVideoUrl;
@@ -1453,7 +1458,7 @@
                             if (videoVault[vi].triggerPhrase && lowerText.indexOf(videoVault[vi].triggerPhrase.toLowerCase()) !== -1) {
                                 console.log("📹 Video Vault matched:", videoVault[vi].triggerPhrase);
                                 var vOverlay = document.createElement("div");
-                                vOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                vOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                 vOverlay.onclick = function() { vOverlay.remove(); };
                                 var vVideo = document.createElement("video");
                                 vVideo.src = videoVault[vi].url;
