@@ -216,7 +216,8 @@
         }
 
         handleUserInput(userText) {
-            if (!this.isActive) return;
+            // Allow capture during calculator mode even if pre-qual not yet active
+            if (!this.isActive && !window._calcModeActive) return;
             
             // Clean credit score values — strip $ and , if current field is creditScore
             if (this.currentField === "creditScore") {
@@ -291,6 +292,22 @@
 
         detectFieldFromQuestion(tessText) {
             const lowerText = tessText.toLowerCase();
+
+            // 🏠 CALCULATOR MODE: activate when Tess asks calculator questions
+            var calcQuestions = ["annual income", "down payment", "credit score", "loan term", "interest rate", "specific rate", "lowest rate"];
+            var isCalcQuestion = calcQuestions.some(function(q) { return lowerText.indexOf(q) !== -1; });
+            if (isCalcQuestion && !this.isActive) {
+                window._calcModeActive = true;
+                console.log("🏠 Calculator capture mode activated");
+            }
+
+            // 🏠 AUTO-CLOSE calculator when Tess moves to contact collection
+            if ((lowerText.includes("full name") || lowerText.includes("two quick things")) && window._calcModeActive) {
+                window._calcModeActive = false;
+                var bd = document.getElementById("mortgage-calc-backdrop");
+                if (bd) { bd.remove(); console.log("🏠 Calculator auto-closed — moving to contact collection"); }
+                else { var ov = document.getElementById("mortgage-calc-overlay"); if(ov) ov.remove(); }
+            }
             
                         // Capture "I heard X. Is that correct?" patterns from Tess
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
@@ -613,6 +630,22 @@
                 return true;
             }
         } else if (fieldName === "downPayment") {
+            var lower2 = spokenValue.toLowerCase();
+            // Handle percentage — need home price to calculate dollar amount
+            if (lower2.includes("percent") || lower2.includes("%")) {
+                var pct = window.parseSpokenNumber(spokenValue);
+                if (pct) {
+                    // Get current home price or estimate from income
+                    var incomeEl = document.getElementById("mc-income");
+                    var income = incomeEl ? parseFloat(incomeEl.value) || 85000 : 85000;
+                    var estHome = income * 3.5; // rough 3.5x income estimate
+                    var dollarDown = Math.round(estHome * pct / 100);
+                    var el = document.getElementById("mc-down");
+                    if (el) { el.value = dollarDown; window.calcMortgage(); }
+                    console.log("🏠 Down payment " + pct + "% = $" + dollarDown);
+                    return true;
+                }
+            }
             var num = window.parseSpokenNumber(spokenValue);
             if (num) {
                 var el = document.getElementById("mc-down");
@@ -646,6 +679,13 @@
                 return true;
             }
         } else if (fieldName === "interestRate") {
+            var lower3 = spokenValue.toLowerCase();
+            // Handle "current rate", "market rate", "lowest rate", "use that" — keep default
+            if (lower3.includes("current") || lower3.includes("market") || lower3.includes("lowest") || lower3.includes("use that") || lower3.includes("whatever")) {
+                console.log("🏠 Using default interest rate");
+                window.calcMortgage(); // recalculate with existing rate
+                return true;
+            }
             var num = window.parseSpokenNumber(spokenValue);
             if (num && num < 30) {
                 var el = document.getElementById("mc-rate");
