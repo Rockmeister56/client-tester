@@ -345,19 +345,19 @@
             } else if (lowerText.includes("type of loan") || lowerText.includes("fha")) {
                 this.currentField = "loanType";
             } else if (lowerText.includes("monthly income") || lowerText.includes("gross monthly")) {
-                this.currentField = "monthlyIncome";
+                this.currentField = "monthlyIncome"; window._lastCalcField = "monthlyIncome";
             } else if (lowerText.includes("annual income") || lowerText.includes("annual salary") || lowerText.includes("earn per year") || lowerText.includes("make per year")) {
-                this.currentField = "annualIncome";
+                this.currentField = "annualIncome"; window._lastCalcField = "annualIncome";
             } else if (lowerText.includes("monthly debt") || lowerText.includes("debt payment") || lowerText.includes("car payment") || lowerText.includes("monthly obligation") || lowerText.includes("other loans")) {
-                this.currentField = "monthlyDebt";
+                this.currentField = "monthlyDebt"; window._lastCalcField = "monthlyDebt";
             } else if (lowerText.includes("putting down") || lowerText.includes("down payment") || lowerText.includes("how much down")) {
-                this.currentField = "downPayment";
+                this.currentField = "downPayment"; window._lastCalcField = "downPayment";
             } else if (lowerText.includes("credit score")) {
-                this.currentField = "creditScore";
+                this.currentField = "creditScore"; window._lastCalcField = "creditScore";
             } else if (lowerText.includes("loan term") || lowerText.includes("how many years") || lowerText.includes("15 or 30") || lowerText.includes("prefer a 15") || lowerText.includes("prefer a 30")) {
-                this.currentField = "loanTerm";
+                this.currentField = "loanTerm"; window._lastCalcField = "loanTerm";
             } else if (lowerText.includes("interest rate") || lowerText.includes("current rate") || lowerText.includes("rate in mind")) {
-                this.currentField = "interestRate";
+                this.currentField = "interestRate"; window._lastCalcField = "interestRate";
             } else if (lowerText.includes("special requests")) {
                 this.currentField = "specialRequests";
             } else if (lowerText.includes("anything else")) {
@@ -1282,25 +1282,25 @@
                                     window._tessHeardEmail = heardValue;
                                     console.log("📧 Captured email from Tess:", heardValue);
                                 } else if (window._calcModeActive && window.preQualController) {
-                                    console.log("🔍 heardMatch fired. currentField:", window.preQualController.currentField, "value:", heardValue, "calcMode:", window._calcModeActive);
-                                    if (!window.preQualController.currentField) {
-                                        // currentField not set yet — store for when detectFieldFromQuestion sets it
+                                    // Use currentField, or fall back to _lastCalcField if currentField was cleared
+                                    var fieldToPopulate = window.preQualController.currentField || window._lastCalcField;
+                                    console.log("🔍 heardMatch fired. field:", fieldToPopulate, "value:", heardValue);
+                                    if (!fieldToPopulate) {
                                         window._pendingHeardValue = heardValue;
                                         console.log("⏳ Stored pending heard value:", heardValue);
                                     } else {
                                     // 🏠 POPULATE IMMEDIATELY when Tess repeats the value
-                                    console.log("🏠 Tess confirmed value — populating immediately:", window.preQualController.currentField, "=", heardValue);
+                                    console.log("🏠 Populating immediately:", fieldToPopulate, "=", heardValue);
                                     if (typeof window.populateCalcField === "function") {
-                                        var populated = window.populateCalcField(window.preQualController.currentField, heardValue);
+                                        var populated = window.populateCalcField(fieldToPopulate, heardValue);
                                         if (populated) {
-                                            console.log("✅ Field populated:", window.preQualController.currentField);
-                                            // Store for email but don't require yes confirmation
+                                            console.log("✅ Field populated:", fieldToPopulate);
                                             if (window.preQualController.answers) {
-                                                window.preQualController.answers[window.preQualController.currentField] = heardValue;
+                                                window.preQualController.answers[fieldToPopulate] = heardValue;
                                             }
-                                            // Clear field so next question starts fresh
                                             window.preQualController.currentField = null;
                                             window.preQualController.pendingValue = null;
+                                            window._lastCalcField = null;
                                         } else {
                                             console.log("⚠️ populateCalcField returned false — storing as pending");
                                             window.preQualController.pendingValue = heardValue;
