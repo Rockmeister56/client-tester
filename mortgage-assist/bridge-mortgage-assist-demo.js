@@ -1263,16 +1263,32 @@
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
-                            // Skip short/vague captures like "yes", "no", "that" etc.
                             var skipWords = ["yes","no","that","it","okay","ok","sure","right","correct","you said"];
                             var isSkip = skipWords.some(function(w){ return heardValue.toLowerCase() === w || heardValue.toLowerCase().startsWith(w+" "); });
                             if (!isSkip && heardValue.length > 3) {
                                 if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                     window._tessHeardEmail = heardValue;
                                     console.log("📧 Captured email from Tess:", heardValue);
-                                } else if (window._calcModeActive && window.preQualController) {
-                                    window.preQualController.pendingValue = heardValue;
-                                    console.log("🏠 Calc pending value from Tess:", heardValue);
+                                } else if (window._calcModeActive && window.preQualController && window.preQualController.currentField) {
+                                    // 🏠 POPULATE IMMEDIATELY when Tess repeats the value
+                                    // No "yes" needed — Tess already validated by repeating it
+                                    console.log("🏠 Tess confirmed value — populating immediately:", window.preQualController.currentField, "=", heardValue);
+                                    if (typeof window.populateCalcField === "function") {
+                                        var populated = window.populateCalcField(window.preQualController.currentField, heardValue);
+                                        if (populated) {
+                                            console.log("✅ Field populated:", window.preQualController.currentField);
+                                            // Store for email but don't require yes confirmation
+                                            if (window.preQualController.answers) {
+                                                window.preQualController.answers[window.preQualController.currentField] = heardValue;
+                                            }
+                                            // Clear field so next question starts fresh
+                                            window.preQualController.currentField = null;
+                                            window.preQualController.pendingValue = null;
+                                        } else {
+                                            console.log("⚠️ populateCalcField returned false — storing as pending");
+                                            window.preQualController.pendingValue = heardValue;
+                                        }
+                                    }
                                 } else if (!heardValue.match(/^\d/)) {
                                     window._tessHeardName = heardValue;
                                     console.log("👤 Captured name from Tess:", heardValue);
