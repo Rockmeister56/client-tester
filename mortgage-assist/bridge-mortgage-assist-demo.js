@@ -1387,6 +1387,14 @@
                             if (wTriggers.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                 console.log("🌐 Website Info trigger detected during interview!");
                             }
+
+                            // --- MORTGAGE CALCULATOR TRIGGER (during interview/calc mode) ---
+                            var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
+                            console.log("🔍 Checking calc trigger:", calcCfgI?.triggerPhrase, "in:", lowerText.slice(0,60));
+                            if (calcCfgI?.enabled && calcCfgI.triggerPhrase && lowerText.indexOf(calcCfgI.triggerPhrase.toLowerCase()) !== -1) {
+                                console.log("🏠 Mortgage Calculator trigger FIRED (interview mode)!");
+                                if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
+                            }
                             
                             return;
                         }
@@ -1552,8 +1560,9 @@
 
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
+                        console.log("🔍 Normal mode calc check:", calcCfgN?.triggerPhrase, "in:", lowerText.slice(0,60));
                         if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
-                            console.log("🏠 Mortgage Calculator trigger!");
+                            console.log("🏠 Mortgage Calculator trigger FIRED (normal mode)!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
                         }
                     }
