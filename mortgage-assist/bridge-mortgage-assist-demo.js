@@ -27,7 +27,7 @@
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"let's see what you can qualify for","defaultRate":7.25,"defaultTerm":30},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"i've pulled up our mortgage calculator","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
@@ -1245,9 +1245,9 @@
                     // ===== USER TRANSCRIPTION =====
                     if (ev?.data?.type === "user_transcription") {
                         const userText = ev.data.transcription || ev.data.text || "";
-                        // Route to controller if pre-qual active
-                        if (window.preQualController && window.preQualController.isActive) {
-                            console.log("👤 [DAILY] User said (pre-qual):", userText);
+                        // Route to controller if pre-qual active OR calc mode active
+                        if (window.preQualController && (window.preQualController.isActive || window._calcModeActive)) {
+                            console.log("👤 [DAILY] User said (captured):", userText);
                             window.preQualController.handleUserInput(userText);
                         } else {
                             console.log("👤 [DAILY] User said (ignored):", userText);
@@ -1297,8 +1297,8 @@
                             });
                         }
                         
-                        // ===== INTERVIEW MODE: Controller is active =====
-                        if (window.preQualController && window.preQualController.isActive) {
+                        // ===== INTERVIEW MODE OR CALC MODE: detect field from Tess question =====
+                        if (window.preQualController && (window.preQualController.isActive || window._calcModeActive)) {
                             // Detect which question Tess is asking
                             window.preQualController.detectFieldFromQuestion(tessText);
                             
