@@ -1406,8 +1406,18 @@
 
                             // --- MORTGAGE CALCULATOR TRIGGER (during interview/calc mode) ---
                             var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
-                            console.log("🔍 Checking calc trigger:", calcCfgI?.triggerPhrase, "in:", lowerText.slice(0,60));
-                            if (calcCfgI?.enabled && calcCfgI.triggerPhrase && lowerText.indexOf(calcCfgI.triggerPhrase.toLowerCase()) !== -1) {
+                            var calcPhrasesI = [
+                                calcCfgI?.triggerPhrase || "",
+                                "i've pulled up our mortgage calculator",
+                                "let's see what you can qualify for",
+                                "let me show you what you can qualify for",
+                                "pulled up our mortgage calculator",
+                                "i have pulled up",
+                                "show you what you can qualify"
+                            ];
+                            var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
+                            console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
+                            if (calcMatchedI) {
                                 console.log("🏠 Mortgage Calculator trigger FIRED (interview mode)!");
                                 if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
                             }
@@ -1576,8 +1586,18 @@
 
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
-                        console.log("🔍 Normal mode calc check:", calcCfgN?.triggerPhrase, "in:", lowerText.slice(0,60));
-                        if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
+                        var calcPhrasesN = [
+                            calcCfgN?.triggerPhrase || "",
+                            "i've pulled up our mortgage calculator",
+                            "let's see what you can qualify for",
+                            "let me show you what you can qualify for",
+                            "pulled up our mortgage calculator",
+                            "i have pulled up",
+                            "show you what you can qualify"
+                        ];
+                        var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
+                        console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
+                        if (calcMatchedN) {
                             console.log("🏠 Mortgage Calculator trigger FIRED (normal mode)!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
                         }
