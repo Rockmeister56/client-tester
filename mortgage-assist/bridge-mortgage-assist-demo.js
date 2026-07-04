@@ -228,6 +228,17 @@
             
             // Detect which field we're capturing based on Tess's last question
             if (this.currentField) {
+                // During calc mode: if user provides value directly (before Tess repeats),
+                // store as pendingValue so it's ready for confirmation
+                if (window._calcModeActive && !this.pendingValue) {
+                    var cleanLowerCheck = lowerText.replace(/[.!?,]/g, "").trim();
+                    var isConfirmation = (cleanLowerCheck === "yes" || cleanLowerCheck === "correct" || cleanLowerCheck === "that's correct");
+                    if (!isConfirmation) {
+                        this.pendingValue = userText;
+                        console.log("🏠 User direct value:", this.currentField, "=", userText);
+                        return; // wait for Tess to repeat and user to confirm
+                    }
+                }
                 // Normalize email addresses before storing
                 if (this.currentField === "email" && userText) {
                     userText = userText
@@ -249,7 +260,7 @@
                         this.answers[this.currentField] = this.pendingValue;
                         console.log("✅ Confirmed:", this.currentField, "=", this.pendingValue);
                         // 🏠 If calculator is open, auto-populate the matching field
-                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","interestRate"];
+                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","interestRate","monthlyDebt"];
                         if (calcFields.indexOf(this.currentField) !== -1 && typeof window.populateCalcField === "function") {
                             var populated = window.populateCalcField(this.currentField, this.pendingValue);
                             if (populated) console.log("🏠 Calculator field populated:", this.currentField);
@@ -337,6 +348,8 @@
                 this.currentField = "monthlyIncome";
             } else if (lowerText.includes("annual income") || lowerText.includes("annual salary") || lowerText.includes("earn per year") || lowerText.includes("make per year")) {
                 this.currentField = "annualIncome";
+            } else if (lowerText.includes("monthly debt") || lowerText.includes("debt payment") || lowerText.includes("car payment") || lowerText.includes("monthly obligation") || lowerText.includes("other loans")) {
+                this.currentField = "monthlyDebt";
             } else if (lowerText.includes("putting down") || lowerText.includes("down payment") || lowerText.includes("how much down")) {
                 this.currentField = "downPayment";
             } else if (lowerText.includes("credit score")) {
@@ -529,8 +542,8 @@
         }
         var grid = document.createElement("div");
         grid.style.cssText = "display:grid;gap:14px;";
-        grid.appendChild(mcField("💰 Annual Income","mc-income","number","85000",null,false,null));
-        grid.appendChild(mcField("🏦 Down Payment ($)","mc-down","number","40000",null,false,null));
+        grid.appendChild(mcField("💰 Annual Income","mc-income","number","",null,false,null));
+        grid.appendChild(mcField("🏦 Down Payment ($)","mc-down","number","",null,false,null));
         grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
             {v:"0.5",t:"Excellent (760+)"},
             {v:"0.25",t:"Good (700-759)",sel:true},
@@ -546,6 +559,7 @@
         ]));
         row.appendChild(mcField("📈 Rate %","mc-rate","number","7.25","0.05",false,null));
         grid.appendChild(row);
+        grid.appendChild(mcField("💳 Monthly Debt Payments (cars, loans, etc.)","mc-debt","number","",null,false,null));
         body.appendChild(grid);
         var res = document.createElement("div");
         res.id = "mc-results";
@@ -678,6 +692,13 @@
                 window.calcMortgage();
                 return true;
             }
+        } else if (fieldName === "monthlyDebt") {
+            var num = window.parseSpokenNumber(spokenValue);
+            if (num !== null) {
+                var el = document.getElementById("mc-debt");
+                if (el) { el.value = Math.round(num); window.calcMortgage(); }
+                return true;
+            }
         } else if (fieldName === "interestRate") {
             var lower3 = spokenValue.toLowerCase();
             // Handle "current rate", "market rate", "lowest rate", "use that" — keep default
@@ -699,15 +720,21 @@
     window.calcMortgage = function() {
         var income=parseFloat(document.getElementById("mc-income")?.value)||0;
         var down=parseFloat(document.getElementById("mc-down")?.value)||0;
+        var debt=parseFloat(document.getElementById("mc-debt")?.value)||0;
         var creditAdj=parseFloat(document.getElementById("mc-credit")?.value)||0;
         var term=parseInt(document.getElementById("mc-term")?.value)||30;
         var rate=parseFloat(document.getElementById("mc-rate")?.value)-creditAdj;
         if(!income)return;
-        var mr=rate/100/12,n=term*12,gm=income/12,mp=gm*0.28;
+        var mr=rate/100/12,n=term*12,gm=income/12;
+        // Back-end DTI: max total debt (including new mortgage) = 43% of gross monthly
+        // Front-end DTI: max housing payment = 28% of gross monthly
+        var maxHousingPayment = (gm * 0.43) - debt; // remaining room after existing debt
+        if (maxHousingPayment < gm * 0.1) maxHousingPayment = gm * 0.1; // floor
+        var mp = Math.min(maxHousingPayment, gm * 0.28); // front-end cap
         var maxLoan=mr>0?mp*(1-Math.pow(1+mr,-n))/mr:mp*n;
         var maxHome=maxLoan+down;
         var pmt=mr>0?maxLoan*(mr*Math.pow(1+mr,n))/(Math.pow(1+mr,n)-1):maxLoan/n;
-        var dti=gm>0?((pmt/gm)*100).toFixed(1):0;
+        var dti=gm>0?(((pmt+debt)/gm)*100).toFixed(1):0;
         var fmt=function(v){return "$"+Math.round(v).toLocaleString();};
         var hp=document.getElementById("mc-home-price");if(hp)hp.textContent=fmt(maxHome*0.9)+"\u2013"+fmt(maxHome);
         var mp2=document.getElementById("mc-monthly");if(mp2)mp2.textContent=fmt(pmt)+"/mo";
@@ -1214,38 +1241,44 @@
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
-                    
-                    // 🔥 BLOCK USER TRANSCRIPTIONS from triggering modules
+
+                    // ===== USER TRANSCRIPTION =====
                     if (ev?.data?.type === "user_transcription") {
                         const userText = ev.data.transcription || ev.data.text || "";
-                        console.log("👤 [DAILY] User said (ignored):", userText);
+                        // Route to controller if pre-qual active
+                        if (window.preQualController && window.preQualController.isActive) {
+                            console.log("👤 [DAILY] User said (pre-qual):", userText);
+                            window.preQualController.handleUserInput(userText);
+                        } else {
+                            console.log("👤 [DAILY] User said (ignored):", userText);
+                        }
                         return;
                     }
-                    
-                    // 🔥 NEW: Handle USER transcriptions during interview
-                    if (window.preQualController && window.preQualController.isActive && ev?.data?.type === "user_transcription") {
-                        const userText = ev.data.transcription || ev.data.text || "";
-                        console.log("👤 [DAILY] User said:", userText);
-                        window.preQualController.handleUserInput(userText);
-                        return;
-                    }
-                    
+
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
-                        
-                        // Capture "I heard X. Is that correct?" patterns from Tess
+
+                        // ===== CAPTURE "I HEARD X" FROM TESS =====
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                 window._tessHeardEmail = heardValue;
                                 console.log("📧 Captured email from Tess:", heardValue);
+                            } else if (window._calcModeActive && window.preQualController) {
+                                // During calculator mode — route to pendingValue for field population
+                                window.preQualController.pendingValue = heardValue;
+                                console.log("🏠 Calc pending value from Tess:", heardValue);
                             } else if (heardValue.length > 1 && !heardValue.match(/^\d/)) {
                                 window._tessHeardName = heardValue;
                                 console.log("👤 Captured name from Tess:", heardValue);
                             }
                         }
+
+                        // ===== USER "YES" CONFIRMATION — populate calc field =====
+                        // When user says yes after Tess repeats a value, fire population
+                        // This is handled via handleUserInput below
                         // Always log Tess transcriptions
                         console.log("🤖 [DAILY] Tess said:", tessText);
                         
