@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 7/3/2026, 1:28:57 PM
+// Generated: 7/3/2026, 1:20:40 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -26,7 +26,7 @@
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
-            "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
+            "videoVault": {"videos":[]},
             "mortgageCalc": {"enabled":true,"triggerPhrase":"let me show you what you can qualify for","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
@@ -415,26 +415,19 @@
             }
             // ===== EMAIL 1: TO LOAN BROKER PROSPECT =====
             if (data.email) {
-                var calcData = window._calcResults || {};
                 var prospectParams = {
-                    to_email:             data.email,
-                    full_name:            data.fullName || "Valued Client",
-                    email:                data.email,
-                    phone:                data.phone || "Not provided",
-                    business_name:        data.businessName || "Not provided",
-                    scheduled_datetime:   data.scheduledDateTime || "To be determined",
-                    submitted_at:         new Date().toLocaleString(),
-                    calc_annual_income:   calcData.income     || "Not provided",
-                    calc_down_payment:    calcData.down       || "Not provided",
-                    calc_credit_score:    calcData.credit     || "Not provided",
-                    calc_loan_term:       calcData.term       || "Not provided",
-                    calc_interest_rate:   calcData.rate       || "Not provided",
-                    calc_home_price:      calcData.homePrice  || "Not provided",
-                    calc_monthly_payment: calcData.monthly    || "Not provided",
-                    calc_loan_amount:     calcData.loanAmount || "Not provided",
-                    calc_dti:             calcData.dti        || "Not provided",
-                    calc_verdict:         calcData.verdict    || "",
-                    special_requests:     data.specialRequests || "None"
+                    to_email: data.email,
+                    full_name: data.fullName || "Valued Client",
+                    email: data.email,
+                    phone: data.phone || "Not provided",
+                    business_name: data.businessName || "Not provided",
+                    scheduled_datetime: data.scheduledDateTime || "To be determined",
+                    loan_type: "See Full Example Below",
+                    annual_income: "See Full Example Below",
+                    down_payment: "See Full Example Below",
+                    credit_score: "See Full Example Below",
+                    special_requests: data.specialRequests || "None",
+                    submitted_at: new Date().toLocaleString()
                 };
                 
                 emailjs.send("service_b9bppgb", "template_8kx812d", prospectParams)
@@ -675,24 +668,7 @@
         var mp2=document.getElementById("mc-monthly");if(mp2)mp2.textContent=fmt(pmt)+"/mo";
         var la=document.getElementById("mc-loan");if(la)la.textContent=fmt(maxLoan);
         var de=document.getElementById("mc-dti");if(de){de.textContent=dti+"%";de.style.color=parseFloat(dti)<=28?"#34a853":parseFloat(dti)<=36?"#f8c400":"#f44336";}
-        var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\u2705 Higher DTI \u2014 let's talk through your options.";
-        // 💾 Save results for email
-        var creditLabels={"0.5":"Excellent (760+)","0.25":"Good (700-759)","0":"Fair (640-699)","-0.5":"Poor (580-639)"};
-        var creditSel=document.getElementById("mc-credit");
-        var termSel=document.getElementById("mc-term");
-        window._calcResults = {
-            income:     document.getElementById("mc-income")?.value ? "$"+parseInt(document.getElementById("mc-income").value).toLocaleString() : "Not provided",
-            down:       document.getElementById("mc-down")?.value   ? "$"+parseInt(document.getElementById("mc-down").value).toLocaleString()   : "Not provided",
-            credit:     creditSel ? (creditLabels[creditSel.value] || creditSel.options[creditSel.selectedIndex]?.text || "Not provided") : "Not provided",
-            term:       termSel ? termSel.value+" Years" : "30 Years",
-            rate:       document.getElementById("mc-rate")?.value ? document.getElementById("mc-rate").value+"%" : "Not provided",
-            homePrice:  document.getElementById("mc-home-price")?.textContent || "Not provided",
-            monthly:    document.getElementById("mc-monthly")?.textContent   || "Not provided",
-            loanAmount: document.getElementById("mc-loan")?.textContent      || "Not provided",
-            dti:        document.getElementById("mc-dti")?.textContent       || "Not provided",
-            verdict:    document.getElementById("mc-verdict")?.textContent   || ""
-        };
-        console.log("💾 Calc results saved:", window._calcResults);
+        var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\U0001f4cb Higher DTI \u2014 let's talk through your options.";
     };
 
     // =========================================
@@ -1039,6 +1015,27 @@
                             document.body.appendChild(videoOverlay);
                         } else {
                             result.message = "❌ No video trigger matched";
+                        }
+                    }
+
+                    // --- MORTGAGE CALCULATOR ---
+                    if (mod === "mortgage_calc") {
+                        var mcCfg = window.BotemiaConfig?.modules?.mortgageCalc;
+                        if (mcCfg?.enabled && mcCfg.triggerPhrase && phrase.indexOf(mcCfg.triggerPhrase.toLowerCase()) !== -1) {
+                            if (typeof window.showMortgageCalculator === "function") {
+                                window.showMortgageCalculator();
+                                result = { success: true, message: "✅ Mortgage Calculator launched" };
+                            } else {
+                                result = { success: false, message: "❌ Calculator function not loaded" };
+                            }
+                        } else {
+                            result = { success: false, message: "❌ Mortgage Calculator trigger not matched or disabled" };
+                        }
+                        if (window.supabaseChannel) {
+                            window.supabaseChannel.send({
+                                type: "broadcast", event: "trigger_test_result",
+                                payload: { module: mod, success: result.success, message: result.message, timestamp: Date.now() }
+                            });
                         }
                     }
                 }
