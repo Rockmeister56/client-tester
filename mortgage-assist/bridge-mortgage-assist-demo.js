@@ -1470,7 +1470,6 @@
                                 break;
                             }
                         }
-                    }
 
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
@@ -1478,6 +1477,7 @@
                             console.log("🏠 Mortgage Calculator trigger!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
                         }
+                    }
                 });
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
