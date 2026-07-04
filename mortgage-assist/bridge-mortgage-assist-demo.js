@@ -367,6 +367,18 @@
             
             if (this.currentField) {
                 console.log("🎯 Expecting answer for:", this.currentField);
+                // Check if there's a pending heard value waiting to populate
+                if (window._pendingHeardValue && window._calcModeActive && typeof window.populateCalcField === "function") {
+                    console.log("🏠 Applying pending heard value:", this.currentField, "=", window._pendingHeardValue);
+                    var applied = window.populateCalcField(this.currentField, window._pendingHeardValue);
+                    if (applied) {
+                        if (this.answers) this.answers[this.currentField] = window._pendingHeardValue;
+                        this.currentField = null;
+                        this.pendingValue = null;
+                        console.log("✅ Pending value applied successfully");
+                    }
+                    window._pendingHeardValue = null;
+                }
             }
         }
 
@@ -1269,9 +1281,14 @@
                                 if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                     window._tessHeardEmail = heardValue;
                                     console.log("📧 Captured email from Tess:", heardValue);
-                                } else if (window._calcModeActive && window.preQualController && window.preQualController.currentField) {
+                                } else if (window._calcModeActive && window.preQualController) {
+                                    console.log("🔍 heardMatch fired. currentField:", window.preQualController.currentField, "value:", heardValue, "calcMode:", window._calcModeActive);
+                                    if (!window.preQualController.currentField) {
+                                        // currentField not set yet — store for when detectFieldFromQuestion sets it
+                                        window._pendingHeardValue = heardValue;
+                                        console.log("⏳ Stored pending heard value:", heardValue);
+                                    } else {
                                     // 🏠 POPULATE IMMEDIATELY when Tess repeats the value
-                                    // No "yes" needed — Tess already validated by repeating it
                                     console.log("🏠 Tess confirmed value — populating immediately:", window.preQualController.currentField, "=", heardValue);
                                     if (typeof window.populateCalcField === "function") {
                                         var populated = window.populateCalcField(window.preQualController.currentField, heardValue);
@@ -1289,6 +1306,7 @@
                                             window.preQualController.pendingValue = heardValue;
                                         }
                                     }
+                                    } // end else (currentField is set)
                                 } else if (!heardValue.match(/^\d/)) {
                                     window._tessHeardName = heardValue;
                                     console.log("👤 Captured name from Tess:", heardValue);
