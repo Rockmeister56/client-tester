@@ -609,28 +609,24 @@
         grid.style.cssText = "display:grid;gap:14px;";
         grid.appendChild(mcField("💰 Annual Income","mc-income","number","",null,false,null));
         grid.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
-        grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
-            {v:"0.5",t:"Excellent (760+)"},
-            {v:"0.25",t:"Good (700-759)",sel:true},
-            {v:"0",t:"Fair (640-699)"},
-            {v:"-0.5",t:"Poor (580-639)"}
-        ]));
-        var row = document.createElement("div");
-        row.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
-        row.appendChild(mcField("📅 Loan Term","mc-term",null,null,null,true,[
-            {v:"30",t:"30 Years",sel:true},
-            {v:"20",t:"20 Years"},
-            {v:"15",t:"15 Years"}
-        ]));
-        row.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
+        grid.appendChild(mcField("💳 Monthly Obligations (cars, loans, credit cards)","mc-debt","number","",null,false,null));
+        grid.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
             {v:"conventional",t:"Conventional",sel:true},
             {v:"fha",t:"FHA"},
             {v:"va",t:"VA (Military/Veterans)"},
             {v:"jumbo",t:"Jumbo"},
             {v:"usda",t:"USDA (Rural)"}
         ]));
-        grid.appendChild(row);
-        grid.appendChild(mcField("💳 Monthly Debt Payments (cars, loans, etc.)","mc-debt","number","",null,false,null));
+        grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
+            {v:"0.5",t:"Excellent (760+)"},
+            {v:"0.25",t:"Good (700-759)",sel:true},
+            {v:"0",t:"Fair (640-699)"},
+            {v:"-0.5",t:"Poor (580-639)"}
+        ]));
+        // Hidden fields for calculation — not shown to user
+        var hiddenTerm = document.createElement("input");
+        hiddenTerm.type = "hidden"; hiddenTerm.id = "mc-term"; hiddenTerm.value = "30";
+        grid.appendChild(hiddenTerm);
         body.appendChild(grid);
         var res = document.createElement("div");
         res.id = "mc-results";
@@ -1560,11 +1556,22 @@
                             var calcPhrasesI = [
                                 calcCfgI?.triggerPhrase || "",
                                 "i've pulled up our mortgage calculator",
-                                "let's see what you can qualify for",
-                                "let me show you what you can qualify for",
+                                "i have pulled up our mortgage calculator",
                                 "pulled up our mortgage calculator",
-                                "i have pulled up",
-                                "show you what you can qualify"
+                                "let's see what you can qualify for",
+                                "let me see what you can qualify for",
+                                "let me show you what you can qualify for",
+                                "show you what you can qualify",
+                                "what you can qualify for",
+                                "run the numbers for you",
+                                "pull up the calculator",
+                                "mortgage calculator",
+                                "let's find out what you",
+                                "see what you qualify",
+                                "calculate what you",
+                                "figure out what you can afford",
+                                "see how much you can afford",
+                                "show you how much you can afford"
                             ];
                             var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                             console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
@@ -1744,11 +1751,22 @@
                         var calcPhrasesN = [
                             calcCfgN?.triggerPhrase || "",
                             "i've pulled up our mortgage calculator",
-                            "let's see what you can qualify for",
-                            "let me show you what you can qualify for",
+                            "i have pulled up our mortgage calculator",
                             "pulled up our mortgage calculator",
-                            "i have pulled up",
-                            "show you what you can qualify"
+                            "let's see what you can qualify for",
+                            "let me see what you can qualify for",
+                            "let me show you what you can qualify for",
+                            "show you what you can qualify",
+                            "what you can qualify for",
+                            "run the numbers for you",
+                            "pull up the calculator",
+                            "mortgage calculator",
+                            "let's find out what you",
+                            "see what you qualify",
+                            "calculate what you",
+                            "figure out what you can afford",
+                            "see how much you can afford",
+                            "show you how much you can afford"
                         ];
                         var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                         console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
