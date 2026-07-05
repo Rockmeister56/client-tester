@@ -186,6 +186,44 @@
         }
     };
 
+
+    // ===== CALCULATOR SUMMARY — reads directly from DOM for Tess read-back =====
+    window.getCalcSummary = function() {
+        var homePrice  = document.getElementById("mc-home-price")?.textContent || "not calculated";
+        var monthly    = document.getElementById("mc-monthly")?.textContent    || "not calculated";
+        var loanAmt    = document.getElementById("mc-loan")?.textContent       || "not calculated";
+        var dti        = document.getElementById("mc-dti")?.textContent        || "not calculated";
+        var verdict    = document.getElementById("mc-verdict")?.textContent    || "";
+        var income     = document.getElementById("mc-income")?.value           || "";
+        var downPct    = document.getElementById("mc-down-pct")?.value         || "";
+        var debt       = document.getElementById("mc-debt")?.value             || "";
+        var loanTypeSel = document.getElementById("mc-loan-type");
+        var loanType   = loanTypeSel ? loanTypeSel.options[loanTypeSel.selectedIndex]?.text : "Conventional";
+        var creditSel  = document.getElementById("mc-credit");
+        var credit     = creditSel ? creditSel.options[creditSel.selectedIndex]?.text : "";
+
+        return {
+            homePrice, monthly, loanAmt, dti, verdict,
+            income, downPct, debt, loanType, credit,
+            summary: "Based on what you've shared — an income of $" + parseInt(income||0).toLocaleString() +
+                     ", " + (downPct||"0") + "% down, and " + loanType + " financing — " +
+                     "you may qualify for a home in the range of " + homePrice +
+                     " with an estimated monthly payment of " + monthly + ". " +
+                     "Your debt-to-income ratio is " + dti + ". " + verdict
+        };
+    };
+
+    // Make summary available to Tess via mainWidget
+    window.sendCalcSummaryToTess = function() {
+        var s = window.getCalcSummary();
+        console.log("📊 Calc summary for Tess:", s.summary);
+        if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+            window.mainWidget.sendMessage("Calculator results: home price range " + s.homePrice +
+                ", monthly payment " + s.monthly + ", DTI " + s.dti + ". " + s.verdict);
+        }
+        return s;
+    };
+
     class PreQualificationController {
         constructor() {
             this.isActive = false;
@@ -260,7 +298,7 @@
                         this.answers[this.currentField] = this.pendingValue;
                         console.log("✅ Confirmed:", this.currentField, "=", this.pendingValue);
                         // 🏠 If calculator is open, auto-populate the matching field
-                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","interestRate","monthlyDebt"];
+                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","loanType","monthlyDebt"];
                         if (calcFields.indexOf(this.currentField) !== -1 && typeof window.populateCalcField === "function") {
                             var populated = window.populateCalcField(this.currentField, this.pendingValue);
                             if (populated) console.log("🏠 Calculator field populated:", this.currentField);
@@ -356,8 +394,8 @@
                 this.currentField = "creditScore"; window._lastCalcField = "creditScore";
             } else if (lowerText.includes("loan term") || lowerText.includes("how many years") || lowerText.includes("15 or 30") || lowerText.includes("prefer a 15") || lowerText.includes("prefer a 30")) {
                 this.currentField = "loanTerm"; window._lastCalcField = "loanTerm";
-            } else if (lowerText.includes("interest rate") || lowerText.includes("current rate") || lowerText.includes("rate in mind")) {
-                this.currentField = "interestRate"; window._lastCalcField = "interestRate";
+            } else if (lowerText.includes("type of loan") || lowerText.includes("loan type") || lowerText.includes("va loan") || lowerText.includes("fha") || lowerText.includes("conventional") || lowerText.includes("jumbo")) {
+                this.currentField = "loanType"; window._lastCalcField = "loanType";
             } else if (lowerText.includes("special requests")) {
                 this.currentField = "specialRequests";
             } else if (lowerText.includes("anything else")) {
@@ -570,7 +608,7 @@
         var grid = document.createElement("div");
         grid.style.cssText = "display:grid;gap:14px;";
         grid.appendChild(mcField("💰 Annual Income","mc-income","number","",null,false,null));
-        grid.appendChild(mcField("🏦 Down Payment ($)","mc-down","number","",null,false,null));
+        grid.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
         grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
             {v:"0.5",t:"Excellent (760+)"},
             {v:"0.25",t:"Good (700-759)",sel:true},
@@ -584,7 +622,13 @@
             {v:"20",t:"20 Years"},
             {v:"15",t:"15 Years"}
         ]));
-        row.appendChild(mcField("📈 Rate %","mc-rate","number","7.25","0.05",false,null));
+        row.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
+            {v:"conventional",t:"Conventional",sel:true},
+            {v:"fha",t:"FHA"},
+            {v:"va",t:"VA (Military/Veterans)"},
+            {v:"jumbo",t:"Jumbo"},
+            {v:"usda",t:"USDA (Rural)"}
+        ]));
         grid.appendChild(row);
         grid.appendChild(mcField("💳 Monthly Debt Payments (cars, loans, etc.)","mc-debt","number","",null,false,null));
         body.appendChild(grid);
@@ -602,19 +646,87 @@
         ].join("");
         body.appendChild(res);
         var ctaBtn = document.createElement("button");
-        ctaBtn.textContent = "🚀 Start Full Pre-Qualification →";
+        ctaBtn.textContent = "📨 Send My Results →";
         ctaBtn.style.cssText = "width:100%;margin-top:14px;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;";
         ctaBtn.onclick = function() {
-            var o = document.getElementById("mortgage-calc-backdrop"); if(o)o.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); }
-            if(window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
-                window.mainWidget.sendMessage(window.TRIGGER_PHRASE || "let's get started");
-            }
+            // Save calc results before switching view
+            if (typeof window.calcMortgage === "function") window.calcMortgage();
+            window._calcModeActive = false;
+            window._lastCalcField = null;
+            window._collectingContact = true;
+            console.log("📨 Send My Results clicked — showing contact form");
+            // Replace body content with contact form — keep overlay open
+            body.innerHTML = [
+                "<div style='padding:10px 0;'>",
+                "<div style='color:#f8c400;font-size:1rem;font-weight:700;margin-bottom:6px;text-align:center;'>🎉 Great news! Let's send your results.</div>",
+                "<div style='color:rgba(255,255,255,0.6);font-size:0.8rem;text-align:center;margin-bottom:18px;'>A loan officer will follow up with your qualification summary.</div>",
+                "<div style='margin-bottom:12px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>👤 Full Name</label>",
+                "<input id='contact-name' type='text' placeholder='Your full name' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<div style='margin-bottom:12px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>📧 Email Address</label>",
+                "<input id='contact-email' type='email' placeholder='your@email.com' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<div style='margin-bottom:18px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>📞 Phone Number</label>",
+                "<input id='contact-phone' type='tel' placeholder='(555) 555-5555' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<button id='submit-contact-btn' style='width:100%;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;'>📨 Send My Results Now</button>",
+                "<div style='text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem;margin-top:8px;'>Your information is kept private and secure.</div>",
+                "</div>"
+            ].join("");
+            // Wire submit button after DOM update
+            setTimeout(function() {
+                var submitBtn = document.getElementById("submit-contact-btn");
+                if (submitBtn) {
+                    submitBtn.onclick = function() {
+                        var name  = document.getElementById("contact-name")?.value?.trim();
+                        var email = document.getElementById("contact-email")?.value?.trim();
+                        var phone = document.getElementById("contact-phone")?.value?.trim();
+                        if (!name || !email) {
+                            alert("Please enter your name and email to continue.");
+                            return;
+                        }
+                        var calcData = window._calcResults || {};
+                        if (typeof emailjs !== "undefined") {
+                            emailjs.send("service_b9bppgb", "template_8kx812d", {
+                                to_email:             email,
+                                full_name:            name,
+                                email:                email,
+                                phone:                phone || "Not provided",
+                                submitted_at:         new Date().toLocaleString(),
+                                calc_annual_income:   calcData.income     || "Not provided",
+                                calc_down_payment:    calcData.down       || "Not provided",
+                                calc_credit_score:    calcData.credit     || "Not provided",
+                                calc_loan_term:       calcData.term       || "Not provided",
+                                calc_interest_rate:   calcData.rate       || "Not provided",
+                                calc_home_price:      calcData.homePrice  || "Not provided",
+                                calc_monthly_payment: calcData.monthly    || "Not provided",
+                                calc_loan_amount:     calcData.loanAmount || "Not provided",
+                                calc_dti:             calcData.dti        || "Not provided",
+                                calc_verdict:         calcData.verdict    || "",
+                                special_requests:     "None"
+                            })
+                            .then(function() { console.log("✅ Results email sent to:", email); })
+                            .catch(function(e) { console.error("❌ Email error:", e); });
+                        }
+                        // Notify Tess to trigger email confirmation smart screen
+                        if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
+                            window.mainWidget.sendMessage("Your confirmation has been sent");
+                        }
+                        // Close overlay
+                        var bd = document.getElementById("mortgage-calc-backdrop");
+                        if (bd) bd.remove();
+                        window._collectingContact = false;
+                        console.log("✅ Contact collected — name:", name, "email:", email, "phone:", phone);
+                    };
+                }
+            }, 100);
         };
         body.appendChild(ctaBtn);
         var disc = document.createElement("div");
         disc.style.cssText = "text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem;margin-top:8px;";
         disc.textContent = "Results are estimates. Actual qualification depends on full credit review.";
         body.appendChild(disc);
+        // Hidden rate input — uses current market rate, not shown to user
+        var hiddenRate = document.createElement("input");
+        hiddenRate.type = "hidden"; hiddenRate.id = "mc-rate"; hiddenRate.value = "7.25";
+        body.appendChild(hiddenRate);
         ov.appendChild(body); backdrop.appendChild(ov); document.body.appendChild(backdrop);
         window.calcMortgage();
     };
@@ -726,18 +838,16 @@
                 if (el) { el.value = Math.round(num); window.calcMortgage(); }
                 return true;
             }
-        } else if (fieldName === "interestRate") {
-            var lower3 = spokenValue.toLowerCase();
-            // Handle "current rate", "market rate", "lowest rate", "use that" — keep default
-            if (lower3.includes("current") || lower3.includes("market") || lower3.includes("lowest") || lower3.includes("use that") || lower3.includes("whatever")) {
-                console.log("🏠 Using default interest rate");
-                window.calcMortgage(); // recalculate with existing rate
-                return true;
-            }
-            var num = window.parseSpokenNumber(spokenValue);
-            if (num && num < 30) {
-                var el = document.getElementById("mc-rate");
-                if (el) { el.value = num.toFixed(2); window.calcMortgage(); }
+        } else if (fieldName === "loanType") {
+            var lt = spokenValue.toLowerCase();
+            var sel3 = document.getElementById("mc-loan-type");
+            if (sel3) {
+                if (lt.includes("va") || lt.includes("veteran") || lt.includes("military")) sel3.value = "va";
+                else if (lt.includes("fha")) sel3.value = "fha";
+                else if (lt.includes("jumbo")) sel3.value = "jumbo";
+                else if (lt.includes("usda") || lt.includes("rural")) sel3.value = "usda";
+                else sel3.value = "conventional";
+                window.calcMortgage();
                 return true;
             }
         }
@@ -746,7 +856,9 @@
 
     window.calcMortgage = function() {
         var income=parseFloat(document.getElementById("mc-income")?.value)||0;
-        var down=parseFloat(document.getElementById("mc-down")?.value)||0;
+        var downPct=parseFloat(document.getElementById("mc-down-pct")?.value)||0;
+        var loanTypeEl=document.getElementById("mc-loan-type");
+        var loanType=loanTypeEl?loanTypeEl.value:"conventional";
         var debt=parseFloat(document.getElementById("mc-debt")?.value)||0;
         var creditAdj=parseFloat(document.getElementById("mc-credit")?.value)||0;
         var term=parseInt(document.getElementById("mc-term")?.value)||30;
@@ -755,11 +867,15 @@
         var mr=rate/100/12,n=term*12,gm=income/12;
         // Back-end DTI: max total debt (including new mortgage) = 43% of gross monthly
         // Front-end DTI: max housing payment = 28% of gross monthly
+        // Calculate dollar down from % of estimated home price
+        // Use 3.5x income as rough home price estimate for initial calc
+        var estHomeForDown = income * 3.5;
+        var downDollar = estHomeForDown * (downPct / 100);
         var maxHousingPayment = (gm * 0.43) - debt; // remaining room after existing debt
         if (maxHousingPayment < gm * 0.1) maxHousingPayment = gm * 0.1; // floor
         var mp = Math.min(maxHousingPayment, gm * 0.28); // front-end cap
         var maxLoan=mr>0?mp*(1-Math.pow(1+mr,-n))/mr:mp*n;
-        var maxHome=maxLoan+down;
+        var maxHome=maxLoan+downDollar;
         var pmt=mr>0?maxLoan*(mr*Math.pow(1+mr,n))/(Math.pow(1+mr,n)-1):maxLoan/n;
         var dti=gm>0?(((pmt+debt)/gm)*100).toFixed(1):0;
         var fmt=function(v){return "$"+Math.round(v).toLocaleString();};
