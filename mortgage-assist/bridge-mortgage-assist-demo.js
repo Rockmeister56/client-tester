@@ -366,18 +366,27 @@
             }
             
             if (this.currentField) {
-                console.log("🎯 Expecting answer for:", this.currentField);
-                // Check if there's a pending heard value waiting to populate
-                if (window._pendingHeardValue && window._calcModeActive && typeof window.populateCalcField === "function") {
-                    console.log("🏠 Applying pending heard value:", this.currentField, "=", window._pendingHeardValue);
-                    var applied = window.populateCalcField(this.currentField, window._pendingHeardValue);
-                    if (applied) {
-                        if (this.answers) this.answers[this.currentField] = window._pendingHeardValue;
-                        this.currentField = null;
-                        this.pendingValue = null;
-                        console.log("✅ Pending value applied successfully");
+                // Don't re-detect a field we just populated
+                if (this.currentField === window._lastPopulatedField) {
+                    console.log("🚫 Skipping already-populated field:", this.currentField);
+                    this.currentField = null;
+                    window._lastCalcField = null;
+                } else {
+                    console.log("🎯 Expecting answer for:", this.currentField);
+                    // Check if there's a pending heard value waiting to populate
+                    if (window._pendingHeardValue && window._calcModeActive && typeof window.populateCalcField === "function") {
+                        console.log("🏠 Applying pending heard value:", this.currentField, "=", window._pendingHeardValue);
+                        var applied = window.populateCalcField(this.currentField, window._pendingHeardValue);
+                        if (applied) {
+                            console.log("✅ Pending value applied successfully");
+                            if (this.answers) this.answers[this.currentField] = window._pendingHeardValue;
+                            window._lastPopulatedField = this.currentField;
+                            this.currentField = null;
+                            this.pendingValue = null;
+                            window._lastCalcField = null;
+                        }
+                        window._pendingHeardValue = null;
                     }
-                    window._pendingHeardValue = null;
                 }
             }
         }
@@ -506,6 +515,7 @@
         // 🏠 Activate calculator capture mode immediately
         window._calcModeActive = true;
         window._lastCalcField = null;
+        window._lastPopulatedField = null;
         window._pendingHeardValue = null;
         console.log("🏠 Calculator opened — _calcModeActive = true");
         // Full-screen backdrop with blur
@@ -1305,6 +1315,8 @@
                                             }
                                             window.preQualController.currentField = null;
                                             window.preQualController.pendingValue = null;
+                                            // Keep _lastCalcField until next question sets a new one
+                                            window._lastPopulatedField = fieldToPopulate;
                                             window._lastCalcField = null;
                                         } else {
                                             console.log("⚠️ populateCalcField returned false — storing as pending");
