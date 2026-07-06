@@ -883,6 +883,22 @@
         var la=document.getElementById("mc-loan");if(la)la.textContent=fmt(maxLoan);
         var de=document.getElementById("mc-dti");if(de){de.textContent=dti+"%";de.style.color=parseFloat(dti)<=28?"#34a853":parseFloat(dti)<=36?"#f8c400":"#f44336";}
         var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\U0001f4cb Higher DTI \u2014 let's talk through your options.";
+
+        // Save results so "Send My Results" email actually includes real calculator data
+        var creditLabels = {"0.5":"Excellent (760+)","0.25":"Good (700-759)","0":"Fair (640-699)","-0.5":"Poor (580-639)"};
+        window._calcResults = {
+            income: income ? "$"+Math.round(income).toLocaleString() : "Not provided",
+            debt: debt ? "$"+Math.round(debt).toLocaleString()+"/mo" : "$0/mo",
+            down: downPct ? downPct+"%" : "Not provided",
+            credit: creditLabels[String(creditAdj)] || "Not provided",
+            term: term+" Years",
+            rate: rate ? rate.toFixed(2)+"%" : "Not provided",
+            homePrice: hp ? hp.textContent : "Not provided",
+            monthly: mp2 ? mp2.textContent : "Not provided",
+            loanAmount: la ? la.textContent : "Not provided",
+            dti: de ? de.textContent : "Not provided",
+            verdict: ve ? ve.textContent : ""
+        };
     };
 
     // =========================================
