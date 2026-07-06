@@ -780,25 +780,28 @@
             }
         } else if (fieldName === "downPayment") {
             var lower2 = spokenValue.toLowerCase();
-            // Handle percentage — need home price to calculate dollar amount
+            var el = document.getElementById("mc-down-pct");
+            if (!el) return false;
+            // Handle percentage — write directly
             if (lower2.includes("percent") || lower2.includes("%")) {
                 var pct = window.parseSpokenNumber(spokenValue);
-                if (pct) {
-                    // Get current home price or estimate from income
-                    var incomeEl = document.getElementById("mc-income");
-                    var income = incomeEl ? parseFloat(incomeEl.value) || 85000 : 85000;
-                    var estHome = income * 3.5; // rough 3.5x income estimate
-                    var dollarDown = Math.round(estHome * pct / 100);
-                    var el = document.getElementById("mc-down");
-                    if (el) { el.value = dollarDown; window.calcMortgage(); }
-                    console.log("🏠 Down payment " + pct + "% = $" + dollarDown);
+                if (pct !== null) {
+                    el.value = Math.round(pct);
+                    window.calcMortgage();
+                    console.log("🏠 Down payment set directly: " + pct + "%");
                     return true;
                 }
             }
+            // Handle dollar amount — convert to % of estimated home price
             var num = window.parseSpokenNumber(spokenValue);
-            if (num) {
-                var el = document.getElementById("mc-down");
-                if (el) { el.value = Math.round(num); window.calcMortgage(); }
+            if (num !== null) {
+                var incomeEl = document.getElementById("mc-income");
+                var income = incomeEl ? parseFloat(incomeEl.value) || 85000 : 85000;
+                var estHome = income * 3.5; // rough 3.5x income estimate
+                var pctFromDollars = estHome > 0 ? (num / estHome) * 100 : 0;
+                el.value = Math.round(pctFromDollars);
+                window.calcMortgage();
+                console.log("🏠 Down payment $" + num + " ≈ " + Math.round(pctFromDollars) + "%");
                 return true;
             }
         } else if (fieldName === "creditScore") {
