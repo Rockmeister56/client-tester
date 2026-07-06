@@ -680,6 +680,7 @@
                         }
                         var calcData = window._calcResults || {};
                         if (typeof emailjs !== "undefined") {
+                            // ===== EMAIL 1: TO THE PROSPECT (the person using the calculator) =====
                             emailjs.send("service_b9bppgb", "template_8kx812d", {
                                 to_email:             email,
                                 full_name:            name,
@@ -699,7 +700,20 @@
                                 special_requests:     "None"
                             })
                             .then(function() { console.log("✅ Results email sent to:", email); })
-                            .catch(function(e) { console.error("❌ Email error:", e); });
+                            .catch(function(e) { console.error("❌ Prospect email error:", e); });
+
+                            // ===== EMAIL 2: TO THE CLIENT/LOAN OFFICER (the lead) =====
+                            var leadClientEmail = window.BotemiaConfig?.modules?.emailConfig?.loanOfficerEmail || window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+                            emailjs.send("service_b9bppgb", "template_uix9cyx", {
+                                to_email:      leadClientEmail,
+                                full_name:     name,
+                                email:         email,
+                                phone:         phone || "Not provided",
+                                message:       "New home loan pre-qualification lead from the mortgage calculator.",
+                                submitted_at:  new Date().toLocaleString()
+                            })
+                            .then(function() { console.log("✅ Lead notification sent to client:", leadClientEmail); })
+                            .catch(function(e) { console.error("❌ Client lead email error:", e); });
                         }
                         // Notify Tess to trigger email confirmation smart screen
                         if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
@@ -882,7 +896,7 @@
         var mp2=document.getElementById("mc-monthly");if(mp2)mp2.textContent=fmt(pmt)+"/mo";
         var la=document.getElementById("mc-loan");if(la)la.textContent=fmt(maxLoan);
         var de=document.getElementById("mc-dti");if(de){de.textContent=dti+"%";de.style.color=parseFloat(dti)<=28?"#34a853":parseFloat(dti)<=36?"#f8c400":"#f44336";}
-        var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\U0001f4cb Higher DTI \u2014 let's talk through your options.";
+        var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\ud83d\udccb Higher DTI \u2014 let's talk through your options.";
 
         // Save results so "Send My Results" email actually includes real calculator data
         var creditLabels = {"0.5":"Excellent (760+)","0.25":"Good (700-759)","0":"Fair (640-699)","-0.5":"Poor (580-639)"};
