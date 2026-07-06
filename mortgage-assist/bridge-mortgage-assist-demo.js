@@ -1757,6 +1757,12 @@
                         if (calcMatchedN) {
                             console.log("🏠 Mortgage Calculator trigger FIRED (normal mode)!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
+                            // Tess sometimes bundles the trigger phrase AND the first question into one message
+                            // (e.g. "...launching the calculator now. First, what is your annual income?").
+                            // Register that field immediately so it isn't silently skipped.
+                            if (window.preQualController && typeof window.preQualController.detectFieldFromQuestion === "function") {
+                                window.preQualController.detectFieldFromQuestion(tessText);
+                            }
                         }
                     }
                 });
