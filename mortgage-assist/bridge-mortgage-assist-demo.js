@@ -27,7 +27,7 @@
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me bring up the home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"i've pulled up our mortgage calculator","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
@@ -358,8 +358,8 @@
                 else { var ov = document.getElementById("mortgage-calc-overlay"); if(ov) ov.remove(); }
             }
             
-                        // Capture "I heard X" patterns from Tess (no longer requires "Is that correct" — KB wording varies)
-                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
+                        // Capture "I heard X. Is that correct?" patterns from Tess
+                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
@@ -780,28 +780,25 @@
             }
         } else if (fieldName === "downPayment") {
             var lower2 = spokenValue.toLowerCase();
-            var el = document.getElementById("mc-down-pct");
-            if (!el) return false;
-            // Handle percentage — write directly
+            // Handle percentage — need home price to calculate dollar amount
             if (lower2.includes("percent") || lower2.includes("%")) {
                 var pct = window.parseSpokenNumber(spokenValue);
-                if (pct !== null) {
-                    el.value = Math.round(pct);
-                    window.calcMortgage();
-                    console.log("🏠 Down payment set directly: " + pct + "%");
+                if (pct) {
+                    // Get current home price or estimate from income
+                    var incomeEl = document.getElementById("mc-income");
+                    var income = incomeEl ? parseFloat(incomeEl.value) || 85000 : 85000;
+                    var estHome = income * 3.5; // rough 3.5x income estimate
+                    var dollarDown = Math.round(estHome * pct / 100);
+                    var el = document.getElementById("mc-down");
+                    if (el) { el.value = dollarDown; window.calcMortgage(); }
+                    console.log("🏠 Down payment " + pct + "% = $" + dollarDown);
                     return true;
                 }
             }
-            // Handle dollar amount — convert to % of estimated home price
             var num = window.parseSpokenNumber(spokenValue);
-            if (num !== null) {
-                var incomeEl = document.getElementById("mc-income");
-                var income = incomeEl ? parseFloat(incomeEl.value) || 85000 : 85000;
-                var estHome = income * 3.5; // rough 3.5x income estimate
-                var pctFromDollars = estHome > 0 ? (num / estHome) * 100 : 0;
-                el.value = Math.round(pctFromDollars);
-                window.calcMortgage();
-                console.log("🏠 Down payment $" + num + " ≈ " + Math.round(pctFromDollars) + "%");
+            if (num) {
+                var el = document.getElementById("mc-down");
+                if (el) { el.value = Math.round(num); window.calcMortgage(); }
                 return true;
             }
         } else if (fieldName === "creditScore") {
@@ -883,22 +880,6 @@
         var la=document.getElementById("mc-loan");if(la)la.textContent=fmt(maxLoan);
         var de=document.getElementById("mc-dti");if(de){de.textContent=dti+"%";de.style.color=parseFloat(dti)<=28?"#34a853":parseFloat(dti)<=36?"#f8c400":"#f44336";}
         var ve=document.getElementById("mc-verdict");if(ve)ve.textContent=parseFloat(dti)<=28?"\u2705 Strong profile \u2014 you qualify well!":parseFloat(dti)<=36?"\u26a0\ufe0f Good profile. A larger down payment could help.":"\U0001f4cb Higher DTI \u2014 let's talk through your options.";
-
-        // Save results so "Send My Results" email actually includes real calculator data
-        var creditLabels = {"0.5":"Excellent (760+)","0.25":"Good (700-759)","0":"Fair (640-699)","-0.5":"Poor (580-639)"};
-        window._calcResults = {
-            income: income ? "$"+Math.round(income).toLocaleString() : "Not provided",
-            debt: debt ? "$"+Math.round(debt).toLocaleString()+"/mo" : "$0/mo",
-            down: downPct ? downPct+"%" : "Not provided",
-            credit: creditLabels[String(creditAdj)] || "Not provided",
-            term: term+" Years",
-            rate: rate ? rate.toFixed(2)+"%" : "Not provided",
-            homePrice: hp ? hp.textContent : "Not provided",
-            monthly: mp2 ? mp2.textContent : "Not provided",
-            loanAmount: la ? la.textContent : "Not provided",
-            dti: de ? de.textContent : "Not provided",
-            verdict: ve ? ve.textContent : ""
-        };
     };
 
     // =========================================
@@ -1419,8 +1400,8 @@
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
 
-                        // ===== CAPTURE "I HEARD X" FROM TESS (no longer requires "Is that correct" — KB wording varies) =====
-                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
+                        // ===== CAPTURE "I HEARD X" FROM TESS =====
+                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             var skipWords = ["yes","no","that","it","okay","ok","sure","right","correct","you said"];
@@ -1575,7 +1556,10 @@
 
                             // --- MORTGAGE CALCULATOR TRIGGER (during interview/calc mode) ---
                             var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
-                            var calcPhrasesI = [calcCfgI?.triggerPhrase || ""];
+                            var calcPhrasesI = [
+                                "launching your mortgage calculator now",
+                                "i am launching your mortgage calculator now"
+                            ];
                             var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                             console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
                             if (calcMatchedI) {
@@ -1751,18 +1735,15 @@
 
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
-                        var calcPhrasesN = [calcCfgN?.triggerPhrase || ""];
+                        var calcPhrasesN = [
+                            "launching your mortgage calculator now",
+                            "i am launching your mortgage calculator now"
+                        ];
                         var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                         console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
                         if (calcMatchedN) {
                             console.log("🏠 Mortgage Calculator trigger FIRED (normal mode)!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
-                            // Tess sometimes bundles the trigger phrase AND the first question into one message
-                            // (e.g. "...launching the calculator now. First, what is your annual income?").
-                            // Register that field immediately so it isn't silently skipped.
-                            if (window.preQualController && typeof window.preQualController.detectFieldFromQuestion === "function") {
-                                window.preQualController.detectFieldFromQuestion(tessText);
-                            }
                         }
                     }
                 });
