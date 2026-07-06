@@ -2007,7 +2007,18 @@
 
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
-        
+
+        // Request mic permission IMMEDIATELY on click — tied directly to the user gesture,
+        // not deferred behind setup delays. Once granted here, later micOn() calls reuse
+        // this permission without prompting again.
+        try {
+            const earlyStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            earlyStream.getTracks().forEach(track => track.stop());
+            console.log("🎤 Mic permission granted immediately on click");
+        } catch (e) {
+            console.warn("⚠️ Mic permission request on click failed or was denied:", e);
+        }
+
         const splashWidget = document.getElementById('splash-widget');
         if (splashWidget) {
             splashWidget.innerHTML = '';
@@ -2062,10 +2073,11 @@
                 try {
                     var shadow = window.mainWidget.shadowRoot;
                     if (shadow) {
-                        var v = shadow.querySelector("video");
-                        var a = shadow.querySelector("audio");
-                        if (v) { v.muted = false; v.volume = 1.0; }
-                        if (a) { a.muted = false; a.volume = 1.0; }
+                        var vs = shadow.querySelectorAll("video");
+                        var as = shadow.querySelectorAll("audio");
+                        vs.forEach(function(v) { v.muted = false; v.volume = 1.0; });
+                        as.forEach(function(a) { a.muted = false; a.volume = 1.0; });
+                        console.log("🔊 Force unmuted", vs.length, "video and", as.length, "audio elements");
                     }
                     console.log("🔊 Tess force unmuted via Shadow DOM");
                 } catch(e) { console.warn("Shadow unmute error:", e); }
