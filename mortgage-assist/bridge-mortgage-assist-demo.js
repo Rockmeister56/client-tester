@@ -1558,25 +1558,7 @@
                             var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
                             var calcPhrasesI = [
                                 calcCfgI?.triggerPhrase || "",
-                                "i've pulled up our mortgage calculator",
-                                "i have pulled up our mortgage calculator",
-                                "pulled up our mortgage calculator",
-                                "let's see what you can qualify for",
-                                "let me see what you can qualify for",
-                                "let me show you what you can qualify for",
-                            "let me pull up our mortgage calculator",
-                            "pull up our mortgage calculator",
-                                "show you what you can qualify",
-                                "what you can qualify for",
-                                "run the numbers for you",
-                                "pull up the calculator",
-                                "mortgage calculator",
-                                "let's find out what you",
-                                "see what you qualify",
-                                "calculate what you",
-                                "figure out what you can afford",
-                                "see how much you can afford",
-                                "show you how much you can afford"
+                                "launching your mortgage calculator now"
                             ];
                             var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                             console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
@@ -1755,25 +1737,7 @@
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
                         var calcPhrasesN = [
                             calcCfgN?.triggerPhrase || "",
-                            "i've pulled up our mortgage calculator",
-                            "i have pulled up our mortgage calculator",
-                            "pulled up our mortgage calculator",
-                            "let's see what you can qualify for",
-                            "let me see what you can qualify for",
-                            "let me show you what you can qualify for",
-                                "let me pull up our mortgage calculator",
-                                "pull up our mortgage calculator",
-                            "show you what you can qualify",
-                            "what you can qualify for",
-                            "run the numbers for you",
-                            "pull up the calculator",
-                            "mortgage calculator",
-                            "let's find out what you",
-                            "see what you qualify",
-                            "calculate what you",
-                            "figure out what you can afford",
-                            "see how much you can afford",
-                            "show you how much you can afford"
+                            "launching your mortgage calculator now"
                         ];
                         var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                         console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
