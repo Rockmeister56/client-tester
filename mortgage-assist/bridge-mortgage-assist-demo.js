@@ -680,12 +680,15 @@
                         }
                         var calcData = window._calcResults || {};
                         if (typeof emailjs !== "undefined") {
-                            // ===== EMAIL 1: TO THE PROSPECT (the person using the calculator) =====
-                            emailjs.send("service_b9bppgb", "template_8kx812d", {
+                            // ===== DEMO MODE: send the CLIENT/lead-notification email to whatever address
+                            // the demo viewer typed in, so they experience exactly what they'd receive as
+                            // a business owner when one of their own prospects submits the calculator. =====
+                            var leadEmailParams = {
                                 to_email:             email,
                                 full_name:            name,
                                 email:                email,
                                 phone:                phone || "Not provided",
+                                message:              "New home loan pre-qualification lead from the mortgage calculator.",
                                 submitted_at:         new Date().toLocaleString(),
                                 calc_annual_income:   calcData.income     || "Not provided",
                                 calc_down_payment:    calcData.down       || "Not provided",
@@ -696,34 +699,55 @@
                                 calc_monthly_payment: calcData.monthly    || "Not provided",
                                 calc_loan_amount:     calcData.loanAmount || "Not provided",
                                 calc_dti:             calcData.dti        || "Not provided",
-                                calc_verdict:         calcData.verdict    || "",
-                                special_requests:     "None"
-                            })
-                            .then(function() { console.log("✅ Results email sent to:", email); })
-                            .catch(function(e) { console.error("❌ Prospect email error:", e); });
+                                calc_verdict:         calcData.verdict    || ""
+                            };
+                            emailjs.send("service_b9bppgb", "template_uix9cyx", leadEmailParams)
+                                .then(function() { console.log("✅ [DEMO] Lead notification email sent to:", email); })
+                                .catch(function(e) { console.error("❌ [DEMO] Lead email error:", e); });
 
-                            // ===== EMAIL 2: TO THE CLIENT/LOAN OFFICER (the lead) =====
-                            var leadClientEmail = window.BotemiaConfig?.modules?.emailConfig?.loanOfficerEmail || window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
-                            emailjs.send("service_b9bppgb", "template_uix9cyx", {
-                                to_email:      leadClientEmail,
-                                full_name:     name,
-                                email:         email,
-                                phone:         phone || "Not provided",
-                                message:       "New home loan pre-qualification lead from the mortgage calculator.",
-                                submitted_at:  new Date().toLocaleString()
-                            })
-                            .then(function() { console.log("✅ Lead notification sent to client:", leadClientEmail); })
-                            .catch(function(e) { console.error("❌ Client lead email error:", e); });
+                            // ===== DEMO COPY: same email, also sent to you for verification =====
+                            var demoCopyEmail = window.BotemiaConfig?.modules?.emailConfig?.loanOfficerEmail || "bizboost.expert@gmail.com";
+                            var demoCopyParams = Object.assign({}, leadEmailParams, { to_email: demoCopyEmail });
+                            emailjs.send("service_b9bppgb", "template_uix9cyx", demoCopyParams)
+                                .then(function() { console.log("✅ [DEMO] Copy of lead email sent to:", demoCopyEmail); })
+                                .catch(function(e) { console.error("❌ [DEMO] Copy email error:", e); });
                         }
                         // Notify Tess to trigger email confirmation smart screen
                         if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                             window.mainWidget.sendMessage("Your confirmation has been sent");
                         }
-                        // Close overlay
-                        var bd = document.getElementById("mortgage-calc-backdrop");
-                        if (bd) bd.remove();
                         window._collectingContact = false;
                         console.log("✅ Contact collected — name:", name, "email:", email, "phone:", phone);
+
+                        // ===== DEMO: show a confirmation screen with a link to the prospect-side email mockup =====
+                        var mockupParams = new URLSearchParams({
+                            name: name,
+                            email: email,
+                            homePrice: calcData.homePrice || "",
+                            monthly: calcData.monthly || "",
+                            loanAmount: calcData.loanAmount || "",
+                            dti: calcData.dti || "",
+                            verdict: calcData.verdict || ""
+                        }).toString();
+                        var mockupUrl = "https://mobilewise.netlify.app/prospect-example-email?" + mockupParams;
+                        body.innerHTML = [
+                            "<div style='padding:20px 4px;text-align:center;'>",
+                            "<div style='font-size:2rem;margin-bottom:6px;'>✅</div>",
+                            "<div style='color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:8px;'>Lead notification sent!</div>",
+                            "<div style='color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;line-height:1.5;'>That's exactly what you'd receive as a business owner whenever one of your own website prospects completes this calculator.</div>",
+                            "<a href='" + mockupUrl + "' target='_blank' rel='noopener' style='display:inline-block;width:100%;box-sizing:border-box;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border-radius:12px;font-size:0.95rem;font-weight:700;text-decoration:none;margin-bottom:10px;'>📧 See what your prospect receives →</a>",
+                            "<button id='demo-close-btn' style='width:100%;padding:13px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-size:0.9rem;font-weight:600;cursor:pointer;'>Close</button>",
+                            "</div>"
+                        ].join("");
+                        setTimeout(function() {
+                            var closeBtn = document.getElementById("demo-close-btn");
+                            if (closeBtn) {
+                                closeBtn.onclick = function() {
+                                    var bd = document.getElementById("mortgage-calc-backdrop");
+                                    if (bd) bd.remove();
+                                };
+                            }
+                        }, 50);
                     };
                 }
             }, 100);
