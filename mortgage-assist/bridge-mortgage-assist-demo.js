@@ -1557,8 +1557,8 @@
                             // --- MORTGAGE CALCULATOR TRIGGER (during interview/calc mode) ---
                             var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
                             var calcPhrasesI = [
-                                calcCfgI?.triggerPhrase || "",
-                                "launching your mortgage calculator now"
+                                "launching your mortgage calculator now",
+                                "i am launching your mortgage calculator now"
                             ];
                             var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                             console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
@@ -1736,8 +1736,8 @@
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
                         var calcPhrasesN = [
-                            calcCfgN?.triggerPhrase || "",
-                            "launching your mortgage calculator now"
+                            "launching your mortgage calculator now",
+                            "i am launching your mortgage calculator now"
                         ];
                         var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                         console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
