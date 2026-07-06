@@ -24,7 +24,7 @@
             },
             "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a loan expert on the phone"]},
             "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[]},
             "mortgageCalc": {"enabled":true,"triggerPhrase":"i've pulled up our mortgage calculator","defaultRate":7.25,"defaultTerm":30},
@@ -560,7 +560,7 @@
         var backdrop = document.createElement("div");
         backdrop.id = "mortgage-calc-backdrop";
         backdrop.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999997;display:flex;align-items:center;justify-content:center;";
-        backdrop.onclick = function(e) { if(e.target===backdrop) backdrop.remove(); };
+        backdrop.onclick = function(e) { /* Disabled — calculator stays open until user clicks Send My Results */ };
         var ov = document.createElement("div");
         ov.id = "mortgage-calc-overlay";
         ov.style.cssText = "background:rgba(10,15,30,0.98);display:flex;flex-direction:column;border-radius:20px;width:380px;max-width:95vw;max-height:90vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;font-family:sans-serif;";
@@ -997,7 +997,9 @@
                     // --- SMART SCREEN: Actually launch it ---
                     if (mod === "smart_screen") {
                         var images = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                        var calcOpen = !!document.getElementById("mortgage-calc-backdrop");
                         for (var i = 0; i < images.length; i++) {
+                            if (calcOpen) break; // Don't fire smart screens while calculator is open
                             var imgTriggers = images[i].triggerMatch || [];
                             for (var j = 0; j < imgTriggers.length; j++) {
                                 if (imgTriggers[j] && phrase.indexOf(imgTriggers[j].toLowerCase()) !== -1) {
@@ -1467,8 +1469,9 @@
                             
                             // --- SMART SCREEN TRIGGER (during interview) ---
                             var smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
+                            var calcOpenI = !!document.getElementById("mortgage-calc-backdrop");
                             for (var si = 0; si < smartImages.length; si++) {
-                                if ((smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                if (!calcOpenI && (smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                     console.log("📸 Smart Screen matched during interview:", smartImages[si].name);
                                     var overlay = document.createElement("div");
                                     overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
@@ -1561,6 +1564,8 @@
                                 "let's see what you can qualify for",
                                 "let me see what you can qualify for",
                                 "let me show you what you can qualify for",
+                            "let me pull up our mortgage calculator",
+                            "pull up our mortgage calculator",
                                 "show you what you can qualify",
                                 "what you can qualify for",
                                 "run the numbers for you",
@@ -1756,6 +1761,8 @@
                             "let's see what you can qualify for",
                             "let me see what you can qualify for",
                             "let me show you what you can qualify for",
+                                "let me pull up our mortgage calculator",
+                                "pull up our mortgage calculator",
                             "show you what you can qualify",
                             "what you can qualify for",
                             "run the numbers for you",
