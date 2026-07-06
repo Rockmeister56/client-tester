@@ -358,8 +358,8 @@
                 else { var ov = document.getElementById("mortgage-calc-overlay"); if(ov) ov.remove(); }
             }
             
-                        // Capture "I heard X. Is that correct?" patterns from Tess
-                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
+                        // Capture "I heard X" patterns from Tess (no longer requires "Is that correct" — KB wording varies)
+                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
@@ -1400,8 +1400,8 @@
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
 
-                        // ===== CAPTURE "I HEARD X" FROM TESS =====
-                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?\.?\s*Is that correct/i);
+                        // ===== CAPTURE "I HEARD X" FROM TESS (no longer requires "Is that correct" — KB wording varies) =====
+                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
                             var skipWords = ["yes","no","that","it","okay","ok","sure","right","correct","you said"];
@@ -1557,8 +1557,7 @@
                             // --- MORTGAGE CALCULATOR TRIGGER (during interview/calc mode) ---
                             var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
                             var calcPhrasesI = [
-                                "launching your mortgage calculator now",
-                                "i am launching your mortgage calculator now"
+                                "let me bring up the home loan pre qualification calculator"
                             ];
                             var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                             console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
@@ -1736,8 +1735,7 @@
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
                         var calcPhrasesN = [
-                            "launching your mortgage calculator now",
-                            "i am launching your mortgage calculator now"
+                            "let me bring up the home loan pre qualification calculator"
                         ];
                         var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
                         console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
