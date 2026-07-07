@@ -110,7 +110,7 @@
             display: flex; align-items: center; justify-content: center;
             z-index: 999999;
         }
-        #tess-preloader .spinner {
+        #tess-preloader .spinner, #splash-preloader .spinner {
             width: 45%; height: 45%; border-radius: 50%;
             border: 4px solid rgba(248,196,0,0.2);
             border-top: 4px solid #f8c400; border-right: 4px solid #f8c400;
@@ -2060,7 +2060,7 @@
                 spl.style.opacity = '0';
                 setTimeout(() => spl.remove(), 400);
             }
-        }, 10000);
+        }, 2000);
 
         // Add ticker tape if keywords exist
         const tickerKeywords = config.tickerKeywords;
