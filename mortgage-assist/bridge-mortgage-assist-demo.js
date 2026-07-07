@@ -132,19 +132,29 @@
             position: absolute !important;
             top: 50% !important;
             left: 50% !important;
-            /* Remove the + 5px! She was shifted out of frame */
-            transform: translate(-50%, -50%) !important;
+            /* Added translateX(5px) here to shift right */
+            transform: translate(-50%, -50%) translateX(5px) !important;
             width: 200px !important;
             height: 300px !important;
             max-width: none !important;
             max-height: none !important;
-            /* THIS is the magic bullet - it forces the Shadow DOM video into a perfect 70px radius circle */
-            clip-path: circle(70px at 50% 30%) !important;
-            -webkit-clip-path: circle(70px at 50% 30%) !important;
+            /* Changed 30% to 38% here to bring the crop down */
+            clip-path: circle(70px at 50% 38%) !important;
+            -webkit-clip-path: circle(70px at 50% 38%) !important;
         }
-        @media (max-width: 480px) {
+       @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
-            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 0 !important; left: 50% !important; transform: translateX(-50%) !important; }
+            #main-widget-circle-wrap lemon-slice-widget { 
+                width: 160px !important; 
+                height: 240px !important; 
+                top: 50% !important; 
+                left: 50% !important; 
+                /* Kept the 5px right shift for mobile too */
+                transform: translate(-50%, -50%) translateX(5px) !important;
+                /* Added the clip-path for mobile so it doesn't break when you test on your phone */
+                clip-path: circle(55px at 50% 38%) !important;
+                -webkit-clip-path: circle(55px at 50% 38%) !important;
+            }
         }
     `;
     document.head.appendChild(style);
