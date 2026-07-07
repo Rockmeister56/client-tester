@@ -111,41 +111,35 @@
             width: 150px; height: 150px;
             z-index: 999998;
         }
-                #main-widget-circle-wrap {
+        #main-widget-circle-wrap {
             position: absolute; inset: 0;
-            border-radius: 50%; /* <--- MAKE SURE THIS LINE IS HERE */
-            overflow: hidden;
+            border-radius: 50%; overflow: hidden;
             background: #000;
             border: 3px solid rgba(248,196,0,0.85);
             box-shadow: 0 0 0 6px rgba(248,196,0,0.12), 0 10px 30px rgba(0,0,0,0.5);
             display: flex; align-items: center; justify-content: center;
         }
-
-        /* TESS LOADER OVERLAY */
-        #tess-loader-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 50%;
-            background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 999999;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
+        #main-widget-close-btn {
+            position: absolute; top: -6px; right: -6px;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: #0a1a2f; border: 2px solid #f8c400; color: #f8c400;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: bold; cursor: pointer;
+            z-index: 1000000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-        #tess-loader-overlay.hidden { opacity: 0; pointer-events: none; }
-        
-        .tess-loader-ring {
-            width: 40px; height: 40px;
-            border: 3px solid rgba(248, 196, 0, 0.2);
-            border-top: 3px solid #f8c400;
-            border-radius: 50%;
-            animation: tess-spin 1s linear infinite;
-            margin-bottom: 8px;
+          #main-widget-circle-wrap lemon-slice-widget {
+            position: absolute !important;
+            /* Changed from 0px to 5px to drop her down */
+            top: 5px !important;
+            left: -15px !important;
+            transform: translateX(5px) !important;
+            width: 200px !important;
+            height: 300px !important;
+            max-width: none !important;
+            max-height: none !important;
+            zoom: 0.95;
         }
-        .tess-loader-text {
-            color: rgba(255,255,255,0.8); font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
-        }
-        @keyframes tess-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
@@ -2320,44 +2314,4 @@
         };
     };
     console.log("🩺 Bridge health check available: window.bridgeHealthCheck()");
-    // --- INJECT TESS LOADER INTO CIRCLE ---
-    // We use a small delay just to 100% guarantee the DOM is ready
-    setTimeout(function() {
-        var circleWrap = document.getElementById("main-widget-circle-wrap");
-        if (circleWrap) {
-            var loaderHTML = '<div id="tess-loader-overlay"><div class="tess-loader-ring"></div><div class="tess-loader-text">CONNECTING...</div></div>';
-            circleWrap.insertAdjacentHTML('afterbegin', loaderHTML);
-
-            // Checker to hide loader once Tess is actually playing
-            var tessLoaderInterval = setInterval(function() {
-                var widget = circleWrap.querySelector('lemon-slice-widget');
-                if (widget && widget.shadowRoot) {
-                    var video = widget.shadowRoot.querySelector('video');
-                    var canvas = widget.shadowRoot.querySelector('canvas');
-                    
-                    // If a video is playing or a canvas is drawing, she's ready!
-                    if ((video && video.readyState >= 2) || canvas) {
-                        clearInterval(tessLoaderInterval);
-                        var loader = document.getElementById("tess-loader-overlay");
-                        if (loader) {
-                            loader.classList.add("hidden");
-                            setTimeout(function() { loader.remove(); }, 600);
-                        }
-                        console.log("✅ Tess video detected — Loader hidden.");
-                    }
-                }
-            }, 250); 
-
-            // Failsafe: Force remove loader after 8 seconds even if video is slow
-            setTimeout(function() {
-                clearInterval(tessLoaderInterval);
-                var loader = document.getElementById("tess-loader-overlay");
-                if (loader) {
-                    loader.classList.add("hidden");
-                    setTimeout(function() { loader.remove(); }, 600);
-                }
-            }, 8000);
-        }
-    }, 500); // waits half a second after page load to inject
-
 })();
