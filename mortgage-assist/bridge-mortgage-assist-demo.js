@@ -128,19 +128,19 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-                   #main-widget-circle-wrap lemon-slice-widget {
+                          #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
-            /* Raw pixel positioning: no % math to conflict! */
-            top: 10px !important;
+            /* Moved back to 0px so it sits back inside the default circle */
+            top: 0px !important;
             left: -15px !important;
-            /* We only use translate for the 5px right nudge now */
             transform: translateX(5px) !important;
             width: 200px !important;
             height: 300px !important;
             max-width: none !important;
             max-height: none !important;
-            clip-path: circle(70px at 50% 38%) !important;
-            -webkit-clip-path: circle(70px at 50% 38%) !important;
+            /* Changed 38% to 48% to shift her head DOWN inside the video frame */
+            clip-path: circle(70px at 50% 48%) !important;
+            -webkit-clip-path: circle(70px at 50% 48%) !important;
         }
          @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
