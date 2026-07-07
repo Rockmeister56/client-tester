@@ -128,18 +128,19 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-                    #main-widget-circle-wrap {
-            position: fixed !important;
-            bottom: 20px; right: 20px;
-            /* ADD THIS LINE TO DROP THE BLACK MASK DOWN */
-            margin-top: 10px; 
-            width: 150px; height: 150px;
-            border-radius: 50%; overflow: hidden;
-            background: #000;
-            border: 3px solid rgba(248,196,0,0.85);
-            box-shadow: 0 0 0 6px rgba(248,196,0,0.12), 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 999998;
-            display: flex; align-items: center; justify-content: center;
+                   #main-widget-circle-wrap lemon-slice-widget {
+            position: absolute !important;
+            /* Raw pixel positioning: no % math to conflict! */
+            top: 10px !important;
+            left: -15px !important;
+            /* We only use translate for the 5px right nudge now */
+            transform: translateX(5px) !important;
+            width: 200px !important;
+            height: 300px !important;
+            max-width: none !important;
+            max-height: none !important;
+            clip-path: circle(70px at 50% 38%) !important;
+            -webkit-clip-path: circle(70px at 50% 38%) !important;
         }
          @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
