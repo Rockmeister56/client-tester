@@ -2060,7 +2060,7 @@
                 spl.style.opacity = '0';
                 setTimeout(() => spl.remove(), 400);
             }
-        }, 2000);
+        }, 10000);
 
         // Add ticker tape if keywords exist
         const tickerKeywords = config.tickerKeywords;
