@@ -105,6 +105,30 @@
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         .ticker-item { display: inline-block; padding: 0 25px; color: white; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
         .ticker-item i { margin-right: 8px; color: #f8c400; font-size: 12px; filter: drop-shadow(0 0 3px rgba(248,196,0,0.5)); }
+        #main-widget-circle-wrap {
+            position: fixed !important;
+            bottom: 20px; right: 20px;
+            width: 150px; height: 150px;
+            border-radius: 50%; overflow: hidden;
+            background: #000;
+            border: 3px solid rgba(248,196,0,0.85);
+            box-shadow: 0 0 0 6px rgba(248,196,0,0.12), 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 999998;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #main-widget-circle-wrap lemon-slice-widget {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 190px !important;
+            height: 285px !important;
+            max-width: none !important;
+            max-height: none !important;
+        }
+        @media (max-width: 480px) {
+            #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
+            #main-widget-circle-wrap lemon-slice-widget { width: 152px !important; height: 228px !important; }
+        }
     `;
     document.head.appendChild(style);
 
@@ -617,7 +641,7 @@
         var rowDownDebt = document.createElement("div");
         rowDownDebt.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
         rowDownDebt.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
-        rowDownDebt.appendChild(mcField("💳 Monthly Spend","mc-debt","number","",null,false,null));
+        rowDownDebt.appendChild(mcField("💳 Monthly Bills","mc-debt","number","",null,false,null));
         grid.appendChild(rowDownDebt);
 
         var rowLoanCredit = document.createElement("div");
@@ -2054,7 +2078,14 @@
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
                 window.mainWidget.setAttribute('hide-ui', 'true');
-                document.body.appendChild(window.mainWidget);
+                let wrap = document.getElementById('main-widget-circle-wrap');
+                if (!wrap) {
+                    wrap = document.createElement('div');
+                    wrap.id = 'main-widget-circle-wrap';
+                    document.body.appendChild(wrap);
+                }
+                wrap.innerHTML = '';
+                wrap.appendChild(window.mainWidget);
             }
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
