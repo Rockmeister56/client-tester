@@ -23,7 +23,7 @@
                 "triggerPhraseLegacy": "let's get started"
             },
             "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a loan expert on the phone"]},
-            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":""}},
+            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Tess","subtitle":"Your Friendly AI Web Assistant","serviceLine":"Offering 24/7 Customer Service!","presentsText":"Presents:","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"Get Pre-Qualified, Any Lending Questions, Refinance Qualification","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/clients/demo-logo.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy9jbGllbnRzL2RlbW8tbG9nby5qcGciLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzgzMzgzMTY2LCJleHAiOjE4MTQ5MTkxNjZ9._91eAUwxKj3hT5nGr1kWjJpCtRGM1aqyxEB4w0h8nw0"}},
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[]},
@@ -55,46 +55,51 @@
         document.head.appendChild(js);
     })();
 
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Dancing+Script:wght@600;700&display=swap';
+    document.head.appendChild(fontLink);
+
     const style = document.createElement('style');
     style.textContent = `
+        .splash-overlay { display: block !important; background: transparent !important; backdrop-filter: none !important; padding: 0 !important; }
+        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; }
+        .splash-logo-bar { background: #fff; padding: 18px 20px 10px; text-align: center; min-height: 52px; }
+        .splash-logo-bar img { max-width: 78%; height: auto; display: inline-block; }
+        .splash-presents { background: #fff; text-align: center; padding: 2px 0 14px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 1.25rem; color: #1e4a8a; }
+        .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 26px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .splash-navy h1 { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 2.9rem; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.01em; margin: 0; }
+        .splash-navy h1 .sparkle { font-size: 1.95rem; filter: drop-shadow(0 0 6px rgba(248,196,0,0.7)); }
+        .splash-navy h2 { font-family: 'Dancing Script', cursive; color: rgba(255,255,255,0.92); font-size: 1.55rem; font-weight: 600; margin: 2px 0 22px; text-align: center; }
         .splash-avatar-container {
-            width: 220px; height: 384px; margin: 0 auto 25px;
-            border-radius: 20px; overflow: hidden;
+            width: 200px; height: 200px; margin: 0 auto 20px;
+            border-radius: 50%; overflow: hidden;
             background: #000;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 3px solid rgba(248,196,0,0.85);
+            box-shadow: 0 0 0 6px rgba(248,196,0,0.12), 0 20px 40px rgba(0,0,0,0.5);
             display: flex; align-items: center; justify-content: center;
             position: relative;
         }
         .splash-avatar-container lemon-slice-widget {
             position: absolute;
-            top: 50%; left: 45%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 280px !important;
-            height: 400px !important;
+            width: 200px !important;
+            height: 286px !important;
             max-width: none !important;
             max-height: none !important;
-            border-radius: 18px;
         }
-        .splash-card {
-            background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%);
-            border-radius: 48px; padding: 20px 30px 40px 30px;
-            max-width: 475px; width: 90%; text-align: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-            animation: slideUp 0.4s ease;
-        }
-        .splash-card h1 { color: white; font-size: 2.5rem; margin-bottom: 5px; font-weight: 700; }
-        .splash-card h2 { color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
-        .button-group { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .primary-btn, .secondary-btn { padding: 12px 20px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 200px; border: none; transition: all 0.2s; }
+        .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
+        .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
+        .primary-btn, .secondary-btn { padding: 14px 20px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 200px; border: none; transition: all 0.2s; }
         .primary-btn:hover, .secondary-btn:hover { transform: scale(1.02); }
         .ticker-container {
-            position: absolute; bottom: 0; left: 0; right: 0;
+            position: relative; width: calc(100% + 48px); margin: 0 -24px;
             background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(248,196,0,0.2), rgba(0,0,0,0.9));
-            backdrop-filter: blur(2px); color: #f8c400; padding: 6px 0;
+            color: #f8c400; padding: 8px 0;
             overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8); z-index: 10; pointer-events: none;
-            border-top: 2px solid #f8c400; border-bottom: none; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            border-top: 2px solid #f8c400; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
         }
         .ticker-content { display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -1932,39 +1937,37 @@
         overlay.id = 'splashOverlay';
         overlay.style.cssText = `
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center; z-index: 99999;
+            z-index: 99999;
         `;
 
         trackEvent('splash_view');
-        const card = document.createElement('div');
-        card.className = 'splash-card';
-        card.style.background = `radial-gradient(circle at center, ${config.gradientCenter || '#1e4a8a'} 0%, ${config.gradientOuter || '#0a1a2f'} 80%)`;
+        const page = document.createElement('div');
+        page.className = 'splash-page';
 
-        let cardHTML = `
-            <h1>✨ ${config.title || 'Meet Tess!'} ✨</h1>
-            <h2>${config.subtitle || 'Your Personal AI Web Guide'}</h2>
-            <div class="splash-avatar-container" id="splashAvatarContainer"></div>
-            <div class="button-group">
-                <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
-                <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
+        let logoHTML = '';
+        if (config.branding?.logo || config.branding?.name) {
+            logoHTML = `
+            <div class="splash-logo-bar">
+                ${config.branding?.logo ? '<img src="' + config.branding.logo + '" alt="' + (config.branding?.name || 'Client Logo') + '">' : '<span style="color:#333;font-size:20px;font-weight:600;">' + (config.branding?.name || '') + '</span>'}
+            </div>
+            <div class="splash-presents">${config.presentsText || 'Presents:'}</div>
+            `;
+        }
+
+        let pageHTML = logoHTML + `
+            <div class="splash-navy">
+                <h1><span class="sparkle">✨</span>${config.title || 'Tess'}</h1>
+                <h2>${config.subtitle || 'Your Friendly AI Web Assistant'}</h2>
+                <div class="splash-avatar-container" id="splashAvatarContainer"></div>
+                <div class="splash-service-line">${config.serviceLine || 'Offering 24/7 Customer Service!'}</div>
             </div>
         `;
 
-        // Add white footer area with logo - EXACT DIMENSIONS
-        cardHTML += `
-            <div style="position: relative; width: 475px; left: 50%; transform: translateX(-50%); margin-top: 25px; background: white; border-radius: 0 0 48px 48px; padding: 15px 0; margin-bottom: -40px;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; width: 415px; margin: 0 auto;">
-                    ${config.branding?.logo ? '<img src="' + config.branding.logo + '" style="height: 36px; width: auto;">' : ''}
-                    ${config.branding?.name ? '<span style="color: #333; font-size: 18px; font-weight: 500;">' + config.branding.name + '</span>' : ''}
-                </div>
-            </div>
-        `;
-        card.innerHTML = cardHTML;
-
-        overlay.appendChild(card);
+        page.innerHTML = pageHTML;
+        overlay.appendChild(page);
         document.body.appendChild(overlay);
 
+        const navySection = page.querySelector('.splash-navy');
         const container = document.getElementById('splashAvatarContainer');
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
@@ -1973,27 +1976,37 @@
         const tickerKeywords = config.tickerKeywords;
         if (tickerKeywords) {
             const keywords = tickerKeywords.split(',').map(k => k.trim()).filter(k => k);
-            
+
             if (keywords.length > 0) {
                 const tickerContainer = document.createElement('div');
                 tickerContainer.className = 'ticker-container';
-                
+
                 const tickerContent = document.createElement('div');
                 tickerContent.className = 'ticker-content';
-                
+
                 const allKeywords = [...keywords, ...keywords];
-                
+
                 allKeywords.forEach(keyword => {
                     const span = document.createElement('span');
                     span.className = 'ticker-item';
                     span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
                     tickerContent.appendChild(span);
                 });
-                
+
                 tickerContainer.appendChild(tickerContent);
-                container.appendChild(tickerContainer);
+                navySection.appendChild(tickerContainer);
             }
         }
+
+        // Add button group after the ticker
+        const buttonGroup = document.createElement('div');
+        buttonGroup.className = 'button-group';
+        buttonGroup.innerHTML = `
+            <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
+            <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
+        `;
+        navySection.appendChild(buttonGroup);
+
         document.getElementById('activateTessBtn').addEventListener('click', activateTess);
         document.getElementById('justBrowsingBtn').addEventListener('click', justBrowsing);
 
