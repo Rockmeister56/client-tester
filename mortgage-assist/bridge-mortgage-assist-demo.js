@@ -82,7 +82,7 @@
         }
         .splash-avatar-container lemon-slice-widget {
             position: absolute;
-            top: 80%; left: 46%;
+            top: 85%; left: 48%;
             transform: translate(-50%, -50%);
             width: 220px !important;
             height: 329px !important;
