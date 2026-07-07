@@ -118,8 +118,8 @@
         }
         #main-widget-circle-wrap lemon-slice-widget {
             position: absolute;
-            top: 32%; left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0; left: 50%;
+            transform: translateX(-50%);
             width: 180px !important;
             height: 270px !important;
             max-width: none !important;
@@ -127,7 +127,7 @@
         }
         @media (max-width: 480px) {
             #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
-            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 32%; left: 50%; }
+            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 0; left: 50%; transform: translateX(-50%); }
         }
     `;
     document.head.appendChild(style);
@@ -641,7 +641,7 @@
         var rowDownDebt = document.createElement("div");
         rowDownDebt.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
         rowDownDebt.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
-        rowDownDebt.appendChild(mcField("💳 Monthly Bills","mc-debt","number","",null,false,null));
+        rowDownDebt.appendChild(mcField("💳 Monthly Obligations","mc-debt","number","",null,false,null));
         grid.appendChild(rowDownDebt);
 
         var rowLoanCredit = document.createElement("div");
