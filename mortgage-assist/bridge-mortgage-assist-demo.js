@@ -2034,7 +2034,11 @@
             <div class="splash-navy">
                 <h1><span class="sparkle">✨</span>${config.title || 'Tess'}</h1>
                 <h2>${config.subtitle || 'Your Friendly AI Web Assistant'}</h2>
-                <div class="splash-avatar-container" id="splashAvatarContainer"></div>
+                <div class="splash-avatar-container" id="splashAvatarContainer">
+                    <div id="splash-preloader" style="position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
                 <div class="splash-service-line">${config.serviceLine || 'Offering 24/7 Customer Service!'}</div>
             </div>
         `;
@@ -2047,13 +2051,8 @@
         const container = document.getElementById('splashAvatarContainer');
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
+        container.appendChild(document.getElementById('splash-preloader')); // ensure preloader stays on top, last in DOM order
 
-        // Small preloader to hide the ~2s black gap before Tess's video loads
-        const splashPreloader = document.createElement('div');
-        splashPreloader.id = 'splash-preloader';
-        splashPreloader.innerHTML = '<div class="spinner"></div>';
-        splashPreloader.style.cssText = 'position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;';
-        container.appendChild(splashPreloader);
         setTimeout(function() {
             const spl = document.getElementById('splash-preloader');
             if (spl) {
