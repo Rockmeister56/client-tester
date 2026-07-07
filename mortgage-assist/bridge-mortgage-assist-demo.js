@@ -193,42 +193,6 @@
         return widget;
     }
 
-        // --- INJECT TESS LOADER INTO CIRCLE ---
-    var circleWrap = document.getElementById("main-widget-circle-wrap");
-    if (circleWrap) {
-        var loaderHTML = '<div id="tess-loader-overlay"><div class="tess-loader-ring"></div><div class="tess-loader-text">CONNECTING...</div></div>';
-        circleWrap.insertAdjacentHTML('afterbegin', loaderHTML);
-
-        // Checker to hide loader once Tess is actually playing
-        var tessLoaderInterval = setInterval(function() {
-            var widget = circleWrap.querySelector('lemon-slice-widget');
-            if (widget && widget.shadowRoot) {
-                var video = widget.shadowRoot.querySelector('video');
-                var canvas = widget.shadowRoot.querySelector('canvas');
-                
-                if ((video && video.readyState >= 2) || canvas) {
-                    clearInterval(tessLoaderInterval);
-                    var loader = document.getElementById("tess-loader-overlay");
-                    if (loader) {
-                        loader.classList.add("hidden");
-                        setTimeout(function() { loader.remove(); }, 600);
-                    }
-                    console.log("✅ Tess video detected — Loader hidden.");
-                }
-            }
-        }, 250); 
-
-        // Failsafe: Force remove loader after 8 seconds
-        setTimeout(function() {
-            clearInterval(tessLoaderInterval);
-            var loader = document.getElementById("tess-loader-overlay");
-            if (loader) {
-                loader.classList.add("hidden");
-                setTimeout(function() { loader.remove(); }, 600);
-            }
-        }, 8000);
-    }
-
     // ===== INTERVIEW LISTENER (QUESTIONS FROM LEMONSLICE) =====
     window.interviewListener = {
         isActive: false,
@@ -2359,4 +2323,44 @@
         };
     };
     console.log("🩺 Bridge health check available: window.bridgeHealthCheck()");
+    // --- INJECT TESS LOADER INTO CIRCLE ---
+    // We use a small delay just to 100% guarantee the DOM is ready
+    setTimeout(function() {
+        var circleWrap = document.getElementById("main-widget-circle-wrap");
+        if (circleWrap) {
+            var loaderHTML = '<div id="tess-loader-overlay"><div class="tess-loader-ring"></div><div class="tess-loader-text">CONNECTING...</div></div>';
+            circleWrap.insertAdjacentHTML('afterbegin', loaderHTML);
+
+            // Checker to hide loader once Tess is actually playing
+            var tessLoaderInterval = setInterval(function() {
+                var widget = circleWrap.querySelector('lemon-slice-widget');
+                if (widget && widget.shadowRoot) {
+                    var video = widget.shadowRoot.querySelector('video');
+                    var canvas = widget.shadowRoot.querySelector('canvas');
+                    
+                    // If a video is playing or a canvas is drawing, she's ready!
+                    if ((video && video.readyState >= 2) || canvas) {
+                        clearInterval(tessLoaderInterval);
+                        var loader = document.getElementById("tess-loader-overlay");
+                        if (loader) {
+                            loader.classList.add("hidden");
+                            setTimeout(function() { loader.remove(); }, 600);
+                        }
+                        console.log("✅ Tess video detected — Loader hidden.");
+                    }
+                }
+            }, 250); 
+
+            // Failsafe: Force remove loader after 8 seconds even if video is slow
+            setTimeout(function() {
+                clearInterval(tessLoaderInterval);
+                var loader = document.getElementById("tess-loader-overlay");
+                if (loader) {
+                    loader.classList.add("hidden");
+                    setTimeout(function() { loader.remove(); }, 600);
+                }
+            }, 8000);
+        }
+    }, 500); // waits half a second after page load to inject
+
 })();
