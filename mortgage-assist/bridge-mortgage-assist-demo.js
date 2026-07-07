@@ -117,9 +117,9 @@
             display: flex; align-items: center; justify-content: center;
         }
         #main-widget-circle-wrap lemon-slice-widget {
-            position: absolute;
-            top: -34px; left: 50%;
-            transform: translateX(calc(-50% + 5px));
+            position: absolute !important;
+            top: -34px !important; left: 50% !important;
+            transform: translateX(calc(-50% + 5px)) !important;
             width: 180px !important;
             height: 270px !important;
             max-width: none !important;
@@ -127,7 +127,7 @@
         }
         @media (max-width: 480px) {
             #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
-            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 0; left: 50%; transform: translateX(-50%); }
+            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 0 !important; left: 50% !important; transform: translateX(-50%) !important; }
         }
     `;
     document.head.appendChild(style);
@@ -2078,10 +2078,10 @@
         if (overlay) overlay.remove();
 
         setTimeout(() => {
+            let wrap = document.getElementById('main-widget-circle-wrap');
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
                 window.mainWidget.setAttribute('hide-ui', 'true');
-                let wrap = document.getElementById('main-widget-circle-wrap');
                 if (!wrap) {
                     wrap = document.createElement('div');
                     wrap.id = 'main-widget-circle-wrap';
@@ -2089,7 +2089,27 @@
                 }
                 wrap.innerHTML = '';
                 wrap.appendChild(window.mainWidget);
+
+                // Custom close button — LemonSlice's own hide-ui/show-minimize-button
+                // attributes conflict (hide-ui suppresses their built-in button too),
+                // so we build our own that matches the circle's design.
+                const closeBtn = document.createElement('div');
+                closeBtn.id = 'main-widget-close-btn';
+                closeBtn.innerHTML = '✕';
+                closeBtn.style.cssText = 'position:absolute;top:-6px;right:-6px;width:26px;height:26px;border-radius:50%;background:#0a1a2f;border:2px solid #f8c400;color:#f8c400;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;cursor:pointer;z-index:1000000;box-shadow:0 2px 8px rgba(0,0,0,0.4);';
+                closeBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    if (window.mainWidget) {
+                        window.mainWidget.setAttribute("controlled-widget-state", "hidden");
+                        window.mainWidget.micOff?.();
+                        window.mainWidget.mute?.();
+                    }
+                    wrap.style.display = 'none';
+                    console.log("⏹️ Tess hidden via close button");
+                };
+                wrap.appendChild(closeBtn);
             }
+            if (wrap) wrap.style.display = 'flex';
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
@@ -2116,6 +2136,8 @@
                                         window.mainWidget.mute?.();
                                         window.mainWidget.style.display = "none";
                                     }
+                                    var wrapEl = document.getElementById('main-widget-circle-wrap');
+                                    if (wrapEl) wrapEl.style.display = "none";
                                     console.log("⏹️ Tess hidden via Ctrl+X");
                                 }
                             });
