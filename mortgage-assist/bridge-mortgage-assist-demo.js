@@ -144,13 +144,13 @@
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
             #main-widget-circle-wrap lemon-slice-widget { 
-                width: 150px !important; 
+                width: 160px !important; 
                 height: 240px !important; 
                 /* Dropped her down 5px on mobile too */
                 top: 20px !important; 
-                left: -20px !important; 
+                left: -15px !important; 
                 transform: translateX(5px) !important;
-                zoom: 0.95;
+                zoom: 0.90;
             }
         }
     `;
