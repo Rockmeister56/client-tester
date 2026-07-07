@@ -128,11 +128,11 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-                     #main-widget-circle-wrap {
+                    #main-widget-circle-wrap {
             position: fixed !important;
             bottom: 20px; right: 20px;
-            /* Shifted the black circle down 10px to match the video */
-            top: calc(100% - 170px);
+            /* ADD THIS LINE TO DROP THE BLACK MASK DOWN */
+            margin-top: 10px; 
             width: 150px; height: 150px;
             border-radius: 50%; overflow: hidden;
             background: #000;
