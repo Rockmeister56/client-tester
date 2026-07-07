@@ -64,6 +64,27 @@
     style.textContent = `
         .splash-overlay { display: block !important; background: transparent !important; backdrop-filter: none !important; padding: 0 !important; }
         .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; }
+        @media (min-width: 481px) {
+            .splash-overlay {
+                background: rgba(0,0,0,0.75) !important;
+                backdrop-filter: blur(6px) !important;
+                display: flex !important;
+                align-items: center; justify-content: center;
+                padding: 20px !important;
+            }
+            .splash-page {
+                width: 400px;
+                max-width: 92vw;
+                aspect-ratio: 9 / 16;
+                height: auto;
+                max-height: 90vh;
+                border-radius: 28px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+        }
         .splash-logo-bar { background: #fff; padding: 8px 20px 4px; text-align: center; min-height: 65px; }
         .splash-logo-bar img { max-width: 78%; max-height: 90px; height: auto; display: inline-block; }
         .splash-presents { background: #fff; text-align: center; padding: 2px 0 8px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 1.25rem; color: #1e4a8a; }
