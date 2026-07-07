@@ -128,9 +128,8 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-                          #main-widget-circle-wrap lemon-slice-widget {
+                   #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
-            /* Moved back to 0px so it sits back inside the default circle */
             top: 0px !important;
             left: -15px !important;
             transform: translateX(5px) !important;
@@ -138,21 +137,16 @@
             height: 300px !important;
             max-width: none !important;
             max-height: none !important;
-            /* Changed 38% to 48% to shift her head DOWN inside the video frame */
-            clip-path: circle(70px at 50% 48%) !important;
-            -webkit-clip-path: circle(70px at 50% 48%) !important;
         }
-         @media (max-width: 480px) {
+
+        @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
             #main-widget-circle-wrap lemon-slice-widget { 
                 width: 160px !important; 
                 height: 240px !important; 
-                /* Adjusted raw pixels for the smaller mobile circle */
                 top: 0px !important; 
                 left: -20px !important; 
                 transform: translateX(5px) !important;
-                clip-path: circle(55px at 50% 38%) !important;
-                -webkit-clip-path: circle(55px at 50% 38%) !important;
             }
         }
     `;
