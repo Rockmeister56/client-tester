@@ -103,6 +103,19 @@
         }
         .ticker-content { display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        @keyframes tessSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #tess-preloader {
+            position: absolute; inset: 0;
+            border-radius: 50%; background: #000;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999999;
+        }
+        #tess-preloader .spinner {
+            width: 45%; height: 45%; border-radius: 50%;
+            border: 4px solid rgba(248,196,0,0.2);
+            border-top: 4px solid #f8c400; border-right: 4px solid #f8c400;
+            animation: tessSpin 1s linear infinite;
+        }
         .ticker-item { display: inline-block; padding: 0 25px; color: white; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
         .ticker-item i { margin-right: 8px; color: #f8c400; font-size: 12px; filter: drop-shadow(0 0 3px rgba(248,196,0,0.5)); }
         #main-widget-outer {
@@ -2117,6 +2130,22 @@
                 wrap.id = 'main-widget-circle-wrap';
                 wrap.appendChild(window.mainWidget);
                 outer.appendChild(wrap);
+
+                // ===== PRELOADER =====
+                // Hides LemonSlice's raw loading state behind a clean branded spinner
+                // for a fixed 5.5 seconds, then reveals the avatar underneath.
+                const preloader = document.createElement('div');
+                preloader.id = 'tess-preloader';
+                preloader.innerHTML = '<div class="spinner"></div>';
+                wrap.appendChild(preloader);
+                setTimeout(function() {
+                    const pl = document.getElementById('tess-preloader');
+                    if (pl) {
+                        pl.style.transition = 'opacity 0.5s ease';
+                        pl.style.opacity = '0';
+                        setTimeout(() => pl.remove(), 500);
+                    }
+                }, 5500);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
