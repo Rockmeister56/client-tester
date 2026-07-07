@@ -617,7 +617,7 @@
         var rowDownDebt = document.createElement("div");
         rowDownDebt.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
         rowDownDebt.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
-        rowDownDebt.appendChild(mcField("💳 Monthly Obligations","mc-debt","number","",null,false,null));
+        rowDownDebt.appendChild(mcField("💳 Monthly Spend","mc-debt","number","",null,false,null));
         grid.appendChild(rowDownDebt);
 
         var rowLoanCredit = document.createElement("div");
