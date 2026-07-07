@@ -2145,7 +2145,7 @@
                         pl.style.opacity = '0';
                         setTimeout(() => pl.remove(), 500);
                     }
-                }, 5500);
+                }, 8000);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
