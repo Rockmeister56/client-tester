@@ -120,14 +120,14 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 190px !important;
-            height: 285px !important;
+            width: 165px !important;
+            height: 247px !important;
             max-width: none !important;
             max-height: none !important;
         }
         @media (max-width: 480px) {
             #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
-            #main-widget-circle-wrap lemon-slice-widget { width: 152px !important; height: 228px !important; }
+            #main-widget-circle-wrap lemon-slice-widget { width: 132px !important; height: 198px !important; }
         }
     `;
     document.head.appendChild(style);
