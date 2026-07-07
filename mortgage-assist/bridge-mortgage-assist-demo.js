@@ -118,16 +118,16 @@
         }
         #main-widget-circle-wrap lemon-slice-widget {
             position: absolute;
-            top: 50%; left: 50%;
+            top: 32%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 165px !important;
-            height: 247px !important;
+            width: 180px !important;
+            height: 270px !important;
             max-width: none !important;
             max-height: none !important;
         }
         @media (max-width: 480px) {
             #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
-            #main-widget-circle-wrap lemon-slice-widget { width: 132px !important; height: 198px !important; }
+            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 32%; left: 50%; }
         }
     `;
     document.head.appendChild(style);
@@ -1921,6 +1921,9 @@
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
+        widget.setAttribute('custom-active-width', '180');
+        widget.setAttribute('custom-active-height', '270');
+        widget.setAttribute('show-minimize-button', 'true');
         widget.id = 'main-widget';
         widget.style.display = 'none';
         return widget;
