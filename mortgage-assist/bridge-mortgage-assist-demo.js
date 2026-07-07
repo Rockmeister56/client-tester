@@ -118,7 +118,7 @@
         }
         #main-widget-circle-wrap lemon-slice-widget {
             position: absolute;
-            top: -30px; left: 50%;
+            top: -34px; left: 50%;
             transform: translateX(calc(-50% + 5px));
             width: 180px !important;
             height: 270px !important;
@@ -127,7 +127,7 @@
         }
         @media (max-width: 480px) {
             #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
-            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: -30px; left: 50%; transform: translateX(calc(-50% + 5px)); }
+            #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 0; left: 50%; transform: translateX(-50%); }
         }
     `;
     document.head.appendChild(style);
