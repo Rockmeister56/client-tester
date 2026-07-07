@@ -147,7 +147,7 @@
                 width: 160px !important; 
                 height: 240px !important; 
                 /* Dropped her down 5px on mobile too */
-                top: 5px !important; 
+                top: 15px !important; 
                 left: -20px !important; 
                 transform: translateX(5px) !important;
                 zoom: 0.95;
