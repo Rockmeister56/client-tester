@@ -80,18 +80,14 @@
             display: flex; align-items: center; justify-content: center;
             position: relative;
         }
-            .splash-avatar-container lemon-slice-widget {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            /* Force the raw widget to shrink, which forces the internal video to shrink */
-            width: 160px !important; 
-            height: 240px !important;
+        .splash-avatar-container lemon-slice-widget {
+            position: absolute;
+            top: 80%; left: 46%;
+            transform: translate(-50%, -50%);
+            width: 220px !important;
+            height: 329px !important;
             max-width: none !important;
             max-height: none !important;
-            /* Zoom penetrates the Shadow DOM and shrinks the actual video canvas */
-            zoom: 0.75; 
         }
         .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
         .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
@@ -132,14 +128,19 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-        #main-widget-circle-wrap lemon-slice-widget {
+         #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
-            top: -34px !important; left: 50% !important;
-            transform: translateX(calc(-50% + 5px)) !important;
-            width: 180px !important;
-            height: 270px !important;
+            top: 50% !important;
+            left: 50% !important;
+            /* Remove the + 5px! She was shifted out of frame */
+            transform: translate(-50%, -50%) !important;
+            width: 200px !important;
+            height: 300px !important;
             max-width: none !important;
             max-height: none !important;
+            /* THIS is the magic bullet - it forces the Shadow DOM video into a perfect 70px radius circle */
+            clip-path: circle(70px at 50% 30%) !important;
+            -webkit-clip-path: circle(70px at 50% 30%) !important;
         }
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
