@@ -111,17 +111,14 @@
             width: 150px; height: 150px;
             z-index: 999998;
         }
-         #main-widget-circle-wrap lemon-slice-widget {
-            position: absolute !important;
-            /* Changed from 0px to 5px to drop her down */
-            top: 5px !important;
-            left: -15px !important;
-            transform: translateX(5px) !important;
-            width: 200px !important;
-            height: 300px !important;
-            max-width: none !important;
-            max-height: none !important;
-            zoom: 0.95;
+                #main-widget-circle-wrap {
+            position: absolute; inset: 0;
+            border-radius: 50%; /* <--- MAKE SURE THIS LINE IS HERE */
+            overflow: hidden;
+            background: #000;
+            border: 3px solid rgba(248,196,0,0.85);
+            box-shadow: 0 0 0 6px rgba(248,196,0,0.12), 0 10px 30px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
         }
 
         /* TESS LOADER OVERLAY */
