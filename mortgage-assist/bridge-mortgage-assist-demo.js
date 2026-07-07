@@ -128,29 +128,29 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-                    #main-widget-circle-wrap lemon-slice-widget {
+             #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
             top: 0px !important;
             left: -15px !important;
-            /* Added scale(0.85) to make her 15% smaller */
-            transform: translateX(5px) scale(0.85) !important;
-            /* Reduced width/height by 15% */
-            width: 170px !important;
-            height: 255px !important;
+            transform: translateX(5px) !important;
+            width: 200px !important;
+            height: 300px !important;
             max-width: none !important;
             max-height: none !important;
+            /* Shrinks her 5% without changing her position */
+            zoom: 0.95;
         }
 
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
             #main-widget-circle-wrap lemon-slice-widget { 
-                /* Reduced width/height by 15% */
-                width: 136px !important; 
-                height: 204px !important; 
+                width: 160px !important; 
+                height: 240px !important; 
                 top: 0px !important; 
                 left: -20px !important; 
-                /* Added scale(0.85) for mobile too */
-                transform: translateX(5px) scale(0.85) !important;
+                transform: translateX(5px) !important;
+                /* Shrinks her 5% on mobile without moving her */
+                zoom: 0.95;
             }
         }
     `;
