@@ -67,12 +67,12 @@
         .splash-logo-bar { background: #fff; padding: 8px 20px 4px; text-align: center; min-height: 65px; }
         .splash-logo-bar img { max-width: 78%; max-height: 90px; height: auto; display: inline-block; }
         .splash-presents { background: #fff; text-align: center; padding: 2px 0 8px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 1.25rem; color: #1e4a8a; }
-        .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 26px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 11px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
         .splash-navy h1 { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 2.9rem; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.01em; margin: 0 0 0 -20px; }
         .splash-navy h1 .sparkle { font-size: 1.95rem; filter: drop-shadow(0 0 6px rgba(248,196,0,0.7)); }
         .splash-navy h2 { font-family: 'Dancing Script', cursive; color: rgba(255,255,255,0.92); font-size: 1.55rem; font-weight: 600; margin: 2px 0 22px; text-align: center; }
         .splash-avatar-container {
-            width: 200px; height: 200px; margin: 0 auto 20px;
+            width: 175px; height: 175px; margin: 0 auto 20px;
             border-radius: 50%; overflow: hidden;
             background: #000;
             border: 3px solid rgba(248,196,0,0.85);
