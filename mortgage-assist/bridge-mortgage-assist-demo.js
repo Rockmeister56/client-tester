@@ -2145,7 +2145,7 @@
                         pl.style.opacity = '0';
                         setTimeout(() => pl.remove(), 500);
                     }
-                }, 8000);
+                }, 5500);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
@@ -2154,13 +2154,20 @@
                 closeBtn.innerHTML = '✕';
                 closeBtn.onclick = function(e) {
                     e.stopPropagation();
+                    console.log("⏹️ Stop button clicked — actually ending the call this time");
+                    try {
+                        window.dailyCallObject?.leave();
+                    } catch (err) {
+                        console.warn("Daily leave() error:", err);
+                    }
                     if (window.mainWidget) {
-                        window.mainWidget.setAttribute("controlled-widget-state", "hidden");
                         window.mainWidget.micOff?.();
                         window.mainWidget.mute?.();
+                        window.mainWidget.remove(); // fully remove, not just hide — lets the widget's own cleanup run
                     }
-                    outer.style.display = 'none';
-                    console.log("⏹️ Tess hidden via close button");
+                    window.mainWidget = null;
+                    outer.remove();
+                    showPersistentAvatar();
                 };
                 outer.appendChild(closeBtn);
             }
