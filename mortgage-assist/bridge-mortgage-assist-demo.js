@@ -2048,6 +2048,21 @@
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
 
+        // Small preloader to hide the ~2s black gap before Tess's video loads
+        const splashPreloader = document.createElement('div');
+        splashPreloader.id = 'splash-preloader';
+        splashPreloader.innerHTML = '<div class="spinner"></div>';
+        splashPreloader.style.cssText = 'position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;';
+        container.appendChild(splashPreloader);
+        setTimeout(function() {
+            const spl = document.getElementById('splash-preloader');
+            if (spl) {
+                spl.style.transition = 'opacity 0.4s ease';
+                spl.style.opacity = '0';
+                setTimeout(() => spl.remove(), 400);
+            }
+        }, 2000);
+
         // Add ticker tape if keywords exist
         const tickerKeywords = config.tickerKeywords;
         if (tickerKeywords) {
