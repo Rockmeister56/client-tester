@@ -128,10 +128,10 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-          #main-widget-circle-wrap lemon-slice-widget {
+           #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
-            /* Added + 20px here to drop her down */
-            top: calc(50% + 20px) !important;
+            /* Bumped from + 20px to + 30px */
+            top: calc(50% + 30px) !important;
             left: 50% !important;
             transform: translate(-50%, -50%) translateX(5px) !important;
             width: 200px !important;
@@ -141,17 +141,17 @@
             clip-path: circle(70px at 50% 38%) !important;
             -webkit-clip-path: circle(70px at 50% 38%) !important;
         }
-        @media (max-width: 480px) {
+         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
             #main-widget-circle-wrap lemon-slice-widget { 
                 width: 160px !important; 
                 height: 240px !important; 
-                /* Added + 20px here to drop her down on mobile too */
-                top: calc(50% + 20px) !important; 
+                /* Bumped from + 20px to + 30px */
+                top: calc(50% + 30px) !important; 
                 left: 50% !important; 
                 transform: translate(-50%, -50%) translateX(5px) !important;
                 clip-path: circle(55px at 50% 38%) !important;
-                -webkit-clip-path: circle(50% 38%) !important;
+                -webkit-clip-path: circle(55px at 50% 38%) !important;
             }
         }
     `;
