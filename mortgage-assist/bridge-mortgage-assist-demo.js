@@ -80,14 +80,18 @@
             display: flex; align-items: center; justify-content: center;
             position: relative;
         }
-        .splash-avatar-container lemon-slice-widget {
-            position: absolute;
-            top: 80%; left: 46%;
-            transform: translate(-50%, -50%);
-            width: 220px !important;
-            height: 329px !important;
+            .splash-avatar-container lemon-slice-widget {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            /* Force the raw widget to shrink, which forces the internal video to shrink */
+            width: 160px !important; 
+            height: 240px !important;
             max-width: none !important;
             max-height: none !important;
+            /* Zoom penetrates the Shadow DOM and shrinks the actual video canvas */
+            zoom: 0.75; 
         }
         .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
         .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
