@@ -82,7 +82,7 @@
         }
         .splash-avatar-container lemon-slice-widget {
             position: absolute;
-            top: 85%; left: 48%;
+            top: 80%; left: 46%;
             transform: translate(-50%, -50%);
             width: 220px !important;
             height: 329px !important;
@@ -580,7 +580,7 @@
         xBtn.onclick = function() { var bd=document.getElementById("mortgage-calc-backdrop"); if(bd)bd.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); } window._calcModeActive=false; window._lastCalcField=null; console.log("🏠 Calculator closed"); };
         hdr.appendChild(hLeft); hdr.appendChild(xBtn); ov.appendChild(hdr);
         var body = document.createElement("div");
-        body.style.cssText = "padding:20px;overflow-y:auto;";
+        body.style.cssText = "padding:16px;overflow-y:auto;";
         function mcField(labelText, inputId, inputType, inputVal, extraAttr, isSelect, options) {
             var wrap = document.createElement("div");
             var lbl = document.createElement("label");
@@ -611,23 +611,32 @@
             return wrap;
         }
         var grid = document.createElement("div");
-        grid.style.cssText = "display:grid;gap:14px;";
+        grid.style.cssText = "display:grid;gap:12px;";
         grid.appendChild(mcField("💰 Annual Income","mc-income","number","",null,false,null));
-        grid.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
-        grid.appendChild(mcField("💳 Monthly Obligations (cars, loans, credit cards)","mc-debt","number","",null,false,null));
-        grid.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
+
+        var rowDownDebt = document.createElement("div");
+        rowDownDebt.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
+        rowDownDebt.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
+        rowDownDebt.appendChild(mcField("💳 Monthly Obligations","mc-debt","number","",null,false,null));
+        grid.appendChild(rowDownDebt);
+
+        var rowLoanCredit = document.createElement("div");
+        rowLoanCredit.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
+        rowLoanCredit.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
             {v:"conventional",t:"Conventional",sel:true},
             {v:"fha",t:"FHA"},
-            {v:"va",t:"VA (Military/Veterans)"},
+            {v:"va",t:"VA (Military)"},
             {v:"jumbo",t:"Jumbo"},
             {v:"usda",t:"USDA (Rural)"}
         ]));
-        grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
+        rowLoanCredit.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
             {v:"0.5",t:"Excellent (760+)"},
             {v:"0.25",t:"Good (700-759)",sel:true},
             {v:"0",t:"Fair (640-699)"},
             {v:"-0.5",t:"Poor (580-639)"}
         ]));
+        grid.appendChild(rowLoanCredit);
+
         // Hidden fields for calculation — not shown to user
         var hiddenTerm = document.createElement("input");
         hiddenTerm.type = "hidden"; hiddenTerm.id = "mc-term"; hiddenTerm.value = "30";
@@ -662,11 +671,11 @@
                 "<div style='color:#f8c400;font-size:1rem;font-weight:700;margin-bottom:6px;text-align:center;'>🎉 Great news! Let's send your results.</div>",
                 "<div style='color:rgba(255,255,255,0.6);font-size:0.8rem;text-align:center;margin-bottom:18px;'>A loan officer will follow up with your qualification summary.</div>",
                 "<div style='margin-bottom:12px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>👤 Full Name</label>",
-                "<input id='contact-name' type='text' placeholder='Your full name' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<input id='contact-name' name='name' autocomplete='name' type='text' placeholder='Your full name' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
                 "<div style='margin-bottom:12px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>📧 Email Address</label>",
-                "<input id='contact-email' type='email' placeholder='your@email.com' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<input id='contact-email' name='email' autocomplete='email' type='email' placeholder='your@email.com' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
                 "<div style='margin-bottom:18px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>📞 Phone Number</label>",
-                "<input id='contact-phone' type='tel' placeholder='(555) 555-5555' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<input id='contact-phone' name='tel' autocomplete='tel' type='tel' placeholder='(555) 555-5555' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
                 "<button id='submit-contact-btn' style='width:100%;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;'>📨 Send My Results Now</button>",
                 "<div style='text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem;margin-top:8px;'>Your information is kept private and secure.</div>",
                 "</div>"
