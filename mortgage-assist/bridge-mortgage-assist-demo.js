@@ -105,16 +105,28 @@
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         .ticker-item { display: inline-block; padding: 0 25px; color: white; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
         .ticker-item i { margin-right: 8px; color: #f8c400; font-size: 12px; filter: drop-shadow(0 0 3px rgba(248,196,0,0.5)); }
-        #main-widget-circle-wrap {
+        #main-widget-outer {
             position: fixed !important;
             bottom: 20px; right: 20px;
             width: 150px; height: 150px;
+            z-index: 999998;
+        }
+        #main-widget-circle-wrap {
+            position: absolute; inset: 0;
             border-radius: 50%; overflow: hidden;
             background: #000;
             border: 3px solid rgba(248,196,0,0.85);
             box-shadow: 0 0 0 6px rgba(248,196,0,0.12), 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 999998;
             display: flex; align-items: center; justify-content: center;
+        }
+        #main-widget-close-btn {
+            position: absolute; top: -6px; right: -6px;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: #0a1a2f; border: 2px solid #f8c400; color: #f8c400;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: bold; cursor: pointer;
+            z-index: 1000000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
         #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
@@ -126,7 +138,7 @@
             max-height: none !important;
         }
         @media (max-width: 480px) {
-            #main-widget-circle-wrap { width: 120px; height: 120px; bottom: 16px; right: 16px; }
+            #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
             #main-widget-circle-wrap lemon-slice-widget { width: 144px !important; height: 216px !important; top: 0 !important; left: 50% !important; transform: translateX(-50%) !important; }
         }
     `;
@@ -2078,25 +2090,27 @@
         if (overlay) overlay.remove();
 
         setTimeout(() => {
-            let wrap = document.getElementById('main-widget-circle-wrap');
+            let outer = document.getElementById('main-widget-outer');
             if (!window.mainWidget || !document.body.contains(window.mainWidget)) {
                 window.mainWidget = createMainWidget();
                 window.mainWidget.setAttribute('hide-ui', 'true');
-                if (!wrap) {
-                    wrap = document.createElement('div');
-                    wrap.id = 'main-widget-circle-wrap';
-                    document.body.appendChild(wrap);
+                if (!outer) {
+                    outer = document.createElement('div');
+                    outer.id = 'main-widget-outer';
+                    document.body.appendChild(outer);
                 }
-                wrap.innerHTML = '';
-                wrap.appendChild(window.mainWidget);
+                outer.innerHTML = '';
 
-                // Custom close button — LemonSlice's own hide-ui/show-minimize-button
-                // attributes conflict (hide-ui suppresses their built-in button too),
-                // so we build our own that matches the circle's design.
+                const wrap = document.createElement('div');
+                wrap.id = 'main-widget-circle-wrap';
+                wrap.appendChild(window.mainWidget);
+                outer.appendChild(wrap);
+
+                // Custom close button — lives OUTSIDE the circular crop mask so it
+                // isn't clipped by the circle's overflow:hidden.
                 const closeBtn = document.createElement('div');
                 closeBtn.id = 'main-widget-close-btn';
                 closeBtn.innerHTML = '✕';
-                closeBtn.style.cssText = 'position:absolute;top:-6px;right:-6px;width:26px;height:26px;border-radius:50%;background:#0a1a2f;border:2px solid #f8c400;color:#f8c400;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;cursor:pointer;z-index:1000000;box-shadow:0 2px 8px rgba(0,0,0,0.4);';
                 closeBtn.onclick = function(e) {
                     e.stopPropagation();
                     if (window.mainWidget) {
@@ -2104,12 +2118,12 @@
                         window.mainWidget.micOff?.();
                         window.mainWidget.mute?.();
                     }
-                    wrap.style.display = 'none';
+                    outer.style.display = 'none';
                     console.log("⏹️ Tess hidden via close button");
                 };
-                wrap.appendChild(closeBtn);
+                outer.appendChild(closeBtn);
             }
-            if (wrap) wrap.style.display = 'flex';
+            if (outer) outer.style.display = 'block';
             window.mainWidget.style.display = 'block';
             window.mainWidget.setAttribute('controlled-widget-state', 'active');
             
@@ -2136,8 +2150,8 @@
                                         window.mainWidget.mute?.();
                                         window.mainWidget.style.display = "none";
                                     }
-                                    var wrapEl = document.getElementById('main-widget-circle-wrap');
-                                    if (wrapEl) wrapEl.style.display = "none";
+                                    var outerEl = document.getElementById('main-widget-outer');
+                                    if (outerEl) outerEl.style.display = "none";
                                     console.log("⏹️ Tess hidden via Ctrl+X");
                                 }
                             });
