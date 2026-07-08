@@ -167,7 +167,7 @@
             #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
             /* Changed from -30px to -20px to bring her DOWN 10px */
-            top: -10px !important;
+            top: -5px !important;
             /* Changed from -30px to -28px to nudge her RIGHT 2px */
             left: -28px !important;
             transform: translateX(-5px) !important;
@@ -188,7 +188,7 @@
                 top: 20px !important; 
                 left: -15px !important; 
                 transform: translateX(5px) !important;
-                zoom: 0.90;
+                zoom: 0.85;
             }
         }
         /* Desktop-only splash layout adjustments — placed last so they correctly
