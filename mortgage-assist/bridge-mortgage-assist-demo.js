@@ -192,9 +192,9 @@
         }
         /* Desktop-only splash layout adjustments — placed last so they correctly
            override the base rules above at this screen width, without touching mobile */
-        @media (min-width: 481px) {
+        @media (min-width: 471px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 26px), -50%);
+                transform: translate(calc(-50% - 30px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
