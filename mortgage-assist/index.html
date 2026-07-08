@@ -63,6 +63,22 @@
             z-index: 10;
         }
     </style>
+    <style>
+    /* --- MOBILE BACKGROUND OVERRIDE --- */
+    @media (max-width: 768px) {
+        /* We use 'body' and standard background classes to catch whatever the desktop is using */
+        body, 
+        .background-wrapper, 
+        .hero-section, 
+        [class*="background"], 
+        [class*="wrapper"] {
+            background-image: url('https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Marketing/mobile/mobile-base.jpeg') !important;
+            background-size: cover !important;
+            background-position: top center !important;
+            background-repeat: no-repeat !important;
+        }
+    }
+</style>
 
     <!-- 🔥 STEP 1: THE HTML HANDSHAKE (Global Config) -->
 </head>
