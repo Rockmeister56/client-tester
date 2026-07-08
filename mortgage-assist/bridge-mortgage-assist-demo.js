@@ -167,7 +167,7 @@
             #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
             /* Changed from -30px to -20px to bring her DOWN 10px */
-            top: -20px !important;
+            top: -10px !important;
             /* Changed from -30px to -28px to nudge her RIGHT 2px */
             left: -28px !important;
             transform: translateX(-5px) !important;
