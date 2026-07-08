@@ -202,12 +202,12 @@
         }
         /* Real desktop only — bigger conversation widget circle, avatar shifted up/left */
         @media (min-width: 1024px) {
-            #main-widget-outer { width: 190px; height: 190px; }
+            #main-widget-outer { width: 220px; height: 220px; }
             #main-widget-circle-wrap lemon-slice-widget {
-                width: 250px !important;
-                height: 375px !important;
-                top: -10px !important;
-                left: -15px !important;
+                width: 275px !important;
+                height: 400px !important;
+                top: -30px !important;
+                left: -30px !important;
                 transform: translateX(-5px) !important;
                 zoom: 0.95;
             }
