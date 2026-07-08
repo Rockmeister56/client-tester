@@ -192,16 +192,16 @@
         }
         /* Desktop-only splash layout adjustments — placed last so they correctly
            override the base rules above at this screen width, without touching mobile */
-        @media (min-width: 450px) {
+        @media (min-width: 481px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 43px), -50%);
+                transform: translate(calc(-50% - 20px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
             }
         }
         /* Real desktop only — bigger conversation widget circle, avatar shifted up/left */
-        @media (min-width: 1024px) {
+        @media (min-width: 900px) {
             #main-widget-outer { width: 220px; height: 220px; }
             #main-widget-circle-wrap lemon-slice-widget {
                 width: 275px !important;
@@ -209,7 +209,7 @@
                 top: -30px !important;
                 left: -30px !important;
                 transform: translateX(-5px) !important;
-                zoom: 0.95;
+                zoom: 0.95 !important;
             }
         }
     `;
@@ -2004,8 +2004,9 @@
         widget.setAttribute('initial-state', 'minimized');
         widget.setAttribute('custom-minimized-width', '144');
         widget.setAttribute('custom-minimized-height', '216');
-        widget.setAttribute('custom-active-width', '180');
-        widget.setAttribute('custom-active-height', '270');
+        const isDesktop = window.innerWidth >= 900;
+        widget.setAttribute('custom-active-width', isDesktop ? '275' : '180');
+        widget.setAttribute('custom-active-height', isDesktop ? '400' : '270');
         widget.setAttribute('show-minimize-button', 'true');
         widget.id = 'main-widget';
         widget.style.display = 'none';
