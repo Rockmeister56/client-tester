@@ -142,7 +142,7 @@
         #main-widget-outer {
             position: fixed !important;
             bottom: 20px; right: 20px;
-            width: 150px; height: 150px;
+            width: 220px; height: 220px;
             z-index: 999998;
         }
         #persistent-avatar-btn { width: 150px !important; height: 150px !important; }
@@ -164,17 +164,18 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-          #main-widget-circle-wrap lemon-slice-widget {
+            #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
-            /* Changed from 0px to 5px to drop her down */
-            top: 5px !important;
-            left: -15px !important;
-            transform: translateX(5px) !important;
-            width: 200px !important;
-            height: 300px !important;
+            /* Shifted UP (negative top) and LEFT (negative left) */
+            top: -30px !important;
+            left: -30px !important;
+            transform: translateX(-5px) !important;
+            /* Made her significantly BIGGER for desktop */
+            width: 275px !important;
+            height: 400px !important;
             max-width: none !important;
             max-height: none !important;
-            zoom: 0.95;
+            zoom: 0.95 !important;
         }
 
         @media (max-width: 480px) {
@@ -198,18 +199,6 @@
             }
             .splash-service-line {
                 margin-top: 55px;
-            }
-        }
-        /* Real desktop only — bigger conversation widget circle, avatar shifted up/left */
-        @media (min-width: 900px) {
-            #main-widget-outer { width: 220px; height: 220px; }
-            #main-widget-circle-wrap lemon-slice-widget {
-                width: 275px !important;
-                height: 400px !important;
-                top: -30px !important;
-                left: -30px !important;
-                transform: translateX(-5px) !important;
-                zoom: 0.95 !important;
             }
         }
     `;
