@@ -192,12 +192,24 @@
         }
         /* Desktop-only splash layout adjustments — placed last so they correctly
            override the base rules above at this screen width, without touching mobile */
-        @media (min-width: 471px) {
+        @media (min-width: 481px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 43px), -50%);
+                transform: translate(calc(-50% - 20px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
+            }
+        }
+        /* Real desktop only — bigger conversation widget circle, avatar shifted up/left */
+        @media (min-width: 1024px) {
+            #main-widget-outer { width: 190px; height: 190px; }
+            #main-widget-circle-wrap lemon-slice-widget {
+                width: 250px !important;
+                height: 375px !important;
+                top: -10px !important;
+                left: -15px !important;
+                transform: translateX(-5px) !important;
+                zoom: 0.95;
             }
         }
     `;
