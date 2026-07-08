@@ -194,7 +194,7 @@
            override the base rules above at this screen width, without touching mobile */
         @media (min-width: 471px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 35px), -50%);
+                transform: translate(calc(-50% - 43px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
