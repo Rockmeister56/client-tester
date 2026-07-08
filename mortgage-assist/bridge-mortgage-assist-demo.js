@@ -177,24 +177,18 @@
             max-height: none !important;
             zoom: 0.95 !important;
         }
-            /* Catches iPads, larger phones, and half-screen browsers */
-        @media (min-width: 481px) and (max-width: 899px) {
-            #main-widget-circle-wrap lemon-slice-widget { 
-                zoom: 0.85 !important;
-            }
-        }
 
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
             #persistent-avatar-btn { width: 120px !important; height: 120px !important; }
             #main-widget-circle-wrap lemon-slice-widget { 
-                width: 160px !important; 
-                height: 240px !important; 
+                width: 150px !important; 
+                height: 220px !important; 
                 /* Dropped her down 5px on mobile too */
                 top: 20px !important; 
                 left: -15px !important; 
                 transform: translateX(5px) !important;
-                zoom: 0.85;
+                zoom: 0.90;
             }
         }
         /* Desktop-only splash layout adjustments — placed last so they correctly
