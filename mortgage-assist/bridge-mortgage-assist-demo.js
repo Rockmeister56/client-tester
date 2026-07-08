@@ -166,11 +166,11 @@
         }
             #main-widget-circle-wrap lemon-slice-widget {
             position: absolute !important;
-            /* Shifted UP (negative top) and LEFT (negative left) */
-            top: -30px !important;
-            left: -30px !important;
+            /* Changed from -30px to -20px to bring her DOWN 10px */
+            top: -20px !important;
+            /* Changed from -30px to -28px to nudge her RIGHT 2px */
+            left: -28px !important;
             transform: translateX(-5px) !important;
-            /* Made her significantly BIGGER for desktop */
             width: 275px !important;
             height: 400px !important;
             max-width: none !important;
@@ -195,7 +195,7 @@
            override the base rules above at this screen width, without touching mobile */
         @media (min-width: 470px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 43px), -50%);
+                transform: translate(calc(-50% - 40px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
