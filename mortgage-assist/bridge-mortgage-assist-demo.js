@@ -177,6 +177,12 @@
             max-height: none !important;
             zoom: 0.95 !important;
         }
+            /* Catches iPads, larger phones, and half-screen browsers */
+        @media (min-width: 481px) and (max-width: 899px) {
+            #main-widget-circle-wrap lemon-slice-widget { 
+                zoom: 0.85 !important;
+            }
+        }
 
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
