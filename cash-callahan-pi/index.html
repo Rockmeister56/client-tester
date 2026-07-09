@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Mortgage Assist Demo</title>
+    
+    <!-- 🔥 CLEAN STYLES -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* Your Background Image */
+            background-image: url('https://client-tester.netlify.app/cash-callahan-pi/cash-callahan.jpg'); 
+            background-size: cover;
+            background-position: center;
+            font-family: sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .test-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(248,196,0,0.95);
+            color: #000;
+            padding: 12px;
+            text-align: center;
+            z-index: 1000000;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .status-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #f8c400;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            border: 1px solid #f8c400;
+            z-index: 1000000;
+        }
+
+        /* 🆕 Daily Video Container - NO BLACK BACKGROUND */
+        #daily-container {
+            width: 90vw;
+            max-width: 1000px;
+            height: 80vh;
+            background: transparent;  /* ← FIXED: Removed black background */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);  /* Kept outer shadow, removed inner black */
+            border: 2px solid rgba(255,255,255,0.2);  /* Slightly more visible border */
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+    <style>
+    /* --- MOBILE BACKGROUND OVERRIDE --- */
+    @media (max-width: 768px) {
+        /* We use 'body' and standard background classes to catch whatever the desktop is using */
+        body, 
+        .background-wrapper, 
+        .hero-section, 
+        [class*="background"], 
+        [class*="wrapper"] {
+            background-image: url('https://client-tester.netlify.app/cash-callahan-pi/cash-callahan-mobile.jpg') !important;
+            background-size: cover !important;
+            background-position: top center !important;
+            background-repeat: no-repeat !important;
+        }
+    }
+</style>
+
+    <!-- 🔥 STEP 1: THE HTML HANDSHAKE (Global Config) -->
+</head>
+<body>
+
+    <!-- 🆕 DAILY VIDEO CONTAINER -->
+    <div id="daily-container"></div>
+
+    <!-- 🔥 STEP 2: LOAD DAILY SDK (Replaces Old Widget) -->
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
+
+    <!-- 🔥 STEP 3: LOAD BRIDGE -->
+    <script src="bridge-mortgage-assist-demo.js" defer></script>
+
+    <!-- 🔥 STEP 4: Health Dashboard -->
+    <script src="https://mobilewise.netlify.app/health/health-client.js?clientId=mortgage-assist-demo"></script>
+   
+</body>
+</html>
