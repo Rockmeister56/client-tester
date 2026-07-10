@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prospect Follow-Up Email Preview — Tax Relief 911</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f1f3f;
+    --navy-deep:#0a1730;
+    --maroon:#7c1f2e;
+    --maroon-light:#9c2c3d;
+    --gold:#c9a227;
+    --gold-light:#dcc363;
+    --parchment:#f6f0e2;
+    --parchment-deep:#eee2c8;
+    --ink:#2b2620;
+    --muted:#786f5c;
+    --line:#e2d5b0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:32px 16px 64px;
+    font-family:'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:linear-gradient(180deg,#0a1730,#0f1f3f 55%,#0a1730);
+    color:var(--ink);
+  }
+  .chrome-label{
+    max-width:640px; margin:0 auto 14px;
+    display:flex; align-items:center; gap:10px;
+    color:rgba(255,255,255,0.55); font-size:0.78rem;
+    letter-spacing:0.06em; text-transform:uppercase;
+  }
+  .chrome-label .dot{width:7px;height:7px;border-radius:50%;background:#34a853;box-shadow:0 0 8px #34a853;}
+
+  .email-shell{
+    max-width:640px; margin:0 auto;
+    background:var(--parchment);
+    border-radius:16px; overflow:hidden;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+  }
+
+  /* HEADER */
+  .header{
+    background:var(--navy);
+    padding:34px 40px 28px;
+    text-align:center;
+    border-bottom:3px solid var(--gold);
+  }
+  .header .wordmark{
+    font-family:'Playfair Display', serif;
+    font-size:1.5rem; font-weight:700;
+    color:#fff; letter-spacing:0.01em;
+  }
+  .header .tagline{
+    color:rgba(255,255,255,0.6); font-size:0.8rem;
+    letter-spacing:0.05em; text-transform:uppercase; margin-top:8px;
+  }
+
+  /* CONFIDENTIAL BANNER */
+  .confidential{
+    background:var(--navy-deep); text-align:center;
+    padding:8px; font-size:0.72rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--gold-light); font-weight:600;
+  }
+
+  /* GREETING BANNER */
+  .banner{ padding:32px 40px 8px; text-align:center; }
+  .banner .badge{
+    display:inline-block; background:rgba(124,31,46,0.1);
+    color:var(--maroon); border:1px solid rgba(124,31,46,0.35);
+    padding:5px 16px; border-radius:999px;
+    font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:700;
+  }
+  .banner h1{
+    font-family:'Playfair Display', serif;
+    color:var(--navy); font-size:1.6rem; font-weight:700;
+    margin:16px 0 6px;
+  }
+  .banner p{ color:var(--muted); font-size:0.95rem; margin:0; }
+
+  /* BODY LETTER */
+  .letter{ padding:20px 40px 8px; }
+  .letter p{ font-size:0.98rem; line-height:1.75; color:#3a3428; margin:0 0 16px; }
+  .letter .sign-off{ margin-top:22px; }
+  .letter .sign-off .name{ font-family:'Playfair Display', serif; color:var(--navy); font-weight:700; font-size:1.05rem; }
+  .letter .sign-off .title{ color:var(--muted); font-size:0.82rem; margin-top:2px; }
+
+  /* URGENT ENFORCEMENT NOTE */
+  .urgent-note{
+    margin:0 40px 24px; padding:14px 18px;
+    background:rgba(124,31,46,0.07); border:1px solid rgba(124,31,46,0.3);
+    border-radius:10px;
+  }
+  .urgent-note p{ margin:0; font-size:0.85rem; color:var(--maroon); line-height:1.6; font-weight:600; }
+
+  /* Q&A RECAP */
+  .recap-wrap{ padding:8px 40px 8px; }
+  .recap-head{
+    font-family:'Playfair Display', serif;
+    color:var(--navy); font-size:1.15rem; font-weight:700;
+    margin:20px 0 4px;
+  }
+  .recap-sub{ color:var(--muted); font-size:0.85rem; margin-bottom:18px; }
+  .qa-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:18px 20px; margin-bottom:12px;
+  }
+  .qa-q{
+    font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--gold); font-weight:700; margin-bottom:6px;
+  }
+  .qa-a{ font-size:0.95rem; color:var(--ink); line-height:1.6; }
+
+  /* NEXT STEPS */
+  .next-steps{
+    margin:8px 40px 28px; background:var(--navy); border-radius:14px;
+    padding:26px 28px; text-align:center;
+  }
+  .next-steps h3{
+    font-family:'Playfair Display', serif; color:#fff;
+    font-size:1.15rem; margin:0 0 10px;
+  }
+  .next-steps p{ color:rgba(255,255,255,0.75); font-size:0.9rem; line-height:1.65; margin:0 0 18px; }
+  .next-steps .phone-cta{
+    display:inline-block; background:linear-gradient(135deg,var(--maroon-light),var(--maroon));
+    color:#fff; font-weight:700; padding:13px 30px;
+    border-radius:8px; text-decoration:none; font-size:0.95rem; letter-spacing:0.02em;
+  }
+  .next-steps .fine{
+    color:rgba(255,255,255,0.5); font-size:0.78rem; margin-top:14px; line-height:1.6;
+  }
+
+  /* REASSURANCE STRIP */
+  .reassure{
+    margin:0 40px 30px; padding:16px 20px;
+    background:var(--parchment-deep); border-radius:10px;
+    border-left:3px solid var(--gold);
+  }
+  .reassure p{ margin:0; font-size:0.85rem; color:#4a4432; line-height:1.6; }
+  .reassure strong{ color:var(--navy); }
+
+  /* FOOTER */
+  .footer{
+    background:var(--parchment-deep); padding:26px 40px;
+    text-align:center; border-top:1px solid var(--line);
+  }
+  .footer .fname{ font-family:'Playfair Display', serif; color:var(--navy); font-weight:700; font-size:1rem; }
+  .footer .fmeta{ color:var(--muted); font-size:0.78rem; margin-top:6px; line-height:1.7; }
+  .footer .fdisclaimer{ color:#9a9078; font-size:0.68rem; margin-top:16px; line-height:1.6; }
+
+  .annotate{
+    max-width:640px; margin:18px auto 0; text-align:center;
+  }
+  .annotate span{
+    display:inline-block; background:rgba(255,255,255,0.06);
+    border:1px dashed rgba(255,255,255,0.25); color:rgba(255,255,255,0.65);
+    font-size:0.78rem; padding:9px 16px; border-radius:10px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="chrome-label"><span class="dot"></span> Preview — this is what your web prospect receives, not a live inbox</div>
+
+  <div class="email-shell">
+
+    <div class="header">
+      <div class="wordmark">Tax Relief 911</div>
+      <div class="tagline">Attorneys · CPAs · Former IRS Agents</div>
+    </div>
+    <div class="confidential">🔒 This information is completely confidential</div>
+
+    <div class="banner">
+      <span class="badge">We Received Your Information</span>
+      <h1>Thank You, <span id="pName">Jason</span></h1>
+      <p>Here's a quick summary of what we discussed with Tess.</p>
+    </div>
+
+    <div class="letter">
+      <p>Hi <span id="pName2">Jason</span>,</p>
+      <p>Thank you for taking a few minutes to talk with Tess about your situation. I know dealing with the IRS is stressful, and I want you to know you've already taken the most important step just by reaching out. Your information has been sent directly to our tax specialists — there's nothing else you need to do right now.</p>
+      <p>One of our specialists will personally call you at <strong id="pTime">tomorrow morning</strong> to walk through your options in detail. Everything you share with us stays completely confidential, and the consultation is free.</p>
+      <div class="sign-off">
+        <div class="name">The Team at Tax Relief 911</div>
+        <div class="title">Attorneys · CPAs · Former IRS Agents</div>
+      </div>
+    </div>
+
+    <div class="urgent-note" id="urgentNote">
+      <p>⚠️ Because you mentioned active wage garnishment, we've flagged your case as a priority. A specialist will reach out within 2 hours.</p>
+    </div>
+
+    <div class="recap-wrap">
+      <div class="recap-head">What We Discussed</div>
+      <div class="recap-sub">For your records — here's a recap of the information you shared with Tess.</div>
+
+      <div class="qa-card">
+        <div class="qa-q">Your situation</div>
+        <div class="qa-a" id="qaSituation">My employer received a wage garnishment notice from the IRS last week. I'm not sure how much they're planning to take out of each paycheck.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Estimated amount owed</div>
+        <div class="qa-a" id="qaAmount">Around $42,000, based on the most recent notice I received.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Tax years affected</div>
+        <div class="qa-a" id="qaYears">About 3 years — it built up gradually after I fell behind.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Enforcement status</div>
+        <div class="qa-a" id="qaEnforcement">Active wage garnishment — my employer was already notified.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Best way to reach you</div>
+        <div class="qa-a" id="qaContact">(949) 555-0148 — available tomorrow morning</div>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <h3>Need to Talk to Someone Right Now?</h3>
+      <p>If your situation changes, you have questions, or you just need to talk this through before we call — we're here.</p>
+      <a href="tel:9493570655" class="phone-cta">📞 Call Us: 949-357-0655</a>
+      <div class="fine">Available 24/7 · No cost to speak with our team</div>
+    </div>
+
+    <div class="reassure">
+      <p><strong>A reminder:</strong> your consultation is completely free, and everything you share is confidential. Once you have representation, the IRS communicates through us — you don't have to deal with them directly.</p>
+    </div>
+
+    <div class="footer">
+      <div class="fname">Tax Relief 911</div>
+      <div class="fmeta">
+        📞 <a href="tel:9493570655" style="color:var(--maroon);text-decoration:none;">949-357-0655</a> &nbsp;·&nbsp;
+        ✉️ <a href="mailto:intake@taxrelief911.com" style="color:var(--maroon);text-decoration:none;">intake@taxrelief911.com</a>
+      </div>
+      <div class="fdisclaimer">
+        This message was sent because you spoke with Tess, our virtual intake specialist. Nothing in this email constitutes tax or legal advice, and no representation agreement exists until formally established.<br>
+        Tax Relief 911 — Attorneys, CPAs &amp; Former IRS Agents
+      </div>
+    </div>
+
+  </div>
+
+  <div class="annotate"><span>💡 This page is a demo mockup — no real email was sent to this address</span></div>
+
+<script>
+  function qp(name, fallback){
+    var v = new URLSearchParams(window.location.search).get(name);
+    return (v && v.trim()) ? v : fallback;
+  }
+  var firstName = qp('first_name', 'Jason');
+  document.getElementById('pName').textContent = firstName;
+  document.getElementById('pName2').textContent = firstName;
+  document.getElementById('pTime').textContent = qp('callback_time', 'tomorrow morning');
+  document.getElementById('qaSituation').textContent = qp('situation', document.getElementById('qaSituation').textContent);
+  document.getElementById('qaAmount').textContent = qp('amount_owed', document.getElementById('qaAmount').textContent);
+  document.getElementById('qaYears').textContent = qp('years_affected', document.getElementById('qaYears').textContent);
+  document.getElementById('qaEnforcement').textContent = qp('enforcement', document.getElementById('qaEnforcement').textContent);
+  document.getElementById('qaContact').textContent = qp('contact_info', document.getElementById('qaContact').textContent);
+  var showUrgent = qp('urgent', 'true');
+  if (showUrgent === 'false') {
+    document.getElementById('urgentNote').style.display = 'none';
+  }
+</script>
+</body>
+</html>
