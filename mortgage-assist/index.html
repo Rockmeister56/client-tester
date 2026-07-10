@@ -50,19 +50,19 @@
             z-index: 1000000;
         }
 
-        /* 🆕 Daily Video Container - NO BLACK BACKGROUND */
-        #daily-container {
-            width: 90vw;
-            max-width: 1000px;
-            height: 80vh;
-            background: transparent;  /* ← FIXED: Removed black background */
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);  /* Kept outer shadow, removed inner black */
-            border: 2px solid rgba(255,255,255,0.2);  /* Slightly more visible border */
-            position: relative;
-            z-index: 10;
-        }
+            #daily-container {
+    width: 90vw;
+    max-width: 1000px;
+    height: 80vh;
+    background: transparent;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: none;
+    border: none;
+    position: relative;
+    z-index: 10;
+    display: none;
+}
     </style>
     <style>
     /* --- MOBILE BACKGROUND OVERRIDE --- */
