@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prospect Follow-Up Email Preview — Cash | Callahan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1a2f52;
+    --navy-deep:#0f1f38;
+    --gold:#b8922f;
+    --gold-light:#d4b45c;
+    --parchment:#f6f1e6;
+    --parchment-deep:#eee5d0;
+    --ink:#2b2b2b;
+    --muted:#6b6355;
+    --line:#e0d6bd;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:32px 16px 64px;
+    font-family:'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:linear-gradient(180deg,#0f1f38,#1a2f52 55%,#0f1f38);
+    color:var(--ink);
+  }
+  .chrome-label{
+    max-width:640px; margin:0 auto 14px;
+    display:flex; align-items:center; gap:10px;
+    color:rgba(255,255,255,0.55); font-size:0.78rem;
+    letter-spacing:0.06em; text-transform:uppercase;
+  }
+  .chrome-label .dot{width:7px;height:7px;border-radius:50%;background:#34a853;box-shadow:0 0 8px #34a853;}
+
+  .email-shell{
+    max-width:640px; margin:0 auto;
+    background:var(--parchment);
+    border-radius:16px; overflow:hidden;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+  }
+
+  /* HEADER */
+  .header{
+    background:var(--navy);
+    padding:36px 40px 30px;
+    text-align:center;
+    border-bottom:3px solid var(--gold);
+  }
+  .header .wordmark{
+    font-family:'Playfair Display', serif;
+    font-size:1.7rem; font-weight:700;
+    color:#fff; letter-spacing:0.02em;
+  }
+  .header .wordmark .divider{ color:var(--gold); margin:0 10px; font-weight:400; }
+  .header .tagline{
+    color:rgba(255,255,255,0.6); font-size:0.82rem;
+    letter-spacing:0.05em; text-transform:uppercase; margin-top:8px;
+  }
+
+  /* GREETING BANNER */
+  .banner{ padding:32px 40px 8px; text-align:center; }
+  .banner .badge{
+    display:inline-block; background:rgba(184,146,47,0.12);
+    color:var(--gold); border:1px solid rgba(184,146,47,0.4);
+    padding:5px 16px; border-radius:999px;
+    font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:700;
+  }
+  .banner h1{
+    font-family:'Playfair Display', serif;
+    color:var(--navy); font-size:1.7rem; font-weight:700;
+    margin:16px 0 6px;
+  }
+  .banner p{ color:var(--muted); font-size:0.95rem; margin:0; }
+
+  /* BODY LETTER */
+  .letter{ padding:20px 40px 8px; }
+  .letter p{ font-size:0.98rem; line-height:1.75; color:#3a3428; margin:0 0 16px; }
+  .letter .sign-off{ margin-top:22px; }
+  .letter .sign-off .name{ font-family:'Playfair Display', serif; color:var(--navy); font-weight:700; font-size:1.05rem; }
+  .letter .sign-off .title{ color:var(--muted); font-size:0.82rem; margin-top:2px; }
+
+  /* Q&A RECAP */
+  .recap-wrap{ padding:8px 40px 8px; }
+  .recap-head{
+    font-family:'Playfair Display', serif;
+    color:var(--navy); font-size:1.15rem; font-weight:700;
+    margin:20px 0 4px;
+  }
+  .recap-sub{ color:var(--muted); font-size:0.85rem; margin-bottom:18px; }
+  .qa-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:18px 20px; margin-bottom:12px;
+  }
+  .qa-q{
+    font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--gold); font-weight:700; margin-bottom:6px;
+  }
+  .qa-a{ font-size:0.95rem; color:var(--ink); line-height:1.6; }
+
+  /* NEXT STEPS */
+  .next-steps{
+    margin:8px 40px 28px; background:var(--navy); border-radius:14px;
+    padding:26px 28px; text-align:center;
+  }
+  .next-steps h3{
+    font-family:'Playfair Display', serif; color:#fff;
+    font-size:1.15rem; margin:0 0 10px;
+  }
+  .next-steps p{ color:rgba(255,255,255,0.75); font-size:0.9rem; line-height:1.65; margin:0 0 18px; }
+  .next-steps .phone-cta{
+    display:inline-block; background:linear-gradient(135deg,var(--gold-light),var(--gold));
+    color:var(--navy-deep); font-weight:700; padding:13px 30px;
+    border-radius:8px; text-decoration:none; font-size:0.95rem; letter-spacing:0.02em;
+  }
+  .next-steps .fine{
+    color:rgba(255,255,255,0.5); font-size:0.78rem; margin-top:14px; line-height:1.6;
+  }
+
+  /* REASSURANCE STRIP */
+  .reassure{
+    margin:0 40px 30px; padding:16px 20px;
+    background:var(--parchment-deep); border-radius:10px;
+    border-left:3px solid var(--gold);
+  }
+  .reassure p{ margin:0; font-size:0.85rem; color:#4a4432; line-height:1.6; }
+  .reassure strong{ color:var(--navy); }
+
+  /* FOOTER */
+  .footer{
+    background:var(--parchment-deep); padding:26px 40px;
+    text-align:center; border-top:1px solid var(--line);
+  }
+  .footer .fname{ font-family:'Playfair Display', serif; color:var(--navy); font-weight:700; font-size:1rem; }
+  .footer .fmeta{ color:var(--muted); font-size:0.78rem; margin-top:6px; line-height:1.7; }
+  .footer .fdisclaimer{ color:#9a9078; font-size:0.68rem; margin-top:16px; line-height:1.6; }
+
+  .annotate{
+    max-width:640px; margin:18px auto 0; text-align:center;
+  }
+  .annotate span{
+    display:inline-block; background:rgba(255,255,255,0.06);
+    border:1px dashed rgba(255,255,255,0.25); color:rgba(255,255,255,0.65);
+    font-size:0.78rem; padding:9px 16px; border-radius:10px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="chrome-label"><span class="dot"></span> Preview — this is what your web prospect receives, not a live inbox</div>
+
+  <div class="email-shell">
+
+    <div class="header">
+      <div class="wordmark">CASH<span class="divider">|</span>CALLAHAN</div>
+      <div class="tagline">Attorneys at Law</div>
+    </div>
+
+    <div class="banner">
+      <span class="badge">We Received Your Information</span>
+      <h1>Thank You, <span id="pName">Maria</span></h1>
+      <p>Here's a quick summary of what we discussed with Tess.</p>
+    </div>
+
+    <div class="letter">
+      <p>Hi <span id="pName2">Maria</span>,</p>
+      <p>Thank you for taking a few minutes to speak with Tess about what happened. I know this is a stressful time, and I want you to know your information has already been sent directly to our legal team — you don't need to do anything else right now.</p>
+      <p>One of our attorneys will be reaching out to you personally at <strong id="pTime">tomorrow morning</strong> to go over everything in more detail. In the meantime, please don't discuss your case with any insurance adjusters, and take care of yourself first.</p>
+      <div class="sign-off">
+        <div class="name">The Team at Cash | Callahan</div>
+        <div class="title">Attorneys at Law</div>
+      </div>
+    </div>
+
+    <div class="recap-wrap">
+      <div class="recap-head">What We Discussed</div>
+      <div class="recap-sub">For your records — here's a recap of the information you shared with Tess.</div>
+
+      <div class="qa-card">
+        <div class="qa-q">What happened</div>
+        <div class="qa-a" id="qaWhat">I was rear-ended on the 405 tonight. The other driver ran into me at a red light. My neck and back are really hurting.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">When it happened</div>
+        <div class="qa-a" id="qaWhen">Tonight, about an hour before we spoke.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Injuries &amp; treatment</div>
+        <div class="qa-a" id="qaInjury">Yes — neck and back pain. Paramedics were on scene and taking me to the ER.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Was someone else responsible</div>
+        <div class="qa-a" id="qaFault">Yes — the other driver rear-ended me at a red light.</div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-q">Best way to reach you</div>
+        <div class="qa-a" id="qaContact">(714) 555-0192 — available tomorrow morning</div>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <h3>Need to Talk to Someone Right Now?</h3>
+      <p>If anything changes, you have questions, or you just need to talk this through before we call — we're here.</p>
+      <a href="tel:9493570655" class="phone-cta">📞 Call Us: 949-357-0655</a>
+      <div class="fine">Available 24/7 · No cost to speak with our team</div>
+    </div>
+
+    <div class="reassure">
+      <p><strong>A reminder:</strong> your consultation is completely free, and you pay nothing unless we win your case. There's no obligation, and no pressure — we're simply here to help.</p>
+    </div>
+
+    <div class="footer">
+      <div class="fname">Cash | Callahan, Attorneys at Law</div>
+      <div class="fmeta">
+        📞 <a href="tel:9493570655" style="color:var(--gold);text-decoration:none;">949-357-0655</a> &nbsp;·&nbsp;
+        ✉️ <a href="mailto:intake@cashcallahan.com" style="color:var(--gold);text-decoration:none;">intake@cashcallahan.com</a>
+      </div>
+      <div class="fdisclaimer">
+        This message was sent because you spoke with Tess, our virtual intake specialist. Nothing in this email constitutes legal advice or an attorney-client relationship until formally established.<br>
+        Cash | Callahan, Attorneys at Law
+      </div>
+    </div>
+
+  </div>
+
+  <div class="annotate"><span>💡 This page is a demo mockup — no real email was sent to this address</span></div>
+
+<script>
+  function qp(name, fallback){
+    var v = new URLSearchParams(window.location.search).get(name);
+    return (v && v.trim()) ? v : fallback;
+  }
+  var firstName = qp('first_name', 'Maria');
+  document.getElementById('pName').textContent = firstName;
+  document.getElementById('pName2').textContent = firstName;
+  document.getElementById('pTime').textContent = qp('callback_time', 'tomorrow morning');
+  document.getElementById('qaWhat').textContent = qp('what_happened', document.getElementById('qaWhat').textContent);
+  document.getElementById('qaWhen').textContent = qp('when_happened', document.getElementById('qaWhen').textContent);
+  document.getElementById('qaInjury').textContent = qp('injuries', document.getElementById('qaInjury').textContent);
+  document.getElementById('qaFault').textContent = qp('fault', document.getElementById('qaFault').textContent);
+  document.getElementById('qaContact').textContent = qp('contact_info', document.getElementById('qaContact').textContent);
+</script>
+</body>
+</html>
