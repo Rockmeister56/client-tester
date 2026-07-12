@@ -40,7 +40,7 @@
         console.log("🎯 Bridge using trigger phrase:", window.TRIGGER_PHRASE);
     }
 
-    // =========================================
+    // ========================================
     // 🍋 AUTO-LOADER: EMAILJS LIBRARY
     // =========================================
     (function() {
