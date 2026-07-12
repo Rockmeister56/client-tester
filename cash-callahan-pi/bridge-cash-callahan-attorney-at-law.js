@@ -111,7 +111,7 @@
             max-height: none !important;
         }
         .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
-        .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
+        .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 8px 26px; }
         .primary-btn, .secondary-btn { padding: 14px 20px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 200px; border: none; transition: all 0.2s; }
         .primary-btn:hover, .secondary-btn:hover { transform: scale(1.02); }
         .ticker-container {
