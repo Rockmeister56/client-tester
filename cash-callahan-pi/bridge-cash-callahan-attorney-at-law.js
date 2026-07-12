@@ -91,7 +91,7 @@
         .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 11px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
         .splash-navy h1 { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 2.9rem; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.01em; margin: 0 0 0 -20px; }
         .splash-navy h1 .sparkle { font-size: 1.95rem; filter: drop-shadow(0 0 6px rgba(248,196,0,0.7)); }
-        .splash-navy h2 { font-family: 'Dancing Script', cursive; color: rgba(255,255,255,0.92); font-size: 1.55rem; font-weight: 600; margin: 2px 0 22px; text-align: center; }
+        .splash-navy h2 { font-family: Arial, Helvetica, sans-serif; font-style: italic; color: rgba(255,255,255,0.92); font-size: 1.35rem; font-weight: 400; margin: 2px 0 22px; text-align: center; }
         .splash-avatar-container {
             width: 175px; height: 175px; margin: 0 auto 20px;
             border-radius: 50%; overflow: hidden;
