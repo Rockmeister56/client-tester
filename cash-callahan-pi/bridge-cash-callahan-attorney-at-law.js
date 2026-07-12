@@ -1,5 +1,5 @@
 // Botemia Bridge for Cash Callahan Attorney at Law
-// Generated: 7/11/2026, 8:44:58 PM
+// Generated: 7/11/2026, 9:14:39 PM
 // Client ID: cash-callahan-attorney-at-law
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -195,7 +195,7 @@
            override the base rules above at this screen width, without touching mobile */
         @media (min-width: 470px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 40px), -50%);
+                transform: translate(calc(-50% - 10px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
