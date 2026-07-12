@@ -195,10 +195,10 @@
            override the base rules above at this screen width, without touching mobile */
         @media (min-width: 470px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 25px), -50%);
+                transform: translate(calc(-50% - 10px), -50%);
             }
             .splash-service-line {
-                margin-top: 55px;
+                margin-top: 65px;
             }
         }
     `;
