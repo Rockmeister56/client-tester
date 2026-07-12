@@ -802,9 +802,10 @@
                                 submitted_at:         new Date().toLocaleString(),
                                 calc_annual_income:   calcData.income     || "Not provided",
                                 calc_down_payment:    calcData.down       || "Not provided",
+                                calc_monthly_debt:    calcData.debt       || "Not provided",
+                                calc_loan_type:       calcData.loanType   || "Not provided",
                                 calc_credit_score:    calcData.credit     || "Not provided",
                                 calc_loan_term:       calcData.term       || "Not provided",
-                                calc_interest_rate:   calcData.rate       || "Not provided",
                                 calc_home_price:      calcData.homePrice  || "Not provided",
                                 calc_monthly_payment: calcData.monthly    || "Not provided",
                                 calc_loan_amount:     calcData.loanAmount || "Not provided",
@@ -1041,6 +1042,7 @@
             credit: creditLabels[String(creditAdj)] || "Not provided",
             term: term+" Years",
             rate: rate ? rate.toFixed(2)+"%" : "Not provided",
+            loanType: loanType || "Not provided",
             homePrice: hp ? hp.textContent : "Not provided",
             monthly: mp2 ? mp2.textContent : "Not provided",
             loanAmount: la ? la.textContent : "Not provided",
@@ -2055,11 +2057,15 @@
 
         let logoHTML = '';
         if (config.branding?.logo || config.branding?.name) {
+            const isBlackBg = config.branding?.logoBarBg === 'black';
+            const barBg = isBlackBg ? '#000' : '#fff';
+            const nameColor = isBlackBg ? '#fff' : '#333';
+            const presentsColor = isBlackBg ? '#f8c400' : '#1e4a8a';
             logoHTML = `
-            <div class="splash-logo-bar">
-                ${config.branding?.logo ? '<img src="' + config.branding.logo + '" alt="' + (config.branding?.name || 'Client Logo') + '">' : '<span style="color:#333;font-size:20px;font-weight:600;">' + (config.branding?.name || '') + '</span>'}
+            <div class="splash-logo-bar" style="background:${barBg};">
+                ${config.branding?.logo ? '<img src="' + config.branding.logo + '" alt="' + (config.branding?.name || 'Client Logo') + '">' : '<span style="color:' + nameColor + ';font-size:20px;font-weight:600;">' + (config.branding?.name || '') + '</span>'}
             </div>
-            <div class="splash-presents">${config.presentsText || 'Presents:'}</div>
+            <div class="splash-presents" style="background:${barBg}; color:${presentsColor};">${config.presentsText || 'Presents:'}</div>
             `;
         }
 
