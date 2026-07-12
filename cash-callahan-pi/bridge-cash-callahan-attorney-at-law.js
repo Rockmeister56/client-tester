@@ -124,6 +124,7 @@
         }
         .ticker-content { display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        @keyframes blinkArrow { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         @keyframes tessSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #tess-preloader {
             position: absolute; inset: 0;
@@ -2083,7 +2084,7 @@
         const buttonGroup = document.createElement('div');
         buttonGroup.className = 'button-group';
         buttonGroup.innerHTML = `
-            <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'} ▶</button>
+            <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'} <span style="color:#fff; animation: blinkArrow 1.2s ease-in-out infinite;">▶</span></button>
             <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
         `;
         navySection.appendChild(buttonGroup);
