@@ -105,8 +105,8 @@
             position: absolute;
             top: 80%; left: 46%;
             transform: translate(-50%, -50%);
-            width: 220px !important;
-            height: 329px !important;
+            width: 200px !important;
+            height: 300px !important;
             max-width: none !important;
             max-height: none !important;
         }
