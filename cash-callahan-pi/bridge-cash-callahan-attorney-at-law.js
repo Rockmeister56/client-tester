@@ -85,7 +85,7 @@
                 border: 1px solid rgba(255,255,255,0.1);
             }
         }
-        .splash-logo-bar { background: #fff; padding: 18px 20px 4px; text-align: center; min-height: 65px; }
+        .splash-logo-bar { background: #fff; padding: 18px 10px 4px; text-align: center; min-height: 65px; } .splash-logo-bar img { width: 100% !important; max-width: 500px !important; height: auto !important; object-fit: contain !important; } .splash-logo-bar { background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important; } .splash-logo-bar > * { width: 100% !important; max-width: 500px !important; height: auto !important; }
         .splash-logo-bar img { width: 352px; max-width: 90%; height: 68px; display: inline-block; }
         .splash-presents { background: #fff; text-align: center; padding: 2px 0 8px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 1.25rem; color: #1e4a8a; }
         .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 11px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
