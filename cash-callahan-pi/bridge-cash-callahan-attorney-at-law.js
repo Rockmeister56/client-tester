@@ -110,10 +110,10 @@
             max-width: none !important;
             max-height: none !important;
         }
-        .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
-        .button-group { background: #000000 !important; padding: 25px 20px 30px 20px !important; margin-top: 15px !important; display: flex; flex-direction: column; align-items: center; gap: 12px !important; } 
-        .primary-btn { padding: 14px 20px !important; border-radius: 8px !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer; width: 90% !important; max-width: 350px !important; box-shadow: 0 4px 15px rgba(248, 196, 0, 0.4) !important; transition: transform 0.2s ease !important; } .primary-btn:hover { transform: scale(1.03) !important; box-shadow: 0 6px 20px rgba(248, 196, 0, 0.6) !important; }
-        .secondary-btn { padding: 12px 20px !important; border-radius: 8px !important; border: 1px solid #555 !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer; background: #1a1a1a !important; color: #ffffff !important; width: 90% !important; max-width: 350px !important; transition: transform 0.2s ease !important; } .secondary-btn:hover { transform: scale(1.03) !important; background: #2a2a2a !important; }
+        .splash-service-line { margin-top: 10px !important; margin-bottom: 8px !important; } .ticker-container { margin-bottom: 15px !important; } 
+        .button-group { background: #000000 !important; padding: 15px 20px 25px 20px !important; margin: 0 -20px -20px -20px !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; } 
+        .primary-btn { padding: 12px 15px !important; border-radius: 8px !important; border: none !important; font-size: 15px !important; font-weight: 700 !important; cursor: pointer; width: 90% !important; max-width: 320px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; transition: transform 0.2s ease !important; } .primary-btn:hover { transform: scale(1.03) !important; } 
+        .secondary-btn { padding: 10px 15px !important; border-radius: 8px !important; border: none !important; font-size: 13px !important; font-weight: 600 !important; cursor: pointer; width: 90% !important; max-width: 320px !important; transition: transform 0.2s ease !important; } .secondary-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
         .ticker-container {
             position: relative; width: calc(100% + 48px); margin: 0 -24px;
             background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(248,196,0,0.2), rgba(0,0,0,0.9));
