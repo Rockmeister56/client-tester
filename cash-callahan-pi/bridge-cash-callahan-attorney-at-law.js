@@ -2045,6 +2045,16 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
         const container = document.getElementById('splashAvatarContainer');
         const splashWidget = createSplashWidget();
         container.appendChild(splashWidget);
+        container.appendChild(document.getElementById('splash-preloader')); // ensure preloader stays on top, last in DOM order
+
+        setTimeout(function() {
+            const spl = document.getElementById('splash-preloader');
+            if (spl) {
+                spl.style.transition = 'opacity 0.4s ease';
+                spl.style.opacity = '0';
+                setTimeout(() => spl.remove(), 400);
+            }
+        }, 2000);
 
         // Add ticker tape if keywords exist
         const tickerKeywords = config.tickerKeywords;
