@@ -2159,29 +2159,32 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
 
-                        function hideTessPreloader() {
+        var tessPreloaderHidden = false;
+
+        function hideTessPreloader() {
+            if (tessPreloaderHidden) return;
+            tessPreloaderHidden = true;
+            console.log('✅ Daily room joined — preparing to hide preloader');
+            
             const pl = document.getElementById('tess-preloader');
             if (pl) {
-                pl.style.transition = 'opacity 0.5s ease';
-                pl.style.opacity = '0';
-                setTimeout(() => pl.remove(), 500);
+                // Step 1: Make spinner invisible but keep it blocking Lemon Slice's ugly loader
+                pl.style.visibility = 'hidden';
+                
+                // Step 2: Wait 2 seconds for Lemon Slice to finish buffering in the background
+                setTimeout(() => {
+                    // Step 3: Now actually remove it so Tess shows
+                    pl.remove();
+                    console.log('✅ Lemon Slice buffer complete — preloader removed');
+                }, 2000);
             }
         }
 
-        var tessPreloaderHidden = false;
         window.onDailyRoomJoined = function() {
-            if (tessPreloaderHidden) return;
-            tessPreloaderHidden = true;
-            console.log('✅ Daily room joined — hiding preloader');
             hideTessPreloader();
         };
 
-        setTimeout(function() {
-            if (!tessPreloaderHidden) {
-                tessPreloaderHidden = true;
-                hideTessPreloader();
-            }
-        }, 10000);
+        // Safety net
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
