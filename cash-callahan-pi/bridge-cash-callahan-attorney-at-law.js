@@ -2150,6 +2150,14 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                 preloader.innerHTML = '<div class="spinner"></div>';
                 wrap.appendChild(preloader);
 
+                // Start 2-second invisible shield right when main widget preloader is created
+                setTimeout(function() {
+                    if (preloader) {
+                        preloader.style.visibility = 'hidden';
+                        setTimeout(function() { preloader.remove(); }, 2000);
+                    }
+                }, 500);
+
                 // Play "Hi, I'm Tess..." preloader audio, if configured
                 var preloaderAudioSrc = window.BotemiaConfig?.modules?.splashScreen?.preloaderAudioData;
                 if (preloaderAudioSrc) {
@@ -2191,18 +2199,6 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
             
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
-                      // TEST BLOCK
-        setTimeout(function() {
-            console.log("🚨 Z TEST: THIS IS THE NEW CODE RUNNING!");
-            var pl = document.getElementById('splash-preloader');
-            if (pl) {
-                console.log("🚨 Z TEST: FOUND THE PRELOADER!");
-                pl.style.visibility = 'hidden';
-                setTimeout(function() { pl.remove(); }, 2000);
-            } else {
-                console.log("🚨 Z TEST: COULD NOT FIND PRELOADER");
-            }
-        }, 500);
                 try {
                     if (window.mainWidget) {
                         // Start the room first, then send greeting
