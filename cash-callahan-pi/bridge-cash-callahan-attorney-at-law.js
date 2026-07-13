@@ -2100,10 +2100,20 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
         const secondaryBtn = document.getElementById('justBrowsingBtn');
         secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
-    }
+      }
 
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
+
+        // Attach preloader listener to the window FIRST so it survives the splash screen deletion
+        window.onDailyRoomJoined = function() {
+            var pl = document.getElementById('splash-preloader');
+            if (pl) {
+                console.log('✅ Daily room joined — hiding splash preloader');
+                pl.style.visibility = 'hidden';
+                setTimeout(function() { pl.remove(); }, 2000);
+            }
+        };
 
         // Request mic permission IMMEDIATELY on click — tied directly to the user gesture,
         // not deferred behind setup delays. Once granted here, later micOn() calls reuse
@@ -2158,44 +2168,6 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                         widgetPreloaderAudio.play().catch(function(e) { console.warn('Preloader audio blocked:', e); });
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
-
-                    var tessSplashPreloaderHidden = false;
-
-        function hideSplashPreloader() {
-            if (tessSplashPreloaderHidden) return;
-            // Only hide if the splash screen is still open
-            if (!document.getElementById('splashOverlay')) return;
-            
-            var pl = document.getElementById('splash-preloader');
-            if (!pl) return;
-            
-            tessSplashPreloaderHidden = true;
-            console.log('✅ Daily room joined — hiding splash preloader');
-            
-            pl.style.visibility = 'hidden';
-            
-            setTimeout(function() {
-                pl.remove();
-                console.log('✅ Splash preloader removed');
-            }, 2000);
-        }
-
-        window.onDailyRoomJoined = function() {
-            hideSplashPreloader();
-        };
-
-        // Safety net
-        setTimeout(function() {
-            if (!tessSplashPreloaderHidden) {
-                if (!document.getElementById('splashOverlay')) return;
-                var pl = document.getElementById('splash-preloader');
-                if (pl) {
-                    tessSplashPreloaderHidden = true;
-                    pl.style.visibility = 'hidden';
-                    setTimeout(function() { pl.remove(); }, 2000);
-                }
-            }
-        }, 10000);
 
         // Safety net
 
