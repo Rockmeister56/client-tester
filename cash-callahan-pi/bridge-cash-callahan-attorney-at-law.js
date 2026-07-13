@@ -1,5 +1,5 @@
 // Botemia Bridge for Cash Callahan Attorney at Law
-// Generated: 7/12/2026, 11:40:50 PM
+// Generated: 7/12/2026, 11:57:45 PM
 // Client ID: cash-callahan-attorney-at-law
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -63,9 +63,7 @@
     const style = document.createElement('style');
     style.textContent = `
         .splash-overlay { display: block !important; background: transparent !important; backdrop-filter: none !important; padding: 0 !important; }
-        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; }
-        @media (min-width: 481px) { .splash-page { width: 400px; max-width: 92vw; aspect-ratio: auto !important; height: auto; max-height: 90vh; border-radius: 28px; overflow-x: hidden; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); } }
-        .button-group { background: color-mix(in srgb, var(--grad-outer, #0a1a2f) 80%, #000000) !important; padding: 20px 20px 25px 20px !important; margin: 0 -24px -0px -24px !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; }
+        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; } @media (min-width: 481px) { .splash-page { width: 400px; max-width: 92vw; aspect-ratio: auto !important; height: auto; max-height: 90vh; border-radius: 28px; overflow-x: hidden; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); } } .button-group { background: color-mix(in srgb, var(--grad-outer, #0a1a2f) 80%, #000000) !important; padding: 20px 20px 25px 20px !important; margin: 0 -24px -0px -24px !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; }
         @media (min-width: 481px) {
             .splash-overlay {
                 background: rgba(0,0,0,0.75) !important;
@@ -87,7 +85,7 @@
                 border: 1px solid rgba(255,255,255,0.1);
             }
         }
-        .splash-logo-bar { background: #fff; padding: 18px 20px 4px; text-align: center; min-height: 65px; }
+        .splash-logo-bar { background: #fff; padding: 8px 10px 4px !important; text-align: center; min-height: auto !important; } .splash-logo-bar img { width: 100% !important; max-width: 500px !important; height: auto !important; object-fit: contain !important; } .splash-logo-bar { background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important; } .splash-logo-bar > * { width: 100% !important; max-width: 500px !important; height: auto !important; } .splash-presents-inline { color: #ffffff !important; font-size: 16px !important; font-weight: 400 !important; margin: 0 0 5px 0 !important; padding: 0 !important; text-transform: uppercase; letter-spacing: 1px; text-align: center; } .splash-navy { padding-top: 15px !important; }
         .splash-logo-bar img { width: 352px; max-width: 90%; height: 68px; display: inline-block; }
         .splash-presents { background: #fff; text-align: center; padding: 2px 0 8px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 1.25rem; color: #1e4a8a; }
         .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 11px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
@@ -112,13 +110,10 @@
             max-width: none !important;
             max-height: none !important;
         }
-        .splash-service-line { color: #ffffff !important; font-size: 14px !important; margin-top: 10px !important; margin-bottom: 8px !important; }
-        .splash-navy { background: linear-gradient(180deg, #1e4a8a 0%, #0a1a2f 75%, transparent 100%) !important; padding-bottom: 0px !important; }
+        .splash-service-line { color: #ffffff !important; font-size: 14px !important; margin-top: 10px !important; margin-bottom: 8px !important; } .splash-navy { background: linear-gradient(180deg, #1e4a8a 0%, #0a1a2f 75%, transparent 100%) !important; padding-bottom: 0px !important; } .ticker-container { position: relative !important; z-index: 2 !important; margin-bottom: 15px !important; }
         .button-group { background: transparent !important; padding: 0px 20px 20px 20px !important; margin: 0 !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; }
-        .primary-btn { padding: 14px 15px !important; border-radius: 8px !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer; width: 95% !important; max-width: 320px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; transition: transform 0.2s ease !important; }
-        .primary-btn:hover { transform: scale(1.03) !important; }
-        .secondary-btn { padding: 12px 15px !important; border-radius: 8px !important; border: none !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer; width: 95% !important; max-width: 320px !important; transition: transform 0.2s ease !important; }
-        .secondary-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
+        .primary-btn { padding: 14px 15px !important; border-radius: 8px !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer; width: 95% !important; max-width: 320px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; transition: transform 0.2s ease !important; } .primary-btn:hover { transform: scale(1.03) !important; }
+        .secondary-btn { padding: 12px 15px !important; border-radius: 8px !important; border: none !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer; width: 95% !important; max-width: 320px !important; transition: transform 0.2s ease !important; } .secondary-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
         .ticker-container {
             position: relative; width: calc(100% + 48px); margin: 0 -24px;
             background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(248,196,0,0.2), rgba(0,0,0,0.9));
@@ -2023,10 +2018,11 @@
             <div class="splash-logo-bar" style="background:${barBg};">
                 ${config.branding?.logo ? '<img src="' + config.branding.logo + '" alt="' + (config.branding?.name || 'Client Logo') + '">' : '<span style="color:' + nameColor + ';font-size:20px;font-weight:600;">' + (config.branding?.name || '') + '</span>'}
             </div>
+
             `;
         }
 
-        let pageHTML = logoHTML + `
+           let pageHTML = logoHTML + `
             <div class="splash-navy">
                 <h3 class="splash-presents-inline">${config.presentsText || 'Presents:'}</h3>
                 <h1><span class="sparkle">✨</span>${config.title || 'Tess'}</h1>
