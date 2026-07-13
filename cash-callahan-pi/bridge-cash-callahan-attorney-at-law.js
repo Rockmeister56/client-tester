@@ -2105,7 +2105,7 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
     async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
 
-        // Attach preloader listener to the window FIRST so it survives the splash screen deletion
+        // Attach listener just in case Daily hasn't connected yet
         window.onDailyRoomJoined = function() {
             var pl = document.getElementById('splash-preloader');
             if (pl) {
@@ -2114,6 +2114,29 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                 setTimeout(function() { pl.remove(); }, 2000);
             }
         };
+
+        // If Daily already connected before we clicked, start a fast polling check
+        var splashCheckInterval = setInterval(function() {
+            var pl = document.getElementById('splash-preloader');
+            if (!pl) {
+                clearInterval(splashCheckInterval);
+                return;
+            }
+            // Check if Lemon Slice has actually started loading video (replaces our black circle)
+            var lsWidget = document.querySelector('lemon-slice-widget');
+            if (lsWidget && lsWidget.shadowRoot) {
+                var videos = lsWidget.shadowRoot.querySelectorAll('video');
+                for (var i = 0; i < videos.length; i++) {
+                    if (videos[i].readyState > 0) {
+                        console.log('✅ Video detected in Lemon Slice — hiding splash preloader');
+                        pl.style.visibility = 'hidden';
+                        setTimeout(function() { pl.remove(); }, 2000);
+                        clearInterval(splashCheckInterval);
+                        return;
+                    }
+                }
+            }
+        }, 500); // Checks every half second
 
         // Request mic permission IMMEDIATELY on click — tied directly to the user gesture,
         // not deferred behind setup delays. Once granted here, later micOn() calls reuse
