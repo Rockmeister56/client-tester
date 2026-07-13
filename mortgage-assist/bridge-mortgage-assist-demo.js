@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 7/3/2026, 1:20:40 PM
+// Generated: 7/13/2026, 3:23:53 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -22,12 +22,12 @@
                 "triggerPhrase": "So let's start with your full name please",
                 "triggerPhraseLegacy": "let's get started"
             },
-            "emailConfig": {"loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a loan expert on the phone"]},
-            "splashScreen": {"enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Tess","subtitle":"Your Friendly AI Web Assistant","serviceLine":"Offering 24/7 Customer Service!","presentsText":"Presents:","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","tessVideoFit":"cover","tickerKeywords":"Get Pre-Qualified, Any Lending Questions, Refinance Qualification","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI help with Tess","gradientTop":"#f8c400","gradientBottom":"#d4a000","hoverTop":"#ffd700","hoverBottom":"#e0b000","textColor":"#0a0f1e"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"bottom-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Logos/clients/demo-logo.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJMb2dvcy9jbGllbnRzL2RlbW8tbG9nby5qcGciLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzgzMzgzMTY2LCJleHAiOjE4MTQ5MTkxNjZ9._91eAUwxKj3hT5nGr1kWjJpCtRGM1aqyxEB4w0h8nw0"}},
-            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4}]},
+            "emailConfig": {"bridgeMode":"normal","prospectEmailTemplateId":"template_8kx812d","leadEmailTemplateId":"template_uix9cyx","demoMockupUrl":"","loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a loan expert on the phone"]},
+            "splashScreen": {"serviceLine":"Offering 24/7 Customer Service!","presentsText":"Presents:","enabled":true,"agentId":"agent_7b0776ef6b855de5","title":"Meet Tess","subtitle":"Your Personal AI Web Guide","tessVideoUrl":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/processed-videos/tess-button.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwcm9jZXNzZWQtdmlkZW9zL3Rlc3MtYnV0dG9uLm1wNCIsImlhdCI6MTc3MzgwNDA4MSwiZXhwIjoxODA1MzQwMDgxfQ.07K0XCnTt3zAZPp2ZAgZ-SzYhZj6nW1Vun8WW-zDAVQ","preloaderAudioData":"","tessVideoFit":"cover","tickerKeywords":"","gradientCenter":"#1e4a8a","gradientOuter":"#0a1a2f","primaryButton":{"text":"Get AI-Assistance with Tess","gradientTop":"#008efa","gradientBottom":"#000000","hoverTop":"#00ff2a","hoverBottom":"#e000c2","textColor":"#ffffff"},"secondaryButton":{"text":"Just Browsing","gradientTop":"#3a4050","gradientBottom":"#2a2f3f","hoverTop":"#4a5060","hoverBottom":"#3a4050","textColor":"#ffffff"},"persistentButton":{"enabled":true,"position":"middle-right","action":"activate-tess","gradientTop":"#f8c400","gradientBottom":"#d4a000"},"branding":{"name":"","logo":"data:image/jpeg;base64,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","logoBarBg":"white"}},
+            "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
-            "videoVault": {"videos":[]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me bring up the home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
+            "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me show you what you can qualify for","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
@@ -63,7 +63,7 @@
     const style = document.createElement('style');
     style.textContent = `
         .splash-overlay { display: block !important; background: transparent !important; backdrop-filter: none !important; padding: 0 !important; }
-        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; }
+        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; } @media (min-width: 481px) { .splash-page { width: 400px; max-width: 92vw; aspect-ratio: auto !important; height: auto; max-height: 90vh; border-radius: 28px; overflow-x: hidden; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); } } .button-group { background: color-mix(in srgb, var(--grad-outer, #0a1a2f) 80%, #000000) !important; padding: 20px 20px 25px 20px !important; margin: 0 -24px -0px -24px !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; }
         @media (min-width: 481px) {
             .splash-overlay {
                 background: rgba(0,0,0,0.75) !important;
@@ -85,13 +85,13 @@
                 border: 1px solid rgba(255,255,255,0.1);
             }
         }
-        .splash-logo-bar { background: #fff; padding: 8px 20px 4px; text-align: center; min-height: 65px; }
-        .splash-logo-bar img { max-width: 78%; max-height: 90px; height: auto; display: inline-block; }
+        .splash-logo-bar { background: #fff; padding: 8px 10px 4px !important; text-align: center; min-height: auto !important; } .splash-logo-bar img { width: 100% !important; max-width: 500px !important; height: auto !important; object-fit: contain !important; } .splash-logo-bar { background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important; } .splash-logo-bar > * { width: 100% !important; max-width: 500px !important; height: auto !important; } .splash-presents-inline { color: #ffffff !important; font-size: 16px !important; font-weight: 400 !important; margin: 0 0 5px 0 !important; padding: 0 !important; text-transform: uppercase; letter-spacing: 1px; text-align: center; } .splash-navy { padding-top: 15px !important; }
+        .splash-logo-bar img { width: 352px; max-width: 90%; height: 68px; display: inline-block; }
         .splash-presents { background: #fff; text-align: center; padding: 2px 0 8px; font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 1.25rem; color: #1e4a8a; }
         .splash-navy { flex: 1; background: radial-gradient(circle at center, var(--grad-center, #1e4a8a) 0%, var(--grad-outer, #0a1a2f) 80%); padding: 11px 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; }
         .splash-navy h1 { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 2.9rem; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.01em; margin: 0 0 0 -20px; }
         .splash-navy h1 .sparkle { font-size: 1.95rem; filter: drop-shadow(0 0 6px rgba(248,196,0,0.7)); }
-        .splash-navy h2 { font-family: 'Dancing Script', cursive; color: rgba(255,255,255,0.92); font-size: 1.55rem; font-weight: 600; margin: 2px 0 22px; text-align: center; }
+        .splash-navy h2 { font-family: Arial, Helvetica, sans-serif; font-style: italic; color: rgba(255,255,255,0.92); font-size: 1.35rem; font-weight: 400; margin: 2px 0 22px; text-align: center; }
         .splash-avatar-container {
             width: 175px; height: 175px; margin: 0 auto 20px;
             border-radius: 50%; overflow: hidden;
@@ -103,17 +103,17 @@
         }
         .splash-avatar-container lemon-slice-widget {
             position: absolute;
-            top: 80%; left: 46%;
+            top: 80%; left: 51%;
             transform: translate(-50%, -50%);
-            width: 220px !important;
-            height: 329px !important;
+            width: 200px !important;
+            height: 300px !important;
             max-width: none !important;
             max-height: none !important;
         }
-        .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
-        .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
-        .primary-btn, .secondary-btn { padding: 14px 20px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 200px; border: none; transition: all 0.2s; }
-        .primary-btn:hover, .secondary-btn:hover { transform: scale(1.02); }
+        .splash-service-line { color: #ffffff !important; font-size: 14px !important; margin-top: 10px !important; margin-bottom: 8px !important; } .splash-navy { background: linear-gradient(180deg, #1e4a8a 0%, #0a1a2f 75%, transparent 100%) !important; padding-bottom: 0px !important; } .ticker-container { position: relative !important; z-index: 2 !important; margin-bottom: 15px !important; }
+        .button-group { background: transparent !important; padding: 0px 20px 20px 20px !important; margin: 0 !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; }
+        .primary-btn { padding: 14px 15px !important; border-radius: 8px !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer; width: 95% !important; max-width: 320px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; transition: transform 0.2s ease !important; } .primary-btn:hover { transform: scale(1.03) !important; }
+        .secondary-btn { padding: 12px 15px !important; border-radius: 8px !important; border: none !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer; width: 95% !important; max-width: 320px !important; transition: transform 0.2s ease !important; } .secondary-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
         .ticker-container {
             position: relative; width: calc(100% + 48px); margin: 0 -24px;
             background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(248,196,0,0.2), rgba(0,0,0,0.9));
@@ -124,6 +124,7 @@
         }
         .ticker-content { display: inline-block; animation: ticker 25s linear infinite; padding-left: 100%; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        @keyframes blinkArrow { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         @keyframes tessSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #tess-preloader {
             position: absolute; inset: 0;
@@ -195,7 +196,7 @@
            override the base rules above at this screen width, without touching mobile */
         @media (min-width: 470px) {
             .splash-avatar-container lemon-slice-widget {
-                transform: translate(calc(-50% - 40px), -50%);
+                transform: translate(calc(-50% - 20px), -50%);
             }
             .splash-service-line {
                 margin-top: 55px;
@@ -203,7 +204,6 @@
         }
     `;
     document.head.appendChild(style);
-
     function createSplashWidget() {
         const widget = document.createElement('lemon-slice-widget');
         let clientId = window.BotemiaConfig?.id;
@@ -285,44 +285,6 @@
             console.log("✅ Interview complete. Answers:", this.answers);
             return this.answers;
         }
-    };
-
-
-    // ===== CALCULATOR SUMMARY — reads directly from DOM for Tess read-back =====
-    window.getCalcSummary = function() {
-        var homePrice  = document.getElementById("mc-home-price")?.textContent || "not calculated";
-        var monthly    = document.getElementById("mc-monthly")?.textContent    || "not calculated";
-        var loanAmt    = document.getElementById("mc-loan")?.textContent       || "not calculated";
-        var dti        = document.getElementById("mc-dti")?.textContent        || "not calculated";
-        var verdict    = document.getElementById("mc-verdict")?.textContent    || "";
-        var income     = document.getElementById("mc-income")?.value           || "";
-        var downPct    = document.getElementById("mc-down-pct")?.value         || "";
-        var debt       = document.getElementById("mc-debt")?.value             || "";
-        var loanTypeSel = document.getElementById("mc-loan-type");
-        var loanType   = loanTypeSel ? loanTypeSel.options[loanTypeSel.selectedIndex]?.text : "Conventional";
-        var creditSel  = document.getElementById("mc-credit");
-        var credit     = creditSel ? creditSel.options[creditSel.selectedIndex]?.text : "";
-
-        return {
-            homePrice, monthly, loanAmt, dti, verdict,
-            income, downPct, debt, loanType, credit,
-            summary: "Based on what you've shared — an income of $" + parseInt(income||0).toLocaleString() +
-                     ", " + (downPct||"0") + "% down, and " + loanType + " financing — " +
-                     "you may qualify for a home in the range of " + homePrice +
-                     " with an estimated monthly payment of " + monthly + ". " +
-                     "Your debt-to-income ratio is " + dti + ". " + verdict
-        };
-    };
-
-    // Make summary available to Tess via mainWidget
-    window.sendCalcSummaryToTess = function() {
-        var s = window.getCalcSummary();
-        console.log("📊 Calc summary for Tess:", s.summary);
-        if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
-            window.mainWidget.sendMessage("Calculator results: home price range " + s.homePrice +
-                ", monthly payment " + s.monthly + ", DTI " + s.dti + ". " + s.verdict);
-        }
-        return s;
     };
 
     class PreQualificationController {
@@ -603,24 +565,84 @@
                     if (cfgEmail) data.email = cfgEmail;
                 }
             }
+            var calcData = window._calcResults || {};
+            var isDemoMode = (window.BotemiaConfig?.modules?.emailConfig?.bridgeMode === "demo");
+            data.firstName = (data.fullName || "").trim().split(/\s+/)[0] || "there";
+            
+            if (isDemoMode) {
+                // ===== DEMO MODE: whoever filled the form gets the lead email themselves =====
+                if (data.email) {
+                    var demoLeadParams = {
+                        to_email:             data.email,
+                        full_name:            data.fullName || "Valued Client",
+                        first_name:           data.firstName,
+                        email:                data.email,
+                        phone:                data.phone || "Not provided",
+                        business_name:        data.businessName || "Not provided",
+                        scheduled_datetime:   data.scheduledDateTime || "To be determined",
+                        message:              data.specialRequests || "None",
+                        submitted_at:         new Date().toLocaleString(),
+                        calc_annual_income:   calcData.income     || "Not provided",
+                        calc_down_payment:    calcData.down       || "Not provided",
+                        calc_monthly_debt:    calcData.debt       || "Not provided",
+                        calc_loan_type:       calcData.loanType   || "Not provided",
+                        calc_credit_score:    calcData.credit     || "Not provided",
+                        calc_loan_term:       calcData.term       || "Not provided",
+                        calc_home_price:      calcData.homePrice  || "Not provided",
+                        calc_monthly_payment: calcData.monthly    || "Not provided",
+                        calc_loan_amount:     calcData.loanAmount || "Not provided",
+                        calc_dti:             calcData.dti        || "Not provided",
+                        calc_verdict:         calcData.verdict    || "",
+                        special_requests:     data.specialRequests || "None"
+                    };
+                    var leadTplId = window.BotemiaConfig?.modules?.emailConfig?.leadEmailTemplateId || "template_uix9cyx";
+                    emailjs.send("service_b9bppgb", leadTplId, demoLeadParams)
+                        .then(function() {
+                            console.log("✅ [DEMO] Lead email sent to:", data.email);
+                            var mockupUrl = window.BotemiaConfig?.modules?.emailConfig?.demoMockupUrl;
+                            if (mockupUrl) {
+                                var toast = document.createElement("div");
+                                toast.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0a1a2f;border:2px solid #f8c400;border-radius:14px;padding:16px 20px;z-index:9999999;box-shadow:0 10px 30px rgba(0,0,0,0.5);text-align:center;max-width:340px;";
+                                toast.innerHTML = "<div style=\"color:#fff;font-size:0.85rem;margin-bottom:10px;\">✅ Lead email sent! That's what you'd receive as the client.</div><a href=\"" + mockupUrl + "\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-block;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;padding:10px 18px;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.85rem;margin-right:8px;\">📧 See what your prospect gets</a><span onclick=\"this.parentElement.remove()\" style=\"cursor:pointer;color:#aaa;font-size:1.1rem;vertical-align:middle;\">✕</span>";
+                                document.body.appendChild(toast);
+                                setTimeout(function(){ if (toast.parentElement) toast.remove(); }, 15000);
+                            }
+                        })
+                        .catch(function(e) { console.error("❌ [DEMO] Lead email error:", e); });
+                } else {
+                    console.warn("⚠️ [DEMO] No email provided, skipping demo lead email");
+                }
+                return;
+            }
+            
+            // ===== NORMAL MODE =====
             // ===== EMAIL 1: TO LOAN BROKER PROSPECT =====
             if (data.email) {
                 var prospectParams = {
-                    to_email: data.email,
-                    full_name: data.fullName || "Valued Client",
-                    email: data.email,
-                    phone: data.phone || "Not provided",
-                    business_name: data.businessName || "Not provided",
-                    scheduled_datetime: data.scheduledDateTime || "To be determined",
-                    loan_type: "See Full Example Below",
-                    annual_income: "See Full Example Below",
-                    down_payment: "See Full Example Below",
-                    credit_score: "See Full Example Below",
-                    special_requests: data.specialRequests || "None",
-                    submitted_at: new Date().toLocaleString()
+                    to_email:             data.email,
+                    full_name:            data.fullName || "Valued Client",
+                    first_name:           data.firstName,
+                    email:                data.email,
+                    phone:                data.phone || "Not provided",
+                    business_name:        data.businessName || "Not provided",
+                    scheduled_datetime:   data.scheduledDateTime || "To be determined",
+                    submitted_at:         new Date().toLocaleString(),
+                    calc_annual_income:   calcData.income     || "Not provided",
+                    calc_down_payment:    calcData.down       || "Not provided",
+                    calc_monthly_debt:    calcData.debt       || "Not provided",
+                    calc_loan_type:       calcData.loanType   || "Not provided",
+                    calc_credit_score:    calcData.credit     || "Not provided",
+                    calc_loan_term:       calcData.term       || "Not provided",
+                    calc_home_price:      calcData.homePrice  || "Not provided",
+                    calc_monthly_payment: calcData.monthly    || "Not provided",
+                    calc_loan_amount:     calcData.loanAmount || "Not provided",
+                    calc_dti:             calcData.dti        || "Not provided",
+                    calc_verdict:         calcData.verdict    || "",
+                    special_requests:     data.specialRequests || "None"
                 };
                 
-                emailjs.send("service_b9bppgb", "template_8kx812d", prospectParams)
+                var prospectTplId = window.BotemiaConfig?.modules?.emailConfig?.prospectEmailTemplateId || "template_8kx812d";
+                emailjs.send("service_b9bppgb", prospectTplId, prospectParams)
                     .then(function() { console.log("✅ Prospect email sent to: " + data.email); })
                     .catch(function(e) { console.error("❌ Prospect email error:", e); });
             } else {
@@ -633,6 +655,7 @@
             var clientParams = {
                 to_email: clientEmail,
                 full_name: data.fullName || "Not provided",
+                first_name: data.firstName,
                 email: data.email || "Not provided",
                 phone: data.phone || "Not provided",
                 scheduled_datetime: data.scheduledDateTime || "Not provided",
@@ -640,7 +663,8 @@
                 submitted_at: new Date().toLocaleString()
             };
             
-            emailjs.send("service_b9bppgb", "template_uix9cyx", clientParams)
+            var clientTplId = window.BotemiaConfig?.modules?.emailConfig?.leadEmailTemplateId || "template_uix9cyx";
+            emailjs.send("service_b9bppgb", clientTplId, clientParams)
                 .then(function() { console.log("✅ Agency notification sent to: " + clientEmail); })
                 .catch(function(e) { console.error("❌ Agency email error:", e); });
         }
@@ -676,7 +700,7 @@
         xBtn.onclick = function() { var bd=document.getElementById("mortgage-calc-backdrop"); if(bd)bd.remove(); else { var ov=document.getElementById("mortgage-calc-overlay"); if(ov)ov.remove(); } window._calcModeActive=false; window._lastCalcField=null; console.log("🏠 Calculator closed"); };
         hdr.appendChild(hLeft); hdr.appendChild(xBtn); ov.appendChild(hdr);
         var body = document.createElement("div");
-        body.style.cssText = "padding:16px;overflow-y:auto;";
+        body.style.cssText = "padding:20px;overflow-y:auto;";
         function mcField(labelText, inputId, inputType, inputVal, extraAttr, isSelect, options) {
             var wrap = document.createElement("div");
             var lbl = document.createElement("label");
@@ -707,32 +731,23 @@
             return wrap;
         }
         var grid = document.createElement("div");
-        grid.style.cssText = "display:grid;gap:12px;";
+        grid.style.cssText = "display:grid;gap:14px;";
         grid.appendChild(mcField("💰 Annual Income","mc-income","number","",null,false,null));
-
-        var rowDownDebt = document.createElement("div");
-        rowDownDebt.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
-        rowDownDebt.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
-        rowDownDebt.appendChild(mcField("💳 Monthly Obligations","mc-debt","number","",null,false,null));
-        grid.appendChild(rowDownDebt);
-
-        var rowLoanCredit = document.createElement("div");
-        rowLoanCredit.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
-        rowLoanCredit.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
+        grid.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
+        grid.appendChild(mcField("💳 Monthly Obligations (cars, loans, credit cards)","mc-debt","number","",null,false,null));
+        grid.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
             {v:"conventional",t:"Conventional",sel:true},
             {v:"fha",t:"FHA"},
-            {v:"va",t:"VA (Military)"},
+            {v:"va",t:"VA (Military/Veterans)"},
             {v:"jumbo",t:"Jumbo"},
             {v:"usda",t:"USDA (Rural)"}
         ]));
-        rowLoanCredit.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
+        grid.appendChild(mcField("📊 Credit Score","mc-credit",null,null,null,true,[
             {v:"0.5",t:"Excellent (760+)"},
             {v:"0.25",t:"Good (700-759)",sel:true},
             {v:"0",t:"Fair (640-699)"},
             {v:"-0.5",t:"Poor (580-639)"}
         ]));
-        grid.appendChild(rowLoanCredit);
-
         // Hidden fields for calculation — not shown to user
         var hiddenTerm = document.createElement("input");
         hiddenTerm.type = "hidden"; hiddenTerm.id = "mc-term"; hiddenTerm.value = "30";
@@ -767,11 +782,11 @@
                 "<div style='color:#f8c400;font-size:1rem;font-weight:700;margin-bottom:6px;text-align:center;'>🎉 Great news! Let's send your results.</div>",
                 "<div style='color:rgba(255,255,255,0.6);font-size:0.8rem;text-align:center;margin-bottom:18px;'>A loan officer will follow up with your qualification summary.</div>",
                 "<div style='margin-bottom:12px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>👤 Full Name</label>",
-                "<input id='contact-name' name='name' autocomplete='name' type='text' placeholder='Your full name' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<input id='contact-name' type='text' placeholder='Your full name' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
                 "<div style='margin-bottom:12px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>📧 Email Address</label>",
-                "<input id='contact-email' name='email' autocomplete='email' type='email' placeholder='your@email.com' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<input id='contact-email' type='email' placeholder='your@email.com' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
                 "<div style='margin-bottom:18px;'><label style='color:rgba(255,255,255,0.6);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;'>📞 Phone Number</label>",
-                "<input id='contact-phone' name='tel' autocomplete='tel' type='tel' placeholder='(555) 555-5555' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
+                "<input id='contact-phone' type='tel' placeholder='(555) 555-5555' style='width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(248,196,0,0.3);border-radius:10px;color:white;font-size:1rem;box-sizing:border-box;outline:none;'></div>",
                 "<button id='submit-contact-btn' style='width:100%;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;'>📨 Send My Results Now</button>",
                 "<div style='text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem;margin-top:8px;'>Your information is kept private and secure.</div>",
                 "</div>"
@@ -789,16 +804,19 @@
                             return;
                         }
                         var calcData = window._calcResults || {};
-                        if (typeof emailjs !== "undefined") {
-                            // ===== DEMO MODE: send the CLIENT/lead-notification email to whatever address
-                            // the demo viewer typed in, so they experience exactly what they'd receive as
-                            // a business owner when one of their own prospects submits the calculator. =====
-                            var leadEmailParams = {
+                        var isDemoModeCalc = (window.BotemiaConfig?.modules?.emailConfig?.bridgeMode === "demo");
+                        var firstName = (name || "").trim().split(/\s+/)[0] || "there";
+                        var leadTplIdCalc = window.BotemiaConfig?.modules?.emailConfig?.leadEmailTemplateId || "template_uix9cyx";
+                        var prospectTplIdCalc = window.BotemiaConfig?.modules?.emailConfig?.prospectEmailTemplateId || "template_8kx812d";
+                        if (typeof emailjs !== "undefined" && isDemoModeCalc) {
+                            // ===== DEMO MODE: whoever fills the form gets the lead email themselves =====
+                            emailjs.send("service_b9bppgb", leadTplIdCalc, {
                                 to_email:             email,
                                 full_name:            name,
+                                first_name:           firstName,
                                 email:                email,
                                 phone:                phone || "Not provided",
-                                message:              "New home loan pre-qualification lead from the mortgage calculator.",
+                                message:              "New pre-qualification lead.",
                                 submitted_at:         new Date().toLocaleString(),
                                 calc_annual_income:   calcData.income     || "Not provided",
                                 calc_down_payment:    calcData.down       || "Not provided",
@@ -810,55 +828,70 @@
                                 calc_monthly_payment: calcData.monthly    || "Not provided",
                                 calc_loan_amount:     calcData.loanAmount || "Not provided",
                                 calc_dti:             calcData.dti        || "Not provided",
-                                calc_verdict:         calcData.verdict    || ""
-                            };
-                            emailjs.send("service_b9bppgb", "template_uix9cyx", leadEmailParams)
-                                .then(function() { console.log("✅ [DEMO] Lead notification email sent to:", email); })
-                                .catch(function(e) { console.error("❌ [DEMO] Lead email error:", e); });
+                                calc_verdict:         calcData.verdict    || "",
+                                special_requests:     "None"
+                            })
+                            .then(function() {
+                                console.log("✅ [DEMO] Lead email sent to:", email);
+                                var mockupUrlCalc = window.BotemiaConfig?.modules?.emailConfig?.demoMockupUrl;
+                                if (mockupUrlCalc) {
+                                    var toastCalc = document.createElement("div");
+                                    toastCalc.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0a1a2f;border:2px solid #f8c400;border-radius:14px;padding:16px 20px;z-index:9999999;box-shadow:0 10px 30px rgba(0,0,0,0.5);text-align:center;max-width:340px;";
+                                    toastCalc.innerHTML = "<div style=\"color:#fff;font-size:0.85rem;margin-bottom:10px;\">✅ Lead email sent! That's what you'd receive as the client.</div><a href=\"" + mockupUrlCalc + "\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-block;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;padding:10px 18px;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.85rem;margin-right:8px;\">📧 See what your prospect gets</a><span onclick=\"this.parentElement.remove()\" style=\"cursor:pointer;color:#aaa;font-size:1.1rem;vertical-align:middle;\">✕</span>";
+                                    document.body.appendChild(toastCalc);
+                                    setTimeout(function(){ if (toastCalc.parentElement) toastCalc.remove(); }, 15000);
+                                }
+                            })
+                            .catch(function(e) { console.error("❌ [DEMO] Lead email error:", e); });
+                        } else if (typeof emailjs !== "undefined") {
+                            // ===== NORMAL MODE =====
+                            // ===== EMAIL 1: TO THE PROSPECT (the person using the calculator) =====
+                            emailjs.send("service_b9bppgb", prospectTplIdCalc, {
+                                to_email:             email,
+                                full_name:            name,
+                                first_name:           firstName,
+                                email:                email,
+                                phone:                phone || "Not provided",
+                                submitted_at:         new Date().toLocaleString(),
+                                calc_annual_income:   calcData.income     || "Not provided",
+                                calc_down_payment:    calcData.down       || "Not provided",
+                                calc_monthly_debt:    calcData.debt       || "Not provided",
+                                calc_loan_type:       calcData.loanType   || "Not provided",
+                                calc_credit_score:    calcData.credit     || "Not provided",
+                                calc_loan_term:       calcData.term       || "Not provided",
+                                calc_home_price:      calcData.homePrice  || "Not provided",
+                                calc_monthly_payment: calcData.monthly    || "Not provided",
+                                calc_loan_amount:     calcData.loanAmount || "Not provided",
+                                calc_dti:             calcData.dti        || "Not provided",
+                                calc_verdict:         calcData.verdict    || "",
+                                special_requests:     "None"
+                            })
+                            .then(function() { console.log("✅ Results email sent to:", email); })
+                            .catch(function(e) { console.error("❌ Prospect email error:", e); });
 
-                            // ===== DEMO COPY: same email, also sent to you for verification =====
-                            var demoCopyEmail = window.BotemiaConfig?.modules?.emailConfig?.loanOfficerEmail || "bizboost.expert@gmail.com";
-                            var demoCopyParams = Object.assign({}, leadEmailParams, { to_email: demoCopyEmail });
-                            emailjs.send("service_b9bppgb", "template_uix9cyx", demoCopyParams)
-                                .then(function() { console.log("✅ [DEMO] Copy of lead email sent to:", demoCopyEmail); })
-                                .catch(function(e) { console.error("❌ [DEMO] Copy email error:", e); });
+                            // ===== EMAIL 2: TO THE CLIENT/LOAN OFFICER (the lead) =====
+                            var leadClientEmail = window.BotemiaConfig?.modules?.emailConfig?.loanOfficerEmail || window.BotemiaConfig?.modules?.emailConfig?.clientEmail || "mobilewise.ai@gmail.com";
+                            emailjs.send("service_b9bppgb", leadTplIdCalc, {
+                                to_email:      leadClientEmail,
+                                full_name:     name,
+                                first_name:    firstName,
+                                email:         email,
+                                phone:         phone || "Not provided",
+                                message:       "New home loan pre-qualification lead from the mortgage calculator.",
+                                submitted_at:  new Date().toLocaleString()
+                            })
+                            .then(function() { console.log("✅ Lead notification sent to client:", leadClientEmail); })
+                            .catch(function(e) { console.error("❌ Client lead email error:", e); });
                         }
                         // Notify Tess to trigger email confirmation smart screen
                         if (window.mainWidget && typeof window.mainWidget.sendMessage === "function") {
                             window.mainWidget.sendMessage("Your confirmation has been sent");
                         }
+                        // Close overlay
+                        var bd = document.getElementById("mortgage-calc-backdrop");
+                        if (bd) bd.remove();
                         window._collectingContact = false;
                         console.log("✅ Contact collected — name:", name, "email:", email, "phone:", phone);
-
-                        // ===== DEMO: show a confirmation screen with a link to the prospect-side email mockup =====
-                        var mockupParams = new URLSearchParams({
-                            name: name,
-                            email: email,
-                            homePrice: calcData.homePrice || "",
-                            monthly: calcData.monthly || "",
-                            loanAmount: calcData.loanAmount || "",
-                            dti: calcData.dti || "",
-                            verdict: calcData.verdict || ""
-                        }).toString();
-                        var mockupUrl = "https://mobilewise.netlify.app/prospect-example-email?" + mockupParams;
-                        body.innerHTML = [
-                            "<div style='padding:20px 4px;text-align:center;'>",
-                            "<div style='font-size:2rem;margin-bottom:6px;'>✅</div>",
-                            "<div style='color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:8px;'>Lead notification sent!</div>",
-                            "<div style='color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;line-height:1.5;'>That's exactly what you'd receive as a business owner whenever one of your own website prospects completes this calculator.</div>",
-                            "<a href='" + mockupUrl + "' target='_blank' rel='noopener' style='display:inline-block;width:100%;box-sizing:border-box;padding:13px;background:linear-gradient(135deg,#f8c400,#d4a000);color:#0a0f1e;border-radius:12px;font-size:0.95rem;font-weight:700;text-decoration:none;margin-bottom:10px;'>📧 See what your prospect receives →</a>",
-                            "<button id='demo-close-btn' style='width:100%;padding:13px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-size:0.9rem;font-weight:600;cursor:pointer;'>Close</button>",
-                            "</div>"
-                        ].join("");
-                        setTimeout(function() {
-                            var closeBtn = document.getElementById("demo-close-btn");
-                            if (closeBtn) {
-                                closeBtn.onclick = function() {
-                                    var bd = document.getElementById("mortgage-calc-backdrop");
-                                    if (bd) bd.remove();
-                                };
-                            }
-                        }, 50);
                     };
                 }
             }, 100);
@@ -1001,7 +1034,6 @@
         }
         return false;
     };
-
     window.calcMortgage = function() {
         var income=parseFloat(document.getElementById("mc-income")?.value)||0;
         var downPct=parseFloat(document.getElementById("mc-down-pct")?.value)||0;
@@ -1050,7 +1082,6 @@
             verdict: ve ? ve.textContent : ""
         };
     };
-
     // =========================================
     // 🍋 SUPABASE REALTIME SETUP (ASYNC SAFE)
     // =========================================
@@ -1166,15 +1197,13 @@
                     // --- SMART SCREEN: Actually launch it ---
                     if (mod === "smart_screen") {
                         var images = window.BotemiaConfig?.modules?.smartScreen?.images || [];
-                        var calcOpen = !!document.getElementById("mortgage-calc-backdrop");
                         for (var i = 0; i < images.length; i++) {
-                            if (calcOpen) break; // Don't fire smart screens while calculator is open
                             var imgTriggers = images[i].triggerMatch || [];
                             for (var j = 0; j < imgTriggers.length; j++) {
                                 if (imgTriggers[j] && phrase.indexOf(imgTriggers[j].toLowerCase()) !== -1) {
                                     result = { success: true, message: "✅ Smart Screen launched: " + images[i].name };
                                     var overlay = document.createElement("div");
-                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
+                                    overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:95vw;";
                                     overlay.id = "tcs-test-overlay";
                                     overlay.onclick = function() { overlay.remove(); };
                                     var imgEl = document.createElement("img");
@@ -1292,7 +1321,7 @@
                                 }
                                 // Show the link overlay
                                 var webOverlay = document.createElement("div");
-                                webOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;";
+                                webOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;padding:0;border-radius:16px;max-width:90vw;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;";
                                 var webHeader = document.createElement("div");
                                 webHeader.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:rgba(0,0,0,0.5);border-bottom:1px solid #f8c400;";
                                 var webTitle = document.createElement("span");
@@ -1337,7 +1366,7 @@
                             if (matchedGroup.videos && matchedGroup.videos.length > 0) {
                                 var videoUrl = matchedGroup.videos[0];
                                 var videoOverlay = document.createElement("div");
-                                videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                 videoOverlay.onclick = function() { videoOverlay.remove(); };
                                 var videoEl = document.createElement("video");
                                 videoEl.src = videoUrl;
@@ -1375,7 +1404,7 @@
                         if (matchedVideo) {
                             result = { success: true, message: "✅ Video playing: " + matchedVideo.triggerPhrase };
                             var videoOverlay = document.createElement("div");
-                            videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                            videoOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                             videoOverlay.onclick = function() { videoOverlay.remove(); };
                             var videoEl = document.createElement("video");
                             videoEl.src = matchedVideo.url;
@@ -1397,27 +1426,6 @@
                             document.body.appendChild(videoOverlay);
                         } else {
                             result.message = "❌ No video trigger matched";
-                        }
-                    }
-
-                    // --- MORTGAGE CALCULATOR ---
-                    if (mod === "mortgage_calc") {
-                        var mcCfg = window.BotemiaConfig?.modules?.mortgageCalc;
-                        if (mcCfg?.enabled && mcCfg.triggerPhrase && phrase.indexOf(mcCfg.triggerPhrase.toLowerCase()) !== -1) {
-                            if (typeof window.showMortgageCalculator === "function") {
-                                window.showMortgageCalculator();
-                                result = { success: true, message: "✅ Mortgage Calculator launched" };
-                            } else {
-                                result = { success: false, message: "❌ Calculator function not loaded" };
-                            }
-                        } else {
-                            result = { success: false, message: "❌ Mortgage Calculator trigger not matched or disabled" };
-                        }
-                        if (window.supabaseChannel) {
-                            window.supabaseChannel.send({
-                                type: "broadcast", event: "trigger_test_result",
-                                payload: { module: mod, success: result.success, message: result.message, timestamp: Date.now() }
-                            });
                         }
                     }
                 }
@@ -1551,74 +1559,38 @@
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
-
-                    // ===== USER TRANSCRIPTION =====
+                    
+                    // 🔥 BLOCK USER TRANSCRIPTIONS from triggering modules
                     if (ev?.data?.type === "user_transcription") {
                         const userText = ev.data.transcription || ev.data.text || "";
-                        // Route to controller if pre-qual active OR calc mode active
-                        if (window.preQualController && (window.preQualController.isActive || window._calcModeActive)) {
-                            console.log("👤 [DAILY] User said (captured):", userText);
-                            window.preQualController.handleUserInput(userText);
-                        } else {
-                            console.log("👤 [DAILY] User said (ignored):", userText);
-                        }
+                        console.log("👤 [DAILY] User said (ignored):", userText);
                         return;
                     }
-
+                    
+                    // 🔥 NEW: Handle USER transcriptions during interview
+                    if (window.preQualController && (window.preQualController.isActive || window._calcModeActive) && ev?.data?.type === "user_transcription") {
+                        const userText = ev.data.transcription || ev.data.text || "";
+                        console.log("👤 [DAILY] User said:", userText);
+                        window.preQualController.handleUserInput(userText);
+                        return;
+                    }
+                    
                     if (ev?.data?.type === "agent_transcription") {
                         const tessText = ev.data.transcription;
                         const lowerText = tessText.toLowerCase();
-
-                        // ===== CAPTURE "I HEARD X" FROM TESS (no longer requires "Is that correct" — KB wording varies) =====
+                        
+                        // Capture "I heard X" patterns from Tess (no longer requires "Is that correct" — KB wording varies)
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
-                            var skipWords = ["yes","no","that","it","okay","ok","sure","right","correct","you said"];
-                            var isSkip = skipWords.some(function(w){ return heardValue.toLowerCase() === w || heardValue.toLowerCase().startsWith(w+" "); });
-                            if (!isSkip && heardValue.length > 3) {
-                                if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
-                                    window._tessHeardEmail = heardValue;
-                                    console.log("📧 Captured email from Tess:", heardValue);
-                                } else if (window._calcModeActive && window.preQualController) {
-                                    // Use currentField, or fall back to _lastCalcField if currentField was cleared
-                                    var fieldToPopulate = window.preQualController.currentField || window._lastCalcField;
-                                    console.log("🔍 heardMatch fired. field:", fieldToPopulate, "value:", heardValue);
-                                    if (!fieldToPopulate) {
-                                        window._pendingHeardValue = heardValue;
-                                        console.log("⏳ Stored pending heard value:", heardValue);
-                                    } else {
-                                    // 🏠 POPULATE IMMEDIATELY when Tess repeats the value
-                                    console.log("🏠 Populating immediately:", fieldToPopulate, "=", heardValue);
-                                    if (typeof window.populateCalcField === "function") {
-                                        var populated = window.populateCalcField(fieldToPopulate, heardValue);
-                                        if (populated) {
-                                            console.log("✅ Field populated:", fieldToPopulate);
-                                            if (window.preQualController.answers) {
-                                                window.preQualController.answers[fieldToPopulate] = heardValue;
-                                            }
-                                            window.preQualController.currentField = null;
-                                            window.preQualController.pendingValue = null;
-                                            // Keep _lastCalcField until next question sets a new one
-                                            window._lastPopulatedField = fieldToPopulate;
-                                            window._lastCalcField = null;
-                                        } else {
-                                            console.log("⚠️ populateCalcField returned false — storing as pending");
-                                            window.preQualController.pendingValue = heardValue;
-                                        }
-                                    }
-                                    } // end else (currentField is set)
-                                } else if (!heardValue.match(/^\d/)) {
-                                    window._tessHeardName = heardValue;
-                                    console.log("👤 Captured name from Tess:", heardValue);
-                                }
-                            } else {
-                                console.log("🚫 Skipped vague heard value:", heardValue);
+                            if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
+                                window._tessHeardEmail = heardValue;
+                                console.log("📧 Captured email from Tess:", heardValue);
+                            } else if (heardValue.length > 1 && !heardValue.match(/^\d/)) {
+                                window._tessHeardName = heardValue;
+                                console.log("👤 Captured name from Tess:", heardValue);
                             }
                         }
-
-                        // ===== USER "YES" CONFIRMATION — populate calc field =====
-                        // When user says yes after Tess repeats a value, fire population
-                        // This is handled via handleUserInput below
                         // Always log Tess transcriptions
                         console.log("🤖 [DAILY] Tess said:", tessText);
                         
@@ -1638,12 +1610,11 @@
                             
                             // --- SMART SCREEN TRIGGER (during interview) ---
                             var smartImages = window.BotemiaConfig?.modules?.smartScreen?.images || [];
-                            var calcOpenI = !!document.getElementById("mortgage-calc-backdrop");
                             for (var si = 0; si < smartImages.length; si++) {
-                                if (!calcOpenI && (smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
+                                if ((smartImages[si].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                     console.log("📸 Smart Screen matched during interview:", smartImages[si].name);
                                     var overlay = document.createElement("div");
-                                    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
+                                    overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:90vw;";
                                     var imgEl = document.createElement("img");
                                     imgEl.src = smartImages[si].url;
                                     imgEl.style.cssText = "max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
@@ -1722,25 +1693,11 @@
                             if (wTriggers.some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                 console.log("🌐 Website Info trigger detected during interview!");
                             }
-
-                            // --- MORTGAGE CALCULATOR TRIGGER (during interview/calc mode) ---
-                            var calcCfgI = window.BotemiaConfig?.modules?.mortgageCalc;
-                            var calcPhrasesI = [calcCfgI?.triggerPhrase || ""];
-                            var calcMatchedI = calcCfgI?.enabled && calcPhrasesI.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
-                            console.log("🔍 Calc trigger check (interview):", lowerText.slice(0,80));
-                            if (calcMatchedI) {
-                                console.log("🏠 Mortgage Calculator trigger FIRED (interview mode)!");
-                                if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
-                            }
                             
                             return;
                         }
                         
                         // ===== NORMAL MODE: No interview active =====
-                        // If calculator is open, still detect fields from Tess questions
-                        if (window._calcModeActive && window.preQualController) {
-                            window.preQualController.detectFieldFromQuestion(tessText);
-                        }
                         // --- PRE-QUAL TRIGGER ---
                         var triggerPhrase = window.TRIGGER_PHRASE;
                         if (triggerPhrase) {
@@ -1786,7 +1743,7 @@
                             if ((smartImages2[si2].triggerMatch || []).some(function(t) { return lowerText.indexOf(t.toLowerCase()) !== -1; })) {
                                 console.log("📸 Smart Screen matched:", smartImages2[si2].name);
                                 var overlay = document.createElement("div");
-                                overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;";
+                                overlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);z-index:999998;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;border-radius:16px;max-width:90vw;";
                                 var imgEl = document.createElement("img");
                                 imgEl.src = smartImages2[si2].url;
                                 imgEl.style.cssText = "max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
@@ -1836,7 +1793,7 @@
                                 if (link.triggerPhrase && lowerText.indexOf(link.triggerPhrase.toLowerCase()) !== -1) {
                                     console.log("🌐 Website Info matched:", link.title);
                                     var webOverlay = document.createElement("div");
-                                    webOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999998;display:flex;align-items:center;justify-content:center;";
+                                    webOverlay.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,15,30,0.98);z-index:999998;display:flex;flex-direction:column;padding:0;border-radius:16px;max-width:90vw;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);border:2px solid #f8c400;";
                                     var webHeader = document.createElement("div");
                                     webHeader.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:rgba(0,0,0,0.5);border-bottom:1px solid #f8c400;";
                                     var webTitle = document.createElement("span");
@@ -1866,7 +1823,7 @@
                                 if (testimonialGroups[tg].videos && testimonialGroups[tg].videos.length > 0) {
                                     var tVideoUrl = testimonialGroups[tg].videos[0];
                                     var tOverlay = document.createElement("div");
-                                    tOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                    tOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                     tOverlay.onclick = function() { tOverlay.remove(); };
                                     var tVideo = document.createElement("video");
                                     tVideo.src = tVideoUrl;
@@ -1886,7 +1843,7 @@
                             if (videoVault[vi].triggerPhrase && lowerText.indexOf(videoVault[vi].triggerPhrase.toLowerCase()) !== -1) {
                                 console.log("📹 Video Vault matched:", videoVault[vi].triggerPhrase);
                                 var vOverlay = document.createElement("div");
-                                vOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
+                                vOverlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;";
                                 vOverlay.onclick = function() { vOverlay.remove(); };
                                 var vVideo = document.createElement("video");
                                 vVideo.src = videoVault[vi].url;
@@ -1898,23 +1855,20 @@
                                 break;
                             }
                         }
+                    }
 
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
-                        var calcPhrasesN = [calcCfgN?.triggerPhrase || ""];
-                        var calcMatchedN = calcCfgN?.enabled && calcPhrasesN.some(function(p){ return p && lowerText.indexOf(p.toLowerCase()) !== -1; });
-                        console.log("🔍 Normal mode calc check:", lowerText.slice(0,80));
-                        if (calcMatchedN) {
-                            console.log("🏠 Mortgage Calculator trigger FIRED (normal mode)!");
+                        if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
+                            console.log("🏠 Mortgage Calculator trigger!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
                             // Tess sometimes bundles the trigger phrase AND the first question into one message
                             // (e.g. "...launching the calculator now. First, what is your annual income?").
-                            // Register that field immediately so it isn't silently skipped.
+                            // Register that field immediately so it is not silently skipped.
                             if (window.preQualController && typeof window.preQualController.detectFieldFromQuestion === "function") {
                                 window.preQualController.detectFieldFromQuestion(tessText);
                             }
                         }
-                    }
                 });
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
@@ -2003,7 +1957,6 @@
         widget.style.display = 'none';
         return widget;
     }
-
     function forcePreQualification() {
         console.trace("🔍 [TRACE] forcePreQualification called from:");
         console.log("🚀 forcePreQualification - Activating Listener Mode");
@@ -2065,14 +2018,15 @@
             <div class="splash-logo-bar" style="background:${barBg};">
                 ${config.branding?.logo ? '<img src="' + config.branding.logo + '" alt="' + (config.branding?.name || 'Client Logo') + '">' : '<span style="color:' + nameColor + ';font-size:20px;font-weight:600;">' + (config.branding?.name || '') + '</span>'}
             </div>
-            <div class="splash-presents" style="background:${barBg}; color:${presentsColor};">${config.presentsText || 'Presents:'}</div>
+
             `;
         }
 
-        let pageHTML = logoHTML + `
+           let pageHTML = logoHTML + `
             <div class="splash-navy">
+                <h3 class="splash-presents-inline">${config.presentsText || 'Presents:'}</h3>
                 <h1><span class="sparkle">✨</span>${config.title || 'Tess'}</h1>
-                <h2>${config.subtitle || 'Your Friendly AI Web Assistant'}</h2>
+                <h2>${config.subtitle || 'Your Helpful AI Web Assistant'}</h2>
                 <div class="splash-avatar-container" id="splashAvatarContainer">
                     <div id="splash-preloader" style="position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;">
                         <div class="spinner"></div>
@@ -2131,7 +2085,7 @@
         const buttonGroup = document.createElement('div');
         buttonGroup.className = 'button-group';
         buttonGroup.innerHTML = `
-            <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'}</button>
+            <button class="primary-btn" id="activateTessBtn" style="background: linear-gradient(145deg, ${config.primaryButton?.gradientTop || '#f8c400'}, ${config.primaryButton?.gradientBottom || '#d4a000'}); color: ${config.primaryButton?.textColor || '#0a0f1e'};">${config.primaryButton?.text || 'Get AI help with Tess'} <span style="color:#fff; animation: blinkArrow 1.2s ease-in-out infinite;">▶</span></button>
             <button class="secondary-btn" id="justBrowsingBtn" style="background: linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'}); color: ${config.secondaryButton?.textColor || '#ffffff'};">${config.secondaryButton?.text || 'Just Browsing'}</button>
         `;
         navySection.appendChild(buttonGroup);
@@ -2194,6 +2148,16 @@
                 preloader.id = 'tess-preloader';
                 preloader.innerHTML = '<div class="spinner"></div>';
                 wrap.appendChild(preloader);
+
+                // Play "Hi, I'm Tess..." preloader audio, if configured
+                var preloaderAudioSrc = window.BotemiaConfig?.modules?.splashScreen?.preloaderAudioData;
+                if (preloaderAudioSrc) {
+                    try {
+                        var widgetPreloaderAudio = new Audio(preloaderAudioSrc);
+                        widgetPreloaderAudio.play().catch(function(e) { console.warn('Preloader audio blocked:', e); });
+                    } catch (e) { console.warn('Preloader audio error:', e); }
+                }
+
                 setTimeout(function() {
                     const pl = document.getElementById('tess-preloader');
                     if (pl) {
@@ -2201,7 +2165,7 @@
                         pl.style.opacity = '0';
                         setTimeout(() => pl.remove(), 500);
                     }
-                }, 9000);
+                }, 9999);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
@@ -2328,7 +2292,6 @@
         avatarBtn.addEventListener('click', () => { avatarBtn.remove(); activateTess(); });
         document.body.appendChild(avatarBtn);
     }
-
     function justBrowsing() {
         console.log("👆 Just Browsing clicked - showing persistent avatar");
         const overlay = document.getElementById('splashOverlay');
