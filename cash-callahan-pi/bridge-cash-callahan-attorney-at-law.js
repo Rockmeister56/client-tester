@@ -2195,7 +2195,7 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                     setTimeout(function() { pl.remove(); }, 2000);
                 }
             }
-        }, 10000);
+        }, 11000);
 
         // Safety net
 
