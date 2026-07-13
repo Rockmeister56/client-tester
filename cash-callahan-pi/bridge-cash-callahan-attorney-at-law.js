@@ -2158,14 +2158,44 @@
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
 
-                setTimeout(function() {
-                    const pl = document.getElementById('tess-preloader');
-                    if (pl) {
-                        pl.style.transition = 'opacity 0.5s ease';
-                        pl.style.opacity = '0';
-                        setTimeout(() => pl.remove(), 500);
-                    }
-                }, 9999);
+                function hideTessPreloader() {
+    const pl = document.getElementById('tess-preloader');
+    if (pl) {
+        pl.style.transition = 'opacity 0.5s ease';
+        pl.style.opacity = '0';
+        setTimeout(() => pl.remove(), 500);
+    }
+}
+
+// Poll for real content actually rendering, instead of guessing a fixed delay.
+// Checks both video and audio since this widget may render either.
+var tessReadyPollCount = 0;
+var tessReadyPoll = setInterval(function() {
+    tessReadyPollCount++;
+    var shadow = window.mainWidget?.shadowRoot;
+    var vids = shadow ? shadow.querySelectorAll('video') : [];
+    var auds = shadow ? shadow.querySelectorAll('audio') : [];
+    var ready = false;
+    vids.forEach(function(v) {
+        if (v.readyState >= 3 && v.videoWidth > 0) ready = true;
+    });
+    if (!ready) {
+        auds.forEach(function(a) {
+            if (a.readyState >= 3 && !a.paused) ready = true;
+        });
+    }
+    if (ready) {
+        console.log('✅ Real media detected ready after', tessReadyPollCount * 250, 'ms — hiding preloader');
+        clearInterval(tessReadyPoll);
+        hideTessPreloader();
+    }
+}, 250);
+
+// Safety net — if detection never succeeds, don't leave the preloader stuck forever.
+setTimeout(function() {
+    clearInterval(tessReadyPoll);
+    hideTessPreloader();
+}, 15000);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
