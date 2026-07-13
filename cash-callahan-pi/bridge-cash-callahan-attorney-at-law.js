@@ -165,19 +165,17 @@
             z-index: 1000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
-            #main-widget-circle-wrap lemon-slice-widget {
-            position: absolute !important;
-            /* Changed from -30px to -20px to bring her DOWN 10px */
-            top: -5px !important;
-            /* Changed from -30px to -28px to nudge her RIGHT 2px */
-            left: -28px !important;
-            transform: translateX(-5px) !important;
-            width: 275px !important;
-            height: 400px !important;
-            max-width: none !important;
-            max-height: none !important;
-            zoom: 0.95 !important;
-        }
+    #main-widget-circle-wrap lemon-slice-widget {
+    position: absolute !important;
+    top: 17px !important;
+    left: -2px !important;
+    transform: translateX(-5px) !important;
+    width: 275px !important;
+    height: 400px !important;
+    max-width: none !important;
+    max-height: none !important;
+    zoom: 0.95 !important;
+}
 
         @media (max-width: 480px) {
             #main-widget-outer { width: 120px; height: 120px; bottom: 16px; right: 16px; }
