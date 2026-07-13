@@ -2100,9 +2100,9 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
         const secondaryBtn = document.getElementById('justBrowsingBtn');
         secondaryBtn.onmouseover = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.hoverTop || '#4a5060'}, ${config.secondaryButton?.hoverBottom || '#3a4050'})`; secondaryBtn.style.transform = 'scale(1.02)'; };
         secondaryBtn.onmouseout = () => { secondaryBtn.style.background = `linear-gradient(145deg, ${config.secondaryButton?.gradientTop || '#3a4050'}, ${config.secondaryButton?.gradientBottom || '#2a2f3f'})`; secondaryBtn.style.transform = 'scale(1)'; };
-      }
+    }
 
-      async function activateTess() {
+    async function activateTess() {
         console.log("🖱️ Click detected: Capturing user gesture for audio...");
 
         // Request mic permission IMMEDIATELY on click — tied directly to the user gesture,
@@ -2150,14 +2150,6 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                 preloader.innerHTML = '<div class="spinner"></div>';
                 wrap.appendChild(preloader);
 
-                // Start 2-second invisible shield right when main widget preloader is created
-                setTimeout(function() {
-                    if (preloader) {
-                        preloader.style.visibility = 'hidden';
-                        setTimeout(function() { preloader.remove(); }, 2000);
-                    }
-                }, 500);
-
                 // Play "Hi, I'm Tess..." preloader audio, if configured
                 var preloaderAudioSrc = window.BotemiaConfig?.modules?.splashScreen?.preloaderAudioData;
                 if (preloaderAudioSrc) {
@@ -2166,6 +2158,44 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                         widgetPreloaderAudio.play().catch(function(e) { console.warn('Preloader audio blocked:', e); });
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
+
+                        var tessPreloaderHidden = false;
+
+        function hideTessPreloader() {
+            if (tessPreloaderHidden) return;
+            var pl = document.getElementById('tess-preloader');
+            if (!pl) return;
+            
+            // Make sure we are on the splash screen, not the main widget
+            var isSplash = pl.closest('.splash-avatar-container');
+            if (!isSplash) return;
+            
+            tessPreloaderHidden = true;
+            console.log('✅ Daily room joined — preparing to hide preloader');
+            
+            pl.style.visibility = 'hidden';
+            
+            setTimeout(function() {
+                pl.remove();
+                console.log('✅ Lemon Slice buffer complete — preloader removed');
+            }, 2000);
+        }
+
+        window.onDailyRoomJoined = function() {
+            hideTessPreloader();
+        };
+
+        // Safety net
+        setTimeout(function() {
+            if (!tessPreloaderHidden) {
+                var pl = document.getElementById('tess-preloader');
+                if (pl && pl.closest('.splash-avatar-container')) {
+                    tessPreloaderHidden = true;
+                    pl.style.visibility = 'hidden';
+                    setTimeout(function() { pl.remove(); }, 2000);
+                }
+            }
+        }, 10000);
 
         // Safety net
 
