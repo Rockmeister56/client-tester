@@ -1555,7 +1555,8 @@
                 }
                 
                 await dailyCallObject.join({ url: data.room_url, token: data.token });
-                console.log("✅ Joined Daily room (Server Connection Active)");
+console.log("✅ Joined Daily room (Server Connection Active)");
+if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined(); }
                 
                 // ===== 🎧 CLEAN AUDIO LISTENER =====
                 dailyCallObject.on("app-message", (ev) => {
@@ -2167,34 +2168,23 @@
     }
 }
 
-// Poll for real content actually rendering, instead of guessing a fixed delay.
-// Checks both video and audio since this widget may render either.
-var tessReadyPollCount = 0;
-var tessReadyPoll = setInterval(function() {
-    tessReadyPollCount++;
-    var shadow = window.mainWidget?.shadowRoot;
-    var vids = shadow ? shadow.querySelectorAll('video') : [];
-    var auds = shadow ? shadow.querySelectorAll('audio') : [];
-    var ready = false;
-    vids.forEach(function(v) {
-        if (v.readyState >= 3 && v.videoWidth > 0) ready = true;
-    });
-    if (!ready) {
-        auds.forEach(function(a) {
-            if (a.readyState >= 3 && !a.paused) ready = true;
-        });
-    }
-    if (ready) {
-        console.log('✅ Real media detected ready after', tessReadyPollCount * 250, 'ms — hiding preloader');
-        clearInterval(tessReadyPoll);
+// Hide the preloader the instant the Daily room actually finishes
+// connecting — a real, known milestone from our own code, not a guess.
+var tessPreloaderHidden = false;
+window.onDailyRoomJoined = function() {
+    if (tessPreloaderHidden) return;
+    tessPreloaderHidden = true;
+    console.log('✅ Daily room joined — hiding preloader');
+    hideTessPreloader();
+};
+
+// Safety net — if the room-joined signal never fires for some reason,
+// don't leave the preloader stuck forever. Should rarely if ever fire.
+setTimeout(function() {
+    if (!tessPreloaderHidden) {
+        tessPreloaderHidden = true;
         hideTessPreloader();
     }
-}, 250);
-
-// Safety net — if detection never succeeds, don't leave the preloader stuck forever.
-setTimeout(function() {
-    clearInterval(tessReadyPoll);
-    hideTessPreloader();
 }, 15000);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
