@@ -2029,7 +2029,7 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                 <h1><span class="sparkle">✨</span>${config.title || 'Tess'}</h1>
                 <h2>${config.subtitle || 'Your Helpful AI Web Assistant'}</h2>
                 <div class="splash-avatar-container" id="splashAvatarContainer">
-                    <div id="splash-preloader" style="position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;">
+                    <div id="splash-screen-preloader" style="position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;">
                         <div class="spinner"></div>
                     </div>
                 </div>
@@ -2161,41 +2161,37 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
 
                         var tessPreloaderHidden = false;
 
-        function hideTessPreloader() {
-            if (tessPreloaderHidden) return;
-            var pl = document.getElementById('tess-preloader');
+        function hideSplashPreloader() {
+            if (tessSplashPreloaderHidden) return;
+            var pl = document.getElementById('splash-screen-preloader');
             if (!pl) return;
             
-            // Make sure we are on the splash screen, not the main widget
-            var isSplash = pl.closest('.splash-avatar-container');
-            if (!isSplash) return;
-            
-            tessPreloaderHidden = true;
-            console.log('✅ Daily room joined — preparing to hide preloader');
+            tessSplashPreloaderHidden = true;
+            console.log('✅ Daily room joined — hiding splash preloader');
             
             pl.style.visibility = 'hidden';
             
             setTimeout(function() {
                 pl.remove();
-                console.log('✅ Lemon Slice buffer complete — preloader removed');
+                console.log('✅ Splash preloader removed');
             }, 2000);
         }
 
         window.onDailyRoomJoined = function() {
-            hideTessPreloader();
+            hideSplashPreloader();
         };
 
         // Safety net
         setTimeout(function() {
-            if (!tessPreloaderHidden) {
-                var pl = document.getElementById('tess-preloader');
-                if (pl && pl.closest('.splash-avatar-container')) {
-                    tessPreloaderHidden = true;
+            if (!tessSplashPreloaderHidden) {
+                var pl = document.getElementById('splash-screen-preloader');
+                if (pl) {
+                    tessSplashPreloaderHidden = true;
                     pl.style.visibility = 'hidden';
                     setTimeout(function() { pl.remove(); }, 2000);
                 }
             }
-        }, 11000);
+        }, 10000);
 
         // Safety net
 
