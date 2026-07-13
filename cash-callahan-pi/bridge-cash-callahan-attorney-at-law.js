@@ -2191,12 +2191,16 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
             
             setTimeout(async () => {
                 console.log("🎤 Finalizing audio state...");
-                     // Start 2-second invisible shield right when audio finalizes
+                      // TEST BLOCK
         setTimeout(function() {
+            console.log("🚨 Z TEST: THIS IS THE NEW CODE RUNNING!");
             var pl = document.getElementById('splash-preloader');
             if (pl) {
+                console.log("🚨 Z TEST: FOUND THE PRELOADER!");
                 pl.style.visibility = 'hidden';
                 setTimeout(function() { pl.remove(); }, 2000);
+            } else {
+                console.log("🚨 Z TEST: COULD NOT FIND PRELOADER");
             }
         }, 500);
                 try {
