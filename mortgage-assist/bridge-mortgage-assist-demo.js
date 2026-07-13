@@ -167,8 +167,8 @@
         }
            #main-widget-circle-wrap lemon-slice-widget {
     position: absolute !important;
-    top: 5px !important;
-    left: -13px !important;
+    top: 15px !important;
+    left: -20px !important;
     transform: translateX(-5px) !important;
     width: 275px !important;
     height: 400px !important;
