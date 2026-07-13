@@ -2159,26 +2159,25 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
 
-                        var tessPreloaderHidden = false;
+                var tessPreloaderHidden = false;
 
         function hideTessPreloader() {
             if (tessPreloaderHidden) return;
-            var pl = document.getElementById('tess-preloader');
-            if (!pl) return;
-            
-            // Make sure we are on the splash screen, not the main widget
-            var isSplash = pl.closest('.splash-avatar-container');
-            if (!isSplash) return;
-            
             tessPreloaderHidden = true;
             console.log('✅ Daily room joined — preparing to hide preloader');
             
-            pl.style.visibility = 'hidden';
-            
-            setTimeout(function() {
-                pl.remove();
-                console.log('✅ Lemon Slice buffer complete — preloader removed');
-            }, 2000);
+            const pl = document.getElementById('tess-preloader');
+            if (pl) {
+                // Step 1: Make spinner invisible but keep it blocking Lemon Slice's ugly loader
+                pl.style.visibility = 'hidden';
+                
+                // Step 2: Wait 2 seconds for Lemon Slice to finish buffering in the background
+                setTimeout(() => {
+                    // Step 3: Now actually remove it so Tess shows
+                    pl.remove();
+                    console.log('✅ Lemon Slice buffer complete — preloader removed');
+                }, 2000);
+            }
         }
 
         window.onDailyRoomJoined = function() {
@@ -2188,14 +2187,14 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
         // Safety net
         setTimeout(function() {
             if (!tessPreloaderHidden) {
-                var pl = document.getElementById('tess-preloader');
-                if (pl && pl.closest('.splash-avatar-container')) {
-                    tessPreloaderHidden = true;
+                tessPreloaderHidden = true;
+                const pl = document.getElementById('tess-preloader');
+                if (pl) {
                     pl.style.visibility = 'hidden';
-                    setTimeout(function() { pl.remove(); }, 2000);
+                    setTimeout(() => pl.remove(), 2000);
                 }
             }
-        }, 10000);
+        }, 11000);
 
         // Safety net
 
