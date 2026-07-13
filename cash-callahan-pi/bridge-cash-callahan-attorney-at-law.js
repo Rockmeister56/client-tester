@@ -2029,7 +2029,7 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                 <h1><span class="sparkle">✨</span>${config.title || 'Tess'}</h1>
                 <h2>${config.subtitle || 'Your Helpful AI Web Assistant'}</h2>
                 <div class="splash-avatar-container" id="splashAvatarContainer">
-                    <div id="splash-screen-preloader" style="position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;">
+                    <div id="splash-preloader" style="position:absolute;inset:0;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;">
                         <div class="spinner"></div>
                     </div>
                 </div>
@@ -2159,11 +2159,14 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
 
-                        var tessPreloaderHidden = false;
+                    var tessSplashPreloaderHidden = false;
 
         function hideSplashPreloader() {
             if (tessSplashPreloaderHidden) return;
-            var pl = document.getElementById('splash-screen-preloader');
+            // Only hide if the splash screen is still open
+            if (!document.getElementById('splashOverlay')) return;
+            
+            var pl = document.getElementById('splash-preloader');
             if (!pl) return;
             
             tessSplashPreloaderHidden = true;
@@ -2184,7 +2187,8 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
         // Safety net
         setTimeout(function() {
             if (!tessSplashPreloaderHidden) {
-                var pl = document.getElementById('splash-screen-preloader');
+                if (!document.getElementById('splashOverlay')) return;
+                var pl = document.getElementById('splash-preloader');
                 if (pl) {
                     tessSplashPreloaderHidden = true;
                     pl.style.visibility = 'hidden';
