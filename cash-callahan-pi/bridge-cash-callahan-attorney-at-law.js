@@ -2159,33 +2159,29 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
 
-                function hideTessPreloader() {
-    const pl = document.getElementById('tess-preloader');
-    if (pl) {
-        pl.style.transition = 'opacity 0.5s ease';
-        pl.style.opacity = '0';
-        setTimeout(() => pl.remove(), 500);
-    }
-}
+                        function hideTessPreloader() {
+            const pl = document.getElementById('tess-preloader');
+            if (pl) {
+                pl.style.transition = 'opacity 0.5s ease';
+                pl.style.opacity = '0';
+                setTimeout(() => pl.remove(), 500);
+            }
+        }
 
-// Hide the preloader the instant the Daily room actually finishes
-// connecting — a real, known milestone from our own code, not a guess.
-var tessPreloaderHidden = false;
-window.onDailyRoomJoined = function() {
-    if (tessPreloaderHidden) return;
-    tessPreloaderHidden = true;
-    console.log('✅ Daily room joined — hiding preloader');
-    hideTessPreloader();
-};
+        var tessPreloaderHidden = false;
+        window.onDailyRoomJoined = function() {
+            if (tessPreloaderHidden) return;
+            tessPreloaderHidden = true;
+            console.log('✅ Daily room joined — hiding preloader');
+            hideTessPreloader();
+        };
 
-// Safety net — if the room-joined signal never fires for some reason,
-// don't leave the preloader stuck forever. Should rarely if ever fire.
-setTimeout(function() {
-    if (!tessPreloaderHidden) {
-        tessPreloaderHidden = true;
-        hideTessPreloader();
-    }
-}, 15000);
+        setTimeout(function() {
+            if (!tessPreloaderHidden) {
+                tessPreloaderHidden = true;
+                hideTessPreloader();
+            }
+        }, 8000);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
