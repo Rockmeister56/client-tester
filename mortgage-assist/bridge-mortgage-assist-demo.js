@@ -2158,14 +2158,68 @@
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
 
-                setTimeout(function() {
-                    const pl = document.getElementById('tess-preloader');
-                    if (pl) {
-                        pl.style.transition = 'opacity 0.5s ease';
+                 var tessPreloaderHidden = false;
+
+        function hideTessPreloader() {
+            if (tessPreloaderHidden) return;
+            tessPreloaderHidden = true;
+            console.log('✅ Trigger fired — listening for Tess to speak');
+            
+            const pl = document.getElementById('tess-preloader');
+            if (!pl) return;
+
+            // Try to find ANY audio or video element inside Lemon Slice
+            function listenForMedia(root) {
+                // Check for actual media elements
+                const media = root.querySelectorAll('audio, video');
+                media.forEach(function(el) {
+                    el.addEventListener('playing', function() {
+                        console.log('✅ Tess is speaking! Removing shield.');
+                        pl.style.transition = 'opacity 0.3s ease';
                         pl.style.opacity = '0';
-                        setTimeout(() => pl.remove(), 500);
-                    }
-                }, 9999);
+                        setTimeout(() => pl.remove(), 300);
+                    }, { once: true });
+                });
+
+                // Also check if Lemon Slice uses Web Audio API
+                if (root.audioContext) {
+                    root.audioContext.onstatechange = function() {
+                        if (root.audioContext.state === 'running') {
+                            console.log('✅ Web Audio running! Removing shield.');
+                            pl.style.transition = 'opacity 0.3s ease';
+                            pl.style.opacity = '0';
+                            setTimeout(() => pl.remove(), 300);
+                        }
+                    };
+                }
+            }
+
+            // Check the main document first
+            listenForMedia(document);
+
+            // Dig into Lemon Slice's shadow DOMs
+            document.querySelectorAll('*').forEach(function(el) {
+                if (el.shadowRoot) {
+                    listenForMedia(el.shadowRoot);
+                }
+            });
+        }
+
+        window.onDailyRoomJoined = function() {
+            hideTessPreloader();
+        };
+
+        // Safety net
+        setTimeout(function() {
+            if (!tessPreloaderHidden) {
+                tessPreloaderHidden = true;
+                const pl = document.getElementById('tess-preloader');
+                if (pl) {
+                    pl.style.visibility = 'hidden';
+                    setTimeout(() => pl.remove(), 2000);
+                }
+            }
+        }, 11000);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
