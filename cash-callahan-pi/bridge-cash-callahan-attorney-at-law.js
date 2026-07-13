@@ -2181,7 +2181,7 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
                 tessPreloaderHidden = true;
                 hideTessPreloader();
             }
-        }, 8000);
+        }, 10000);
 
                 // Custom close button — lives OUTSIDE the circular crop mask so it
                 // isn't clipped by the circle's overflow:hidden.
