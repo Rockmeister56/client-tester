@@ -2164,46 +2164,20 @@ if (typeof window.onDailyRoomJoined === "function") { window.onDailyRoomJoined()
         function hideTessPreloader() {
             if (tessPreloaderHidden) return;
             tessPreloaderHidden = true;
-            console.log('✅ Trigger fired — listening for Tess to speak');
+            console.log('✅ Daily room joined — preparing to hide preloader');
             
             const pl = document.getElementById('tess-preloader');
-            if (!pl) return;
-
-            // Try to find ANY audio or video element inside Lemon Slice
-            function listenForMedia(root) {
-                // Check for actual media elements
-                const media = root.querySelectorAll('audio, video');
-                media.forEach(function(el) {
-                    el.addEventListener('playing', function() {
-                        console.log('✅ Tess is speaking! Removing shield.');
-                        pl.style.transition = 'opacity 0.3s ease';
-                        pl.style.opacity = '0';
-                        setTimeout(() => pl.remove(), 300);
-                    }, { once: true });
-                });
-
-                // Also check if Lemon Slice uses Web Audio API
-                if (root.audioContext) {
-                    root.audioContext.onstatechange = function() {
-                        if (root.audioContext.state === 'running') {
-                            console.log('✅ Web Audio running! Removing shield.');
-                            pl.style.transition = 'opacity 0.3s ease';
-                            pl.style.opacity = '0';
-                            setTimeout(() => pl.remove(), 300);
-                        }
-                    };
-                }
+            if (pl) {
+                // Step 1: Make spinner invisible but keep it blocking Lemon Slice's ugly loader
+                pl.style.visibility = 'hidden';
+                
+                // Step 2: Wait 2 seconds for Lemon Slice to finish buffering in the background
+                setTimeout(() => {
+                    // Step 3: Now actually remove it so Tess shows
+                    pl.remove();
+                    console.log('✅ Lemon Slice buffer complete — preloader removed');
+                }, 2000);
             }
-
-            // Check the main document first
-            listenForMedia(document);
-
-            // Dig into Lemon Slice's shadow DOMs
-            document.querySelectorAll('*').forEach(function(el) {
-                if (el.shadowRoot) {
-                    listenForMedia(el.shadowRoot);
-                }
-            });
         }
 
         window.onDailyRoomJoined = function() {
