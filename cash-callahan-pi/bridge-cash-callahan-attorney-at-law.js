@@ -63,7 +63,7 @@
     const style = document.createElement('style');
     style.textContent = `
         .splash-overlay { display: block !important; background: transparent !important; backdrop-filter: none !important; padding: 0 !important; }
-        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; }
+        .splash-page { display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; background: #fff; } @media (min-width: 481px) { .splash-page { width: 400px; max-width: 92vw; aspect-ratio: auto !important; height: auto; max-height: 90vh; border-radius: 28px; overflow-x: hidden; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); } } .button-group { background: color-mix(in srgb, var(--grad-outer, #0a1a2f) 80%, #000000) !important; padding: 20px 20px 25px 20px !important; margin: 0 -24px -0px -24px !important; display: flex; flex-direction: column; align-items: center; gap: 10px !important; }
         @media (min-width: 481px) {
             .splash-overlay {
                 background: rgba(0,0,0,0.75) !important;
