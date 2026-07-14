@@ -184,8 +184,8 @@
                 width: 160px !important; 
                 height: 240px !important; 
                 /* Dropped her down 5px on mobile too */
-                top: 30px !important; 
-                left: -15px !important; 
+                top: 45px !important; 
+                left: -2px !important; 
                 transform: translateX(5px) !important;
                 zoom: 0.90;
             }
