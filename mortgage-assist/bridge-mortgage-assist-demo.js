@@ -111,7 +111,7 @@
             max-height: none !important;
         }
         .splash-service-line { color: #fff; font-weight: 400; font-size: 1.15rem; text-align: center; margin: 6px 0 18px; }
-        .button-group { display: flex; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
+        .button-group { display: flex; flex-direction: column; align-items: center; gap: 10px; justify-content: center; padding: 20px 20px 26px; }
         .primary-btn { padding: 14px 15px !important; border-radius: 8px !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer; width: 90% !important; max-width: 360px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; transition: transform 0.2s ease !important; } .primary-btn:hover { transform: scale(1.03) !important; }
         .secondary-btn { padding: 12px 15px !important; border-radius: 8px !important; border: none !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer; width: 90% !important; max-width: 360px !important; transition: transform 0.2s ease !important; } .secondary-btn:hover { transform: scale(1.03) !important; filter: brightness(1.1) !important; }
         .primary-btn:hover, .secondary-btn:hover { transform: scale(1.02); }
