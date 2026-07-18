@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 7/17/2026, 5:01:03 AM
+// Generated: 7/17/2026, 9:30:38 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -1389,31 +1389,6 @@
                             result.message = "❌ No testimonial trigger matched";
                         }
                     }
-                    // --- MORTGAGE CALCULATOR ---
-                    if (mod === "mortgage_calc") {
-                        var calcCfg = window.BotemiaConfig?.modules?.mortgageCalc;
-                        var calcPhrase = calcCfg?.triggerPhrase || "";
-                        if (calcCfg?.enabled && calcPhrase && phrase.indexOf(calcPhrase.toLowerCase()) !== -1) {
-                            result = { success: true, message: "✅ Mortgage Calculator launched" };
-                            if (typeof window.showMortgageCalculator === "function") {
-                                window.showMortgageCalculator();
-                            }
-                            if (window.supabaseChannel) {
-                                window.supabaseChannel.send({
-                                    type: "broadcast", event: "trigger_test_result",
-                                    payload: { module: mod, success: true, message: "✅ Mortgage Calculator launched", timestamp: Date.now() }
-                                });
-                            }
-                        } else {
-                            result.message = "❌ Mortgage calc trigger not matched";
-                            if (window.supabaseChannel) {
-                                window.supabaseChannel.send({
-                                    type: "broadcast", event: "trigger_test_result",
-                                    payload: { module: mod, success: false, message: result.message, timestamp: Date.now() }
-                                });
-                            }
-                        }
-                    }
                     // --- VIDEO VAULT ---
                     if (mod === "video_vault") {
                         var videos = window.BotemiaConfig?.modules?.videoVault?.videos || [];
@@ -1449,6 +1424,31 @@
                             document.body.appendChild(videoOverlay);
                         } else {
                             result.message = "❌ No video trigger matched";
+                        }
+                    }
+                    // --- MORTGAGE CALCULATOR ---
+                    if (mod === "mortgage_calc") {
+                        var calcCfg = window.BotemiaConfig?.modules?.mortgageCalc;
+                        var calcPhrase = calcCfg?.triggerPhrase || "";
+                        if (calcCfg?.enabled && calcPhrase && phrase.indexOf(calcPhrase.toLowerCase()) !== -1) {
+                            result = { success: true, message: "✅ Mortgage Calculator launched" };
+                            if (typeof window.showMortgageCalculator === "function") {
+                                window.showMortgageCalculator();
+                            }
+                            if (window.supabaseChannel) {
+                                window.supabaseChannel.send({
+                                    type: "broadcast", event: "trigger_test_result",
+                                    payload: { module: mod, success: true, message: "✅ Mortgage Calculator launched", timestamp: Date.now() }
+                                });
+                            }
+                        } else {
+                            result.message = "❌ Mortgage calc trigger not matched";
+                            if (window.supabaseChannel) {
+                                window.supabaseChannel.send({
+                                    type: "broadcast", event: "trigger_test_result",
+                                    payload: { module: mod, success: false, message: result.message, timestamp: Date.now() }
+                                });
+                            }
                         }
                     }
                 }
@@ -2101,7 +2101,7 @@
                 allKeywords.forEach(keyword => {
                     const span = document.createElement('span');
                     span.className = 'ticker-item';
-                    span.innerHTML = `<i class="fas fa-star"></i> ${keyword}`;
+                    span.innerHTML = `⭐ ${keyword}`;
                     tickerContent.appendChild(span);
                 });
 
