@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 7/17/2026, 9:30:38 PM
+// Generated: 7/18/2026, 11:22:46 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -359,7 +359,7 @@
                         this.answers[this.currentField] = this.pendingValue;
                         console.log("✅ Confirmed:", this.currentField, "=", this.pendingValue);
                         // 🏠 If calculator is open, auto-populate the matching field
-                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","loanType","monthlyDebt"];
+                        var calcFields = ["annualIncome","monthlyIncome","downPayment","creditScore","loanTerm","loanType","monthlyDebt","employmentDuration","purchaseTimeline"];
                         if (calcFields.indexOf(this.currentField) !== -1 && typeof window.populateCalcField === "function") {
                             var populated = window.populateCalcField(this.currentField, this.pendingValue);
                             if (populated) console.log("🏠 Calculator field populated:", this.currentField);
@@ -459,6 +459,10 @@
                 this.currentField = "loanType"; window._lastCalcField = "loanType";
             } else if (lowerText.includes("special requests")) {
                 this.currentField = "specialRequests";
+            } else if (lowerText.includes("how long") && (lowerText.includes("employ") || lowerText.includes("job") || lowerText.includes("current position"))) {
+                this.currentField = "employmentDuration"; window._lastCalcField = "employmentDuration";
+            } else if (lowerText.includes("how soon") || lowerText.includes("timeline") || lowerText.includes("when are you looking") || lowerText.includes("time frame")) {
+                this.currentField = "purchaseTimeline"; window._lastCalcField = "purchaseTimeline";
             } else if (lowerText.includes("anything else")) {
                 this.expectingClosingResponse = true;
                 console.log("🎯 Expecting closing response (Yes/No)");
@@ -584,6 +588,8 @@
                         calc_down_payment:    calcData.down       || "Not provided",
                         calc_monthly_debt:    calcData.debt       || "Not provided",
                         calc_loan_type:       calcData.loanType   || "Not provided",
+                        calc_employment_duration: calcData.employmentDuration || "Not provided",
+                        calc_purchase_timeline:   calcData.purchaseTimeline   || "Not provided",
                         calc_credit_score:    calcData.credit     || "Not provided",
                         calc_loan_term:       calcData.term       || "Not provided",
                         calc_home_price:      calcData.homePrice  || "Not provided",
@@ -629,6 +635,8 @@
                     calc_down_payment:    calcData.down       || "Not provided",
                     calc_monthly_debt:    calcData.debt       || "Not provided",
                     calc_loan_type:       calcData.loanType   || "Not provided",
+                    calc_employment_duration: calcData.employmentDuration || "Not provided",
+                    calc_purchase_timeline:   calcData.purchaseTimeline   || "Not provided",
                     calc_credit_score:    calcData.credit     || "Not provided",
                     calc_loan_term:       calcData.term       || "Not provided",
                     calc_home_price:      calcData.homePrice  || "Not provided",
@@ -731,6 +739,8 @@
         var grid = document.createElement("div");
         grid.style.cssText = "display:grid;gap:14px;";
         grid.appendChild(mcField("💰 Annual Income","mc-income","number","",null,false,null));
+        grid.appendChild(mcField("💼 Time at Current Employer","mc-employment","text","",null,false,null));
+        grid.appendChild(mcField("📅 Purchase Timeline","mc-timeline","text","",null,false,null));
         grid.appendChild(mcField("🏦 Down Payment (%)","mc-down-pct","number","",null,false,null));
         grid.appendChild(mcField("💳 Monthly Obligations (cars, loans, credit cards)","mc-debt","number","",null,false,null));
         grid.appendChild(mcField("🏦 Loan Type","mc-loan-type",null,null,null,true,[
@@ -820,6 +830,8 @@
                                 calc_down_payment:    calcData.down       || "Not provided",
                                 calc_monthly_debt:    calcData.debt       || "Not provided",
                                 calc_loan_type:       calcData.loanType   || "Not provided",
+                                calc_employment_duration: calcData.employmentDuration || "Not provided",
+                                calc_purchase_timeline:   calcData.purchaseTimeline   || "Not provided",
                                 calc_credit_score:    calcData.credit     || "Not provided",
                                 calc_loan_term:       calcData.term       || "Not provided",
                                 calc_home_price:      calcData.homePrice  || "Not provided",
@@ -855,6 +867,8 @@
                                 calc_down_payment:    calcData.down       || "Not provided",
                                 calc_monthly_debt:    calcData.debt       || "Not provided",
                                 calc_loan_type:       calcData.loanType   || "Not provided",
+                                calc_employment_duration: calcData.employmentDuration || "Not provided",
+                                calc_purchase_timeline:   calcData.purchaseTimeline   || "Not provided",
                                 calc_credit_score:    calcData.credit     || "Not provided",
                                 calc_loan_term:       calcData.term       || "Not provided",
                                 calc_home_price:      calcData.homePrice  || "Not provided",
@@ -1029,6 +1043,12 @@
                 window.calcMortgage();
                 return true;
             }
+        } else if (fieldName === "employmentDuration") {
+            var el = document.getElementById("mc-employment");
+            if (el) { el.value = spokenValue.trim(); return true; }
+        } else if (fieldName === "purchaseTimeline") {
+            var el = document.getElementById("mc-timeline");
+            if (el) { el.value = spokenValue.trim(); return true; }
         }
         return false;
     };
@@ -1037,6 +1057,8 @@
         var downPct=parseFloat(document.getElementById("mc-down-pct")?.value)||0;
         var loanTypeEl=document.getElementById("mc-loan-type");
         var loanType=loanTypeEl?loanTypeEl.value:"conventional";
+        var employmentDuration=document.getElementById("mc-employment")?.value||"";
+        var purchaseTimeline=document.getElementById("mc-timeline")?.value||"";
         var debt=parseFloat(document.getElementById("mc-debt")?.value)||0;
         var creditAdj=parseFloat(document.getElementById("mc-credit")?.value)||0;
         var term=parseInt(document.getElementById("mc-term")?.value)||30;
@@ -1073,6 +1095,8 @@
             term: term+" Years",
             rate: rate ? rate.toFixed(2)+"%" : "Not provided",
             loanType: loanType || "Not provided",
+            employmentDuration: employmentDuration || "Not provided",
+            purchaseTimeline: purchaseTimeline || "Not provided",
             homePrice: hp ? hp.textContent : "Not provided",
             monthly: mp2 ? mp2.textContent : "Not provided",
             loanAmount: la ? la.textContent : "Not provided",
