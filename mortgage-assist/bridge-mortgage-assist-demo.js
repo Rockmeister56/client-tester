@@ -2207,6 +2207,7 @@
                 if (preloaderAudioSrc) {
                     try {
                         var widgetPreloaderAudio = new Audio(preloaderAudioSrc);
+                        widgetPreloaderAudio.dataset.tessPreloaderIntro = "true";
                         widgetPreloaderAudio.play().catch(function(e) { console.warn('Preloader audio blocked:', e); });
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
@@ -2232,13 +2233,15 @@
                 function scan(root) {
                     const media = root.querySelectorAll('audio, video');
                     for (const el of media) {
+                        if (el.dataset && el.dataset.tessPreloaderIntro === "true") continue;
+                        const elInfo = `tag=${el.tagName} src=${el.src || el.currentSrc || '(none)'} id=${el.id || '(none)'} readyState=${el.readyState} duration=${el.duration}`;
                         if (!el.paused && el.currentTime > 0) {
-                            console.log('✅ Found actively playing media element');
+                            console.log('✅ Found actively playing media element —', elInfo);
                             hideTessPreloader();
                             return true;
                         }
                         el.addEventListener('playing', function() {
-                            console.log('✅ Tess started speaking (playing event)');
+                            console.log('✅ Tess started speaking (playing event) —', elInfo);
                             hideTessPreloader();
                         }, { once: true });
                     }
