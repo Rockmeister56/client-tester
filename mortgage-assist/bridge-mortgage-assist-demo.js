@@ -27,7 +27,7 @@
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me show you what you can qualify for","defaultRate":7.25,"defaultTerm":30},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
@@ -2215,37 +2215,50 @@
         function hideTessPreloader() {
             if (tessPreloaderHidden) return;
             tessPreloaderHidden = true;
-            console.log('✅ Trigger fired — listening for Tess to speak');
+            console.log('✅ Real media detected — removing preloader shield');
             const pl = document.getElementById('tess-preloader');
             if (!pl) return;
-            function listenForMedia(root) {
-                const media = root.querySelectorAll('audio, video');
-                media.forEach(function(el) {
-                    el.addEventListener('playing', function() {
-                        console.log('✅ Tess is speaking! Removing shield.');
-                        pl.style.transition = 'opacity 0.3s ease';
-                        pl.style.opacity = '0';
-                        setTimeout(function() { pl.remove(); }, 300);
-                    }, { once: true });
-                });
-                if (root.audioContext) {
-                    root.audioContext.onstatechange = function() {
-                        if (root.audioContext.state === 'running') {
-                            console.log('✅ Web Audio running! Removing shield.');
-                            pl.style.transition = 'opacity 0.3s ease';
-                            pl.style.opacity = '0';
-                            setTimeout(function() { pl.remove(); }, 300);
-                        }
-                    };
-                }
-            }
-            listenForMedia(document);
-            document.querySelectorAll('*').forEach(function(el) {
-                if (el.shadowRoot) {
-                    listenForMedia(el.shadowRoot);
-                }
-            });
+            pl.style.transition = 'opacity 0.3s ease';
+            pl.style.opacity = '0';
+            setTimeout(function() { pl.remove(); }, 300);
         }
+
+        // Start scanning for real audio/video playback IMMEDIATELY — do not
+        // wait on bot_ready, since it isn't reliably firing. This is now the
+        // primary detection path, not something nested behind another trigger.
+        (function watchForRealMedia() {
+            function checkOnce() {
+                if (tessPreloaderHidden) return true;
+                function scan(root) {
+                    const media = root.querySelectorAll('audio, video');
+                    for (const el of media) {
+                        if (!el.paused && el.currentTime > 0) {
+                            console.log('✅ Found actively playing media element');
+                            hideTessPreloader();
+                            return true;
+                        }
+                        el.addEventListener('playing', function() {
+                            console.log('✅ Tess started speaking (playing event)');
+                            hideTessPreloader();
+                        }, { once: true });
+                    }
+                    return false;
+                }
+                if (scan(document)) return true;
+                let found = false;
+                document.querySelectorAll('*').forEach(function(el) {
+                    if (!found && el.shadowRoot) {
+                        if (scan(el.shadowRoot)) found = true;
+                    }
+                });
+                return found;
+            }
+            const pollInterval = setInterval(function() {
+                if (checkOnce() || tessPreloaderHidden) {
+                    clearInterval(pollInterval);
+                }
+            }, 250);
+        })();
         window.onDailyRoomJoined = function() {
             hideTessPreloader();
         };
