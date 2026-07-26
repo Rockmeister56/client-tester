@@ -1885,16 +1885,14 @@
                         if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
                             console.log("🏠 Mortgage Calculator trigger!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
-                            // Tess sometimes bundles the trigger phrase AND the first question into one message
-                            // (e.g. "...launching the calculator now. First, what is your annual income?").
-                            // Register that field immediately so it is not silently skipped.
                             if (window.preQualController && typeof window.preQualController.detectFieldFromQuestion === "function") {
                                 window.preQualController.detectFieldFromQuestion(tessText);
                             }
                         }
-            } else {
-                console.warn("⚠️ Daily API did not return room_url");
-            }
+                    });   // <-- THIS is the one that stays (closes the Daily response handler)
+                } else {
+                    console.warn("⚠️ Daily API did not return room_url");
+                }
         } catch(e) { 
             console.error("❌ Daily init error:", e); 
         }
