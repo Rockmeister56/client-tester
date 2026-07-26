@@ -27,7 +27,7 @@
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me show you what you can qualify for","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
@@ -202,33 +202,6 @@
         }
     `;
     document.head.appendChild(style);
-    function createSplashWidget() {
-        const widget = document.createElement('lemon-slice-widget');
-        let clientId = window.BotemiaConfig?.id;
-        if (!clientId) { console.error("❌ CRITICAL: BotemiaConfig ID missing!"); return null; }
-        widget.setAttribute('client-id', clientId);
-        widget.clientId = clientId;
-        const sessionId = 'session-' + crypto.randomUUID();
-        window.tessSessionId = sessionId;
-        widget.setAttribute('room-id', sessionId);
-        widget.roomId = sessionId;
-        widget.setAttribute('agent-id', 'agent_7b0776ef6b855de5');
-        widget.agentId = 'agent_7b0776ef6b855de5';
-        const apiKey = "sk_lemon_Tleyq2zh6NoMpllEHf7mYNRxzIED6YcP";
-        widget.setAttribute('api-key', apiKey);
-        widget.apiKey = apiKey;
-        widget.setAttribute('muted', 'true');
-        widget.muted = true;
-        widget.setAttribute('suppress-audio', 'true');
-        widget.setAttribute('initial-state', 'active');
-        widget.setAttribute('inline', '');
-        widget.setAttribute('custom-minimized-width', '280');
-        widget.setAttribute('custom-minimized-height', '400');
-        widget.setAttribute('hide-ui', '');
-        widget.setAttribute('suppress-initial-message', 'true');
-        widget.id = 'splash-widget';
-        return widget;
-    }
 
     // ===== INTERVIEW LISTENER (QUESTIONS FROM LEMONSLICE) =====
     window.interviewListener = {
@@ -1908,6 +1881,7 @@
                                 break;
                             }
                         }
+                    }
 
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
@@ -1921,7 +1895,6 @@
                                 window.preQualController.detectFieldFromQuestion(tessText);
                             }
                         }
-                    }
                 });
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
@@ -2095,8 +2068,19 @@
 
         const navySection = page.querySelector('.splash-navy');
         const container = document.getElementById('splashAvatarContainer');
-        const splashWidget = createSplashWidget();
-        container.appendChild(splashWidget);
+        // ✅ STATIC VIDEO — no LemonSlice session
+const tessVideoUrl = window.BotemiaConfig?.modules?.splashScreen?.tessVideoUrl;
+if (tessVideoUrl) {
+    const splashVid = document.createElement('video');
+    splashVid.src = tessVideoUrl;
+    splashVid.autoplay = true;
+    splashVid.muted = true;
+    splashVid.loop = true;
+    splashVid.playsInline = true;
+    splashVid.setAttribute('playsinline', '');
+    splashVid.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;';
+    container.appendChild(splashVid);
+}
         container.appendChild(document.getElementById('splash-preloader')); // ensure preloader stays on top, last in DOM order
 
         setTimeout(function() {
@@ -2167,12 +2151,6 @@
         } catch (e) {
             console.warn("⚠️ Mic permission request on click failed or was denied:", e);
         }
-
-        const splashWidget = document.getElementById('splash-widget');
-        if (splashWidget) {
-            splashWidget.innerHTML = '';
-            if (splashWidget.parentNode) splashWidget.parentNode.removeChild(splashWidget);
-        }
         
         const overlay = document.getElementById('splashOverlay');
         if (overlay) overlay.remove();
@@ -2207,7 +2185,6 @@
                 if (preloaderAudioSrc) {
                     try {
                         var widgetPreloaderAudio = new Audio(preloaderAudioSrc);
-                        widgetPreloaderAudio.dataset.tessPreloaderIntro = "true";
                         widgetPreloaderAudio.play().catch(function(e) { console.warn('Preloader audio blocked:', e); });
                     } catch (e) { console.warn('Preloader audio error:', e); }
                 }
@@ -2216,52 +2193,37 @@
         function hideTessPreloader() {
             if (tessPreloaderHidden) return;
             tessPreloaderHidden = true;
-            console.log('✅ Real media detected — removing preloader shield');
+            console.log('✅ Trigger fired — listening for Tess to speak');
             const pl = document.getElementById('tess-preloader');
             if (!pl) return;
-            pl.style.transition = 'opacity 0.3s ease';
-            pl.style.opacity = '0';
-            setTimeout(function() { pl.remove(); }, 300);
-        }
-
-        // Start scanning for real audio/video playback IMMEDIATELY — do not
-        // wait on bot_ready, since it isn't reliably firing. This is now the
-        // primary detection path, not something nested behind another trigger.
-        (function watchForRealMedia() {
-            function checkOnce() {
-                if (tessPreloaderHidden) return true;
-                function scan(root) {
-                    const media = root.querySelectorAll('audio, video');
-                    for (const el of media) {
-                        if (el.dataset && el.dataset.tessPreloaderIntro === "true") continue;
-                        const elInfo = `tag=${el.tagName} src=${el.src || el.currentSrc || '(none)'} id=${el.id || '(none)'} readyState=${el.readyState} duration=${el.duration}`;
-                        if (!el.paused && el.currentTime > 0) {
-                            console.log('✅ Found actively playing media element —', elInfo);
-                            hideTessPreloader();
-                            return true;
-                        }
-                        el.addEventListener('playing', function() {
-                            console.log('✅ Tess started speaking (playing event) —', elInfo);
-                            hideTessPreloader();
-                        }, { once: true });
-                    }
-                    return false;
-                }
-                if (scan(document)) return true;
-                let found = false;
-                document.querySelectorAll('*').forEach(function(el) {
-                    if (!found && el.shadowRoot) {
-                        if (scan(el.shadowRoot)) found = true;
-                    }
+            function listenForMedia(root) {
+                const media = root.querySelectorAll('audio, video');
+                media.forEach(function(el) {
+                    el.addEventListener('playing', function() {
+                        console.log('✅ Tess is speaking! Removing shield.');
+                        pl.style.transition = 'opacity 0.3s ease';
+                        pl.style.opacity = '0';
+                        setTimeout(function() { pl.remove(); }, 300);
+                    }, { once: true });
                 });
-                return found;
-            }
-            const pollInterval = setInterval(function() {
-                if (checkOnce() || tessPreloaderHidden) {
-                    clearInterval(pollInterval);
+                if (root.audioContext) {
+                    root.audioContext.onstatechange = function() {
+                        if (root.audioContext.state === 'running') {
+                            console.log('✅ Web Audio running! Removing shield.');
+                            pl.style.transition = 'opacity 0.3s ease';
+                            pl.style.opacity = '0';
+                            setTimeout(function() { pl.remove(); }, 300);
+                        }
+                    };
                 }
-            }, 250);
-        })();
+            }
+            listenForMedia(document);
+            document.querySelectorAll('*').forEach(function(el) {
+                if (el.shadowRoot) {
+                    listenForMedia(el.shadowRoot);
+                }
+            });
+        }
         window.onDailyRoomJoined = function() {
             hideTessPreloader();
         };
