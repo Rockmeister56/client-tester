@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 7/26/2026, 3:07:53 PM
+// Generated: 7/26/2026, 3:13:06 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -27,7 +27,7 @@
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me bring up the home loan pre qualification calculator now","defaultRate":7.25,"defaultTerm":30},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":"home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
