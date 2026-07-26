@@ -1722,6 +1722,7 @@
                             return;
                         }
                         
+                     }
                         // ===== NORMAL MODE: No interview active =====
                         // --- PRE-QUAL TRIGGER ---
                         var triggerPhrase = window.TRIGGER_PHRASE;
