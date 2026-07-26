@@ -1892,7 +1892,6 @@
                                 window.preQualController.detectFieldFromQuestion(tessText);
                             }
                         }
-                });
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
             }
