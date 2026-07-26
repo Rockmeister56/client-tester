@@ -1881,7 +1881,7 @@
                                 break;
                             }
                         }
-                        // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
+                       // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
                         if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
                             console.log("🏠 Mortgage Calculator trigger!");
@@ -1893,6 +1893,7 @@
                                 window.preQualController.detectFieldFromQuestion(tessText);
                             }
                         }
+                    }); 
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
             }
