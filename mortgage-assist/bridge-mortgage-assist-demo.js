@@ -1882,6 +1882,7 @@
                         }
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
+                        console.log("🔍 CALC CHECK — enabled:", calcCfgN?.enabled, "| configured phrase:", JSON.stringify(calcCfgN?.triggerPhrase), "| Tess said (lowerText):", JSON.stringify(lowerText), "| match found:", calcCfgN?.triggerPhrase ? lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1 : "N/A");
                         if (calcCfgN?.enabled && calcCfgN.triggerPhrase && lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1) {
                             console.log("🏠 Mortgage Calculator trigger!");
                             if (typeof window.showMortgageCalculator === "function") { window.showMortgageCalculator(); }
