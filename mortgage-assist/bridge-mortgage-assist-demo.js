@@ -1721,6 +1721,7 @@
                             
                             return;
                         }
+                     }
                         
                         // ===== NORMAL MODE: No interview active =====
                         // --- PRE-QUAL TRIGGER ---
