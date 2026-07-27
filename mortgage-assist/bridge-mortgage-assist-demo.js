@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 7/26/2026, 4:55:15 PM
+// Generated: 7/26/2026, 7:24:11 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.8 - LISTENER MODE (FINAL)
 
@@ -19,7 +19,7 @@
         "agentId": "agent_7b0776ef6b855de5",
         "modules": {
             "preQualification": {
-                "triggerPhrase": "So let's start with your full name please",
+                "triggerPhrase": " home loan pre qualification calculator",
                 "triggerPhraseLegacy": "let's get started"
             },
             "emailConfig": {"bridgeMode":"normal","prospectEmailTemplateId":"template_8kx812d","leadEmailTemplateId":"template_uix9cyx","demoMockupUrl":"","loanOfficerEmail":"bizboost.expert@gmail.com","ccEmail":"","emailSubject":"New Pre-Qual Lead: {{firstName}} {{lastName}}","clientEmail":"mobilewise.ai@gmail.com","supportPhone":"949-228-5263","emailTriggers":["Your confirmation has been sent"],"phoneTriggers":["Let me get a loan expert on the phone"]},
@@ -27,7 +27,7 @@
             "smartScreen": {"action":"showBestMatch","images":[{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/clients/mortgage-assist-demo/smart-screens/pre-qualification-lead.jpg","link":"","name":"pre-qualification-lead","caption":"","imageSize":"400px","showTitle":true,"triggerMatch":["Check your inbox now"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":4},{"url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/web-images/Mortgage%20Assist/what-you-qualify-for.jpeg","link":"","name":"Qualification Invitation","caption":"","imageSize":"auto","showTitle":true,"triggerMatch":["Would you like to see what you can qualify for"],"backdropOpacity":"0.5","backgroundColor":"white","displayDuration":10}]},
             "testimonial": {"groups":[{"name":"Overall Satisfaction","triggerPhrase":"let me share a valued client review with you","category":"results","videos":["https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Video%20Testimonials/mobile-wise-ai/Mortgage-Assist.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJWaWRlbyBUZXN0aW1vbmlhbHMvbW9iaWxlLXdpc2UtYWkvTW9ydGdhZ2UtQXNzaXN0Lm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODMwOTc3MzAsImV4cCI6MTgxNDYzMzczMH0.69j0XyaJDmX0okjFUUajiupjXb5bJ879cR-6iM8tzvQ"]}]},
             "videoVault": {"videos":[{"name":"What a Broker Does","triggerPhrase":"Let me show you what a broker does","url":"https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/public/Videos/clients/Mortgage%20Assist%20Demo/what-a-broker-does.mp4","description":"","category":"process"}]},
-            "mortgageCalc": {"enabled":true,"triggerPhrase":"let me bring up the home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
+            "mortgageCalc": {"enabled":true,"triggerPhrase":" home loan pre qualification calculator","defaultRate":7.25,"defaultTerm":30},
             "websiteInfo": {"triggers":["Here are the latest rates"],"links":[{"title":"Latest Rates","url":"https://client-tester.netlify.app/mortgage-assist/mortgage-rates-screen","triggerPhrase":"Here are the latest rates"}]}
         }
     };
@@ -392,16 +392,11 @@
             }
             
                         // Capture "I heard X" patterns from Tess (no longer requires "Is that correct" — KB wording varies)
-                        var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
-                        if (heardMatch && heardMatch[1]) {
-                            var heardValue = heardMatch[1].trim();
-                            // Always make the raw heard value available to the calculator,
-                            // regardless of whether it's a number, word, or phrase — this was
-                            // previously only captured for names/emails, silently discarding
-                            // numeric answers (income, down payment, etc.) before they could
-                            // ever reach the calculator fields.
-                            window._pendingHeardValue = heardValue;
-                            if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
+                var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
+                if (heardMatch && heardMatch[1]) {
+                    var heardValue = heardMatch[1].trim();
+                    window._pendingHeardValue = heardValue;
+                    if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                 window._tessHeardEmail = heardValue;
                                 console.log("📧 Captured email from Tess:", heardValue);
                             } else if (heardValue.length > 1 && !heardValue.match(/^\d/)) {
@@ -1614,11 +1609,6 @@
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
-                            // Always make the raw heard value available to the calculator,
-                            // regardless of whether it's a number, word, or phrase — this was
-                            // previously only captured for names/emails, silently discarding
-                            // numeric answers (income, down payment, etc.) before they could
-                            // ever reach the calculator fields.
                             window._pendingHeardValue = heardValue;
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                 window._tessHeardEmail = heardValue;
@@ -1732,7 +1722,6 @@
                             }
                             
                             return;
-                        }
                         
                         // ===== NORMAL MODE: No interview active =====
                         // --- PRE-QUAL TRIGGER ---
@@ -1892,6 +1881,7 @@
                                 break;
                             }
                         }
+                    }
                         // --- MORTGAGE CALCULATOR TRIGGER (normal mode) ---
                         var calcCfgN = window.BotemiaConfig?.modules?.mortgageCalc;
                         console.log("🔍 CALC CHECK — enabled:", calcCfgN?.enabled, "| configured phrase:", JSON.stringify(calcCfgN?.triggerPhrase), "| Tess said (lowerText):", JSON.stringify(lowerText), "| match found:", calcCfgN?.triggerPhrase ? lowerText.indexOf(calcCfgN.triggerPhrase.toLowerCase()) !== -1 : "N/A");
