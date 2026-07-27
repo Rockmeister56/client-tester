@@ -395,6 +395,12 @@
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
+                            // Always make the raw heard value available to the calculator,
+                            // regardless of whether it's a number, word, or phrase — this was
+                            // previously only captured for names/emails, silently discarding
+                            // numeric answers (income, down payment, etc.) before they could
+                            // ever reach the calculator fields.
+                            window._pendingHeardValue = heardValue;
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                 window._tessHeardEmail = heardValue;
                                 console.log("📧 Captured email from Tess:", heardValue);
@@ -1608,6 +1614,12 @@
                         var heardMatch = tessText.match(/I heard\s+["']?(.+?)["']?[.?!]/i);
                         if (heardMatch && heardMatch[1]) {
                             var heardValue = heardMatch[1].trim();
+                            // Always make the raw heard value available to the calculator,
+                            // regardless of whether it's a number, word, or phrase — this was
+                            // previously only captured for names/emails, silently discarding
+                            // numeric answers (income, down payment, etc.) before they could
+                            // ever reach the calculator fields.
+                            window._pendingHeardValue = heardValue;
                             if (heardValue.indexOf("@") !== -1 || heardValue.indexOf(" at ") !== -1 || heardValue.indexOf("gmail") !== -1 || heardValue.indexOf("dot com") !== -1) {
                                 window._tessHeardEmail = heardValue;
                                 console.log("📧 Captured email from Tess:", heardValue);
