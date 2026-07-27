@@ -1721,7 +1721,6 @@
                             
                             return;
                         }
-                     }
                         
                         // ===== NORMAL MODE: No interview active =====
                         // --- PRE-QUAL TRIGGER ---
@@ -1893,6 +1892,7 @@
                                 window.preQualController.detectFieldFromQuestion(tessText);
                             }
                         }
+                    }
                 });
             } else {
                 console.warn("⚠️ Daily API did not return room_url");
